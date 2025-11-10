@@ -1,5 +1,5 @@
 **TODO LIST**
 
-1. 列出所有功能
+1. list all possible functions
 2. prolem statement
    
