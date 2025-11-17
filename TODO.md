@@ -1,5 +1,4 @@
 **TODO LIST**
 
-1. list all possible functions
-2. prolem statement
-   
+1. optimize docs
+2. role assignment
