@@ -9,10 +9,10 @@ On FlirtNet, users should be able to:
 - Join public discussions and share posts.
 - Get help from AI when they feel shy or don’t know how to start a conversation.
 
-## 2. Why We Chose This Idea (Short)
+## 2. Why We Chose This Idea
 From our experience and observation, many current social apps feel cold and not very supportive. If you are not good at socializing, it is easy to feel lost. Also, many random chat apps do not help you keep a good connection, and public forums do not give an easy path to private, deeper chats. We think there is space for a platform that cares more about the user’s feelings and gives some AI help.
 
-## 3. Main Features (High Level)
+## 3. Main Features 
 
 ### 3.1 Core Social Features
 1. **The Discovery**  
@@ -53,7 +53,4 @@ To improve the user experience, we also plan to add several AI‑powered service
 
 ## 4. Expected Benefits
 
-- Reduce the need to use many different apps for different social functions.
-- Provide a clear path from random meetings to long‑term connections.
-- Offer AI tools that help shy or nervous users start and maintain conversations.
-- Improve safety and trust through login and content checks (to be detailed more in the requirements).
+The platform would reduce the need to downloading many different apps for different social goals. It would also provide a clear path from random meetings to long‑term connections. With the AI tools, users who are shy or nervous could start and maintain conversations more easily. Finally, safety and trust would be improved  through login and content checks (to be detailed more in the requirements).

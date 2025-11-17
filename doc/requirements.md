@@ -1,7 +1,5 @@
 # Requirements for FlirtNet
 
-This document lists the main requirements for our project in a simple and student‑friendly way. It is not meant to be perfect, but it should show clearly what we expect the system to do.
-
 The short function overview of the system (previously in `function_list.md`) can be understood as a high‑level summary of these requirements:
 
 - Random matching to chat with an OK/Not OK choice and private chat after both agree.
@@ -68,4 +66,3 @@ These requirements describe qualities of the system instead of specific features
 ### 2.5 Future Scalability and Maintainability
 - **NFR‑8**: The design should allow us to add more features later without rewriting everything.
 
-(These non‑functional requirements are simple on purpose, but they show that we have thought about more than just the functions.)
