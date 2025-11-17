@@ -1,12 +1,12 @@
 # Problem Statement
 
 ## 1. Background
-Today many online social platforms feel cold and not very caring. People use different apps for random chat, for public posts, and for private messaging. Switching between them is tiring, and it is easy to lose good connections.
+Today many online dating platforms and social apps feel cold and not very caring. People use different apps for random chat, for public posts, and for private messaging. Switching between them is tiring, and it is easy to lose good connections.
 
 Some users also feel shy or anxious when talking to new people. They do not always know how to start a conversation or how to keep it going. When a good chat suddenly ends, there is often no simple way to continue the relationship.
 
 ## 2. Current Situation
-Today's social platforms are a landscape of missed opportunities, failing to provide the integrated and supportive experience users crave. Most importantly, they lack **humanity caring**. The user journey is fragmented across multiple apps, each with critical gaps that our project is designed to fill.
+Today's online dating platforms and social apps are a landscape of missed opportunities, failing to provide the integrated and supportive experience users crave. Most importantly, they lack **humanity caring**. The user journey is fragmented across multiple apps, each with critical gaps that our project is designed to fill.
 
 ### 2.1 Passive and Unsupportive Platforms
 Current apps are not designed for those who may struggle with socializing. They are passive venues that offer no tools to help a user start a good chat or build confidence. This lack of AI-driven guidance can also make the experience feel isolating, especially when a valued connection is lost.

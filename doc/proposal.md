@@ -1,7 +1,7 @@
 # Project Proposal – FlirtNet
 
 ## 1. Idea of the Project
-We want to build **FlirtNet**, an online social platform that is more caring and friendly than many apps today. Our goal is to help people meet new friends, keep good connections, and feel less lonely. We also want to use AI to give users some guidance and support.
+We want to build **FlirtNet**, an online dating platform that is more caring and friendly than many apps today. Our goal is to help people meet new friends or potential partners, keep good connections, and feel less lonely. We also want to use AI to give users some guidance and support.
 
 On FlirtNet, users should be able to:
 - Discover new people and start one‑to‑one chats.
