@@ -51,6 +51,7 @@ The function overview of FlirtNet can be simply understood as a high‑level sum
 - **FR‑20**: The system should provide an **Atmosphere Analyzer** that gives feedback during the conversation.
 - **FR‑21**: The system should provide an **AI Profile Optimizer** that gives tips on how to improve the user’s profile.
 - **FR‑22**: The system should provide an **AI Practice Mode** for users to practice chatting with AI before talking to real people.
+- **FR‑23**: The system should provide an **AI Abuse & Harassment Detector** that analyzes messages and public posts in near real time to flag abusive / harassing / aggressive content and suggest actions (auto warning, temporary hiding, or prompt user to report). It should focus on context (tone, repeated patterns) not only keywords.
 
 ## 2. Non‑Functional Requirements
 

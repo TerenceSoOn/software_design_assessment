@@ -1,31 +1,28 @@
 # Project Proposal – FlirtNet
 
 ## 1. Idea of the Project
-We want to build **FlirtNet**, an online dating platform that is more caring and friendly than many apps today. Our goal is to help people meet new friends or potential partners, keep good connections, and feel less lonely. We also want to use AI to give users some guidance and support.
+**FlirtNet**, an online dating platform that is more caring and friendly than many dating apps today. Our goal is to help people meet new friends or potential partners, keep good connections, and feel less lonely, along with strong humanity caring powered by AI.
 
 On FlirtNet, users should be able to:
 - Discover new people and start one‑to‑one chats.
 - Turn a good chat into a long‑term connection.
 - Join public discussions and share posts.
-- Get help from AI when they feel shy or don’t know how to start a conversation.
+- Get some help when they feel shy, don’t know how to start a conversation or are not confident with themselves.
 
-## 2. Why We Chose This Idea
-From our experience and observation, many current social apps feel cold and not very supportive. If you are not good at socializing, it is easy to feel lost. Also, many random chat apps do not help you keep a good connection, and public forums do not give an easy path to private, deeper chats. We think there is space for a platform that cares more about the user’s feelings and gives some AI help.
+## 2. Why This Idea?
+From our experience and observation, many current social apps feel cold and not very supportive. If you are not good at socializing, it is easy to feel lost. This is obviously terrible when you want a date with someone. Also, many random chat apps do not help you keep a good connection, and public forums do not give an easy path to private, deeper chats. We think there is space for a platform that cares more about the user’s feelings and gives some AI help.
 
 ## 3. Main Features 
 
 ### 3.1 Core Social Features
-1. **The Discovery**  
-   A text‑only random matching service. Users can be matched with others and have playful one‑on‑one chats. The matching will be connected with the login system to reduce fake accounts.
+1. **Random Chat**  
+   A text‑only random matching service. Users can be matched with others and have playful one‑on‑one chats, which will be a perfect way of meeting new friends.
 
-2. **The Connection System**  
+2. **Long-lasted Connection System**  
    After a good chat in the Discovery, users can send a **connection request** (similar to a friend request). Once accepted, both users will appear in each other’s **Connections List**.
 
 3. **The Public Square**  
    A public area where users can create profiles, publish posts (text and images), follow topics, and join discussions.
-
-4. **Private Messaging**  
-   A one‑on‑one messaging system that works only between users who are connections. This gives a more private and safer space for deeper conversations.
 
 ### 3.2 AI‑Supported Features
 To improve the user experience, we also plan to add several AI‑powered services:
@@ -53,4 +50,4 @@ To improve the user experience, we also plan to add several AI‑powered service
 
 ## 4. Expected Benefits
 
-The platform would reduce the need to downloading many different apps for different social goals. It would also provide a clear path from random meetings to long‑term connections. With the AI tools, users who are shy or nervous could start and maintain conversations more easily. Finally, safety and trust would be improved  through login and content checks (to be detailed more in the requirements).
+The platform would reduce the need to downloading many different apps for different social/dating goals. It would also provide a clear path from random meetings to long‑term connections. With the AI tools, users who are shy or nervous could start and maintain conversations more easily. Finally, safety and trust would be improved  through login and content checks (to be detailed more in the requirements).
