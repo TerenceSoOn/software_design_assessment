@@ -1,148 +1,82 @@
 @startuml
 skinparam componentStyle rectangle
 
-' Client Tier
-node "Client Devices" {
-  [Mobile App\n(iOS/Android)] as Mobile
-  [Web App\n(React/Vue)] as Web
+node "Client Device" {
+  [Mobile/Web App] as Client
 }
 
-' Edge/CDN Layer
-cloud "CDN & Edge" {
-  [Content Delivery Network] as CDN
-  [Static Assets] as Assets
-}
-
-' Cloud Infrastructure
-cloud "Cloud Platform (AWS/Azure)" {
+node "Cloud Region" {
+  node "Load Balancer" as LB
   
-  ' Load Balancing
-  node "Load Balancer" as LB {
-    [Application LB] as ALB
-    [WebSocket LB] as WSLB
-  }
-  
-  ' Application Tier
   node "Kubernetes Cluster" {
-    
-    node "API Gateway Pod" {
-      component "API Gateway" as Gateway
-      component "Auth Service" as Auth
-    }
-    
-    node "Core Services Pods" {
-      component "User & Profile\nService" as UserSvc
-      component "Matchmaking\nService" as MatchSvc
-      component "Chat Service\n(WebSocket)" as ChatSvc
-      component "Connection\nService" as ConnSvc
-      component "Social Service" as SocialSvc
-      component "Notification\nService" as NotifSvc
-    }
+    [API Gateway] as Gateway
+    [Chat Service (WebSocket)] as ChatSvc
+    [Core Services] as CoreSvc
   }
   
-  ' AI Infrastructure
-  node "AI Inference Cluster\n(GPU Instances)" {
-    component "LLM Service\n(Wingman/Companion/Miss Ex)" as LLM
-    component "Content Moderation\nModel (Safety)" as Safety
-    component "Sentiment Analysis\n(Atmosphere)" as Sentiment
-    component "Matching Algorithm\n(Vector Similarity)" as Matching
+  node "AI Inference Cluster" {
+    [LLM Service (Wingman/Bot)] as LLM
+    [Content Moderator Model] as Safety
   }
   
-  ' Data Tier
   node "Data Layer" {
-    database "PostgreSQL\nRDS\n(User, Profile,\nConnection)" as Postgres
-    database "MongoDB Atlas\n(Chat History,\nPosts, Comments)" as Mongo
-    database "Redis ElastiCache\n(Session, Cache,\nPub/Sub)" as Redis
-    database "Pinecone/Milvus\n(User Embeddings)" as Vector
-  }
-  
-  ' Storage
-  node "Object Storage" {
-    storage "S3 Buckets\n(Profile Photos,\nPost Images)" as S3
-  }
-  
-  ' External Services
-  node "Third-party Services" {
-    [SendGrid\n(Email)] as Email
-    [Firebase/SNS\n(Push Notifications)] as Push
+    database "PostgreSQL (Users)" as Postgres
+    database "Redis (Pub/Sub & Cache)" as Redis
+    database "MongoDB (Chat History)" as Mongo
+    database "Vector DB (Matching)" as VectorDB
   }
 }
 
-' Connections - Client to Edge
-Mobile --> CDN : HTTPS
-Web --> CDN : HTTPS
-CDN --> Assets
+' Client to Load Balancer
+Client -- LB : HTTPS / WSS
 
-' Connections - Client to Load Balancer
-Mobile --> ALB : HTTPS/REST
-Web --> ALB : HTTPS/REST
-Mobile --> WSLB : WSS
-Web --> WSLB : WSS
+' Load Balancer to Services
+LB -- Gateway
+LB -- ChatSvc
 
-' Load Balancer to Gateway
-ALB --> Gateway
-WSLB --> ChatSvc
+' API Gateway to Core Services
+Gateway -- CoreSvc
 
-' Gateway to Services
-Gateway --> Auth
-Gateway --> UserSvc
-Gateway --> SocialSvc
-Gateway --> ConnSvc
+' Chat Service connections
+ChatSvc -- CoreSvc
+ChatSvc -- LLM : Async Inference
+ChatSvc -- Safety : Content Filter
+ChatSvc -- Redis : Real-time Pub/Sub
+ChatSvc -- Mongo : Store Chat History
 
-' WebSocket to Services
-ChatSvc --> MatchSvc
-ChatSvc --> NotifSvc
+' Core Services to Data
+CoreSvc -- Postgres
+CoreSvc -- VectorDB : Find Similar Users
+CoreSvc -- LLM : Fallback Bot
 
-' Services to AI
-MatchSvc --> Matching : user similarity
-MatchSvc --> LLM : fallback bot
-ChatSvc --> LLM : wingman/companion
-ChatSvc --> Safety : abuse detection
-ChatSvc --> Sentiment : atmosphere analysis
-SocialSvc --> Safety : post moderation
+' AI Services
+Safety -- Redis : Cache Results
+LLM -- Redis : Cache Results
 
-' Services to Data
-UserSvc --> Postgres
-ConnSvc --> Postgres
-SocialSvc --> Mongo
-ChatSvc --> Mongo : persist chat
-ChatSvc --> Redis : real-time pub/sub
-MatchSvc --> Vector : embeddings
-
-' Services to Storage
-UserSvc --> S3 : profile photos
-SocialSvc --> S3 : post images
-
-' External Services
-NotifSvc --> Email
-NotifSvc --> Push
-Push --> Mobile : notifications
-Email --> Mobile : email alerts
-Email --> Web : email alerts
-
-note right of "AI Inference Cluster\n(GPU Instances)"
-  Separate infrastructure for
-  compute-intensive AI tasks:
-  - LLM inference (GPT-style)
-  - Real-time content moderation
-  - Sentiment analysis
-  - Vector similarity search
+note right of "AI Inference Cluster"
+  Separate GPU infrastructure
+  for compute-intensive AI tasks
 end note
 
 note bottom of Redis
   Used for:
   - Session management
-  - Real-time chat pub/sub
-  - Caching frequently accessed data
-  - Rate limiting
+  - Real-time messaging
+  - Caching
 end note
 
 note right of Postgres
   Relational data:
-  - User accounts & credentials
-  - User profiles
-  - Datemate connections
-  - Connection status
+  - Users & Profiles
+  - Connections
+  - Relationships
+end note
+
+note right of Mongo
+  Time-series data:
+  - Chat messages
+  - Posts & Comments
+  - Interaction history
 end note
 
 @enduml
