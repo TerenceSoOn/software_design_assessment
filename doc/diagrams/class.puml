@@ -1,0 +1,153 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+' User Management
+class User {
+  +UUID userId
+  +String nickname
+  +Profile profile
+  +UserStatus status
+  --
+  +requestMatch()
+  +postContent()
+}
+
+class Profile {
+  +String bio
+  +List~String~ interests
+  +List~String~ photoWall
+  +Map~String, String~ preferences
+  --
+  +updateProfile()
+  +getBasicInfo()
+}
+
+' Connection Management
+class Connection {
+  +UUID connectionId
+  +User initiator
+  +User receiver
+  +ConnectionStatus status
+  +Date establishedAt
+  --
+  +accept()
+  +reject()
+  +block()
+}
+
+enum ConnectionStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  BLOCKED
+}
+
+' Chat Session Hierarchy
+abstract class ChatSession {
+  +UUID sessionId
+  +List~Message~ history
+  --
+  +sendMessage(content)
+}
+
+class RandomChatSession {
+  +Boolean isActive
+  +Boolean userALiked
+  +Boolean userBLiked
+  --
+  +revealProfile()
+}
+
+class PrivateChatSession {
+  +Connection linkedConnection
+  --
+  +archive()
+}
+
+' Messages
+class Message {
+  +UUID messageId
+  +String content
+  +Timestamp sentAt
+  +ContentType type
+  +Boolean isFlagged
+  --
+  +flag()
+}
+
+' Social Features
+class Post {
+  +String text
+  +List~String~ imageUrls
+  +Integer likeCount
+  --
+  +addComment(Comment)
+  +like(User)
+}
+
+class Comment {
+  +UUID commentId
+  +User author
+  +String content
+  +Date createdAt
+}
+
+' AI Service
+interface AIService {
+  +detectAbuse(Message) : SafetyScore
+  +suggestReply(Message, Profile) : String
+  +analyzeSentiment(List~Message~) : AtmosphereReport
+}
+
+class SafetyScore {
+  +Boolean isAbusive
+  +Float confidenceScore
+  +List~String~ reasons
+}
+
+class AtmosphereReport {
+  +String mood
+  +Float positivityScore
+  +List~String~ suggestions
+}
+
+' Relationships
+User "1" *-- "1" Profile
+User "1" -- "*" Post : publishes
+User "1" -- "*" Connection : has datemates
+User "1" -- "*" ChatSession : participates
+
+Connection "1" -- "2" User
+Connection ..> ConnectionStatus
+
+ChatSession <|-- RandomChatSession
+ChatSession <|-- PrivateChatSession
+ChatSession "1" *-- "*" Message
+
+PrivateChatSession --> Connection : belongs to
+
+Post "1" *-- "*" Comment
+Post --> User : authored by
+Comment --> User : authored by
+
+' AI Integration
+Message ..> AIService : analyzed by
+RandomChatSession ..> AIService : uses Wingman
+Post ..> AIService : moderated by
+Profile ..> AIService : optimized by
+
+SafetyScore <.. AIService
+AtmosphereReport <.. AIService
+
+note right of RandomChatSession
+  Used for anonymous matching.
+  Datemate request can be sent
+  after good conversation.
+end note
+
+note right of PrivateChatSession
+  Only available between
+  accepted datemates.
+end note
+
+@enduml
