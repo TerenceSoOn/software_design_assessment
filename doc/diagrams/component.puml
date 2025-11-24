@@ -1,0 +1,121 @@
+@startuml
+skinparam componentStyle rectangle
+
+package "Client Layer" {
+  [Mobile/Web App] as Client
+  [State Management] as State
+  [Notification Handler] as NotifHandler
+  
+  Client --> State
+  Client --> NotifHandler
+}
+
+package "API Gateway Layer" {
+  [REST API] as REST
+  [WebSocket Server] as WS
+  [Authentication Middleware] as Auth
+  
+  REST --> Auth
+  WS --> Auth
+}
+
+package "Core Services" {
+  [User Service] as UserSvc
+  [Profile Service] as ProfileSvc
+  [Matchmaking Service] as MatchSvc
+  [Chat Service] as ChatSvc
+  [Connection Service] as ConnSvc
+  [Social Service] as SocialSvc
+  [Notification Service] as NotifSvc
+}
+
+package "AI Engine" {
+  [NLP Processor] as NLP
+  [Safety & Abuse Detector] as Safety
+  [Wingman & Conversation Helper] as Wingman
+  [AI Companion Bot] as Companion
+  [Miss Ex Simulator] as MissEx
+  [Profile Optimizer] as Optimizer
+  [Intelligent Matcher] as Matcher
+  [Atmosphere Analyzer] as Atmosphere
+}
+
+package "Data Persistence" {
+  database "PostgreSQL\n(Users, Profiles,\nConnections)" as RDBMS
+  database "MongoDB\n(Chat History,\nPosts)" as NoSQL
+  database "Redis\n(Sessions,\nReal-time Data)" as Cache
+  database "Vector DB\n(User Embeddings\nfor Matching)" as VectorDB
+}
+
+package "External Services" {
+  [Image Storage (S3)] as Storage
+  [Email Service] as Email
+  [Push Notification Service] as Push
+}
+
+' Client to Gateway
+Client --> REST : HTTPS
+Client --> WS : WSS
+
+' Gateway to Core Services
+REST --> UserSvc
+REST --> ProfileSvc
+REST --> SocialSvc
+REST --> ConnSvc
+
+WS --> ChatSvc
+WS --> MatchSvc
+WS --> NotifSvc
+
+' Core Services to AI
+MatchSvc --> Matcher : intelligent matching
+MatchSvc --> Companion : fallback bot
+MatchSvc --> VectorDB
+
+ChatSvc --> NLP : context analysis
+ChatSvc --> Safety : filter messages
+ChatSvc --> Wingman : conversation tips
+ChatSvc --> Atmosphere : mood analysis
+ChatSvc --> Cache : real-time updates
+ChatSvc --> NoSQL : persist history
+
+SocialSvc --> Safety : moderate posts
+SocialSvc --> NoSQL : store posts
+
+ProfileSvc --> Optimizer : suggestions
+ProfileSvc --> RDBMS
+
+ConnSvc --> RDBMS
+UserSvc --> RDBMS
+
+' AI to Data
+Companion --> Cache
+MissEx --> NoSQL : read history
+Safety --> Cache : cache results
+
+' External Services
+SocialSvc --> Storage : images
+ProfileSvc --> Storage : photos
+NotifSvc --> Email
+NotifSvc --> Push
+NotifHandler <-- Push : receive
+
+note right of MatchSvc
+  Handles random matching
+  and fallback to AI Companion
+  when no users available
+end note
+
+note right of Safety
+  Real-time content moderation
+  using NLP to detect abuse,
+  harassment, and harmful content
+end note
+
+note bottom of VectorDB
+  Stores user embeddings
+  for semantic similarity
+  matching based on interests
+end note
+
+@enduml

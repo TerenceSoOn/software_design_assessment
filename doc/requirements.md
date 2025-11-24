@@ -2,10 +2,10 @@
 
 The function overview of FlirtNet can be simply understood as a high‑level summary of these requirements:
 
-- Randomly matched chat, users can choose OK/Not OK, and enter private chat after users both agreeing.
+- Randomly matched chat, and enter private chat. Can send datemate request after chat.
 - Users are allowed to post (text and images), and other users can like, comment, or try to start a private chats with poster.
 - Personal profile pages and photo walls.
-- Private chat and group chat.
+- Private chat between datemates.
 - AI assistant: 
   - AI companion when no one matches
   - AI "lost partner"
@@ -23,14 +23,14 @@ The function overview of FlirtNet can be simply understood as a high‑level sum
 - **FR‑3**: The system should allow users to manage a photo wall or avatar.
 
 ### 1.2 Discovery (Random Matching)
-- **FR‑4**: The system should provide a text-only random matching function, the user can choose **OK** or **Not OK**.
-- **FR‑5**: Before starting a chat, the system should show some basic information of the other user.
-- **FR‑6**: If both users choose **OK**, the system should connect them and start a one‑to‑one chat.
+- **FR‑4**: The system should provide a text-only random matching function where users are automatically paired with an available partner.
+- **FR‑5**: Once matched, the system should immediately start a one‑to‑one chat session.
+- **FR‑6**: During the chat, users can view basic information about the other user.
 
 ### 1.3 Connection System
-- **FR‑7**: After a good random chat, user is allowed to send a connection (friend) request to the other user.
-- **FR‑8**: The system should allow the other user to accept or reject the connection request.
-- **FR‑9**: If a connection request is accepted, both users should appear in each other’s **Connections List**.
+- **FR‑7**: After a good random chat, a user can send a **datemate request** to the other user to establish a long-term connection.
+- **FR‑8**: The system must require the other user to explicitly **accept** or **reject** the datemate request.
+- **FR‑9**: If a datemate request is accepted, both users should appear in each other’s **Datemate List**.
 
 ### 1.4 Public Square (Posts and Discussions)
 - **FR‑10**: The system should allow users to post, which includes text and images.
@@ -38,13 +38,12 @@ The function overview of FlirtNet can be simply understood as a high‑level sum
 - **FR‑12**: The system should allow users to look through posts and follow topics or tags.
 
 
-### 1.5 Private Messaging and Group Chat
-- **FR‑13**: The system should allow two connected users to send one‑to‑one private messages.
+### 1.5 Private Messaging
+- **FR‑13**: The system should allow two connected users (datemates) to send one‑to‑one private messages.
 - **FR‑14**: The system should notify users when they receive new messages.
-- **FR‑15**: The system should support group chats, users can choose to create group chats.
 
 ### 1.6 AI‑Supported Features
-- **FR‑16**: If a user cannot match others for a long time, the system will give a option that user whether need to chat with an **AI Companion** or not.
+- **FR‑16**: If a user cannot find any datemate for long time, the system will give a option that user whether need to chat with an **AI Companion** or not.
 - **FR‑17**: The system should provide an **Miss ex** option, where AI can imitate tone and style of user’s ex based on their chat history (only if the user agrees and data use is allowed).
 - **FR‑18**: The system should provide an **Intelligent Matching Assistant** that suggest better matches according to user's porfile.
 - **FR‑19**: The system should provide an **AI Wingman** that suggests opening lines or topics based on the other user’s profile.
