@@ -1,82 +1,21 @@
 @startuml
-skinparam componentStyle rectangle
+left to right direction
 
 node "Client Device" {
-  [Mobile/Web App] as Client
+  component "Web Browser"
 }
 
-node "Cloud Region" {
-  node "Load Balancer" as LB
-  
-  node "Kubernetes Cluster" {
-    [API Gateway] as Gateway
-    [Chat Service (WebSocket)] as ChatSvc
-    [Core Services] as CoreSvc
-  }
-  
-  node "AI Inference Cluster" {
-    [LLM Service (Wingman/Bot)] as LLM
-    [Content Moderator Model] as Safety
-  }
-  
-  node "Data Layer" {
-    database "PostgreSQL (Users)" as Postgres
-    database "Redis (Pub/Sub & Cache)" as Redis
-    database "MongoDB (Chat History)" as Mongo
-    database "Vector DB (Matching)" as VectorDB
-  }
+node "Application Server" {
+  component "API Gateway"
+  component "Core Services"
+  component "AI Modules"
 }
 
-' Client to Load Balancer
-Client -- LB : HTTPS / WSS
+node "Database Server" {
+  database "FlirtNet DB"
+}
 
-' Load Balancer to Services
-LB -- Gateway
-LB -- ChatSvc
-
-' API Gateway to Core Services
-Gateway -- CoreSvc
-
-' Chat Service connections
-ChatSvc -- CoreSvc
-ChatSvc -- LLM : Async Inference
-ChatSvc -- Safety : Content Filter
-ChatSvc -- Redis : Real-time Pub/Sub
-ChatSvc -- Mongo : Store Chat History
-
-' Core Services to Data
-CoreSvc -- Postgres
-CoreSvc -- VectorDB : Find Similar Users
-CoreSvc -- LLM : Fallback Bot
-
-' AI Services
-Safety -- Redis : Cache Results
-LLM -- Redis : Cache Results
-
-note right of "AI Inference Cluster"
-  Separate GPU infrastructure
-  for compute-intensive AI tasks
-end note
-
-note bottom of Redis
-  Used for:
-  - Session management
-  - Real-time messaging
-  - Caching
-end note
-
-note right of Postgres
-  Relational data:
-  - Users & Profiles
-  - Connections
-  - Relationships
-end note
-
-note right of Mongo
-  Time-series data:
-  - Chat messages
-  - Posts & Comments
-  - Interaction history
-end note
+"Client Device" -- "Application Server" : HTTPS / WSS
+"Application Server" -- "Database Server" : JDBC / Internal
 
 @enduml

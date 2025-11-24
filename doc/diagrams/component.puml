@@ -1,67 +1,63 @@
 @startuml
 skinparam componentStyle rectangle
-skinparam linetype ortho
 
-package "Client App" {
-  [UI Frontend] as UI
+package "Client Layer" {
+  [Web App] as Web
 }
 
-package "API Gateway" {
-  [REST API] as REST
-  [WebSocket Server] as WS
+package "Application Server" {
+  
+  package "API Gateway" {
+    [REST API] as REST
+    [WebSocket Handler] as WS
+  }
+
+  package "Core Services" {
+    [User Service] as UserSvc
+    [Matchmaking Service] as MatchSvc
+    [Chat Service] as ChatSvc
+    [Social Service] as SocialSvc
+    [Connection Service] as ConnSvc
+    
+    package "AI Modules" {
+      [Safety Detector] as Safety
+      [Wingman Generator] as Wingman
+      [Sentiment Analyzer] as Sentiment
+      [AI Companion Bot] as Companion
+      [Miss Ex Simulator] as MissEx
+      [Profile Optimizer] as Optimizer
+    }
+  }
 }
 
-package "Core Services" {
-  [User Service] as UserSvc
-  [Matchmaking Service] as MatchSvc
-  [Chat Service] as ChatSvc
-  [Social Service] as SocialSvc
+package "Data Layer" {
+  database "FlirtNet Database" as DB
 }
 
-package "AI Engine" {
-  [NLP/Safety/Wingman] as AI
-  [AI Companion Bot] as Bot
-}
+' Client to Gateway
+Web --> REST
+Web --> WS
 
-package "Data Persistence" {
-  [PostgreSQL] as RDBMS
-  [MongoDB] as NoSQL
-  [Vector DB] as VectorDB
-}
-
-' Main Flow Path
-UI --> REST : HTTP
-UI --> WS : WSS
-
+' Gateway to Core
 REST --> UserSvc
 REST --> SocialSvc
-
+REST --> ConnSvc
 WS --> ChatSvc
 WS --> MatchSvc
 
-' Services to AI
-ChatSvc --> AI : analyze
-MatchSvc --> Bot : fallback
+' Core to AI (Internal Calls)
+ChatSvc --> Safety
+ChatSvc --> Wingman
+ChatSvc --> Sentiment
+MatchSvc --> Companion
+MatchSvc --> MissEx
+UserSvc --> Optimizer
 
-' Services to Data
-UserSvc --> RDBMS
-SocialSvc --> RDBMS
-ChatSvc --> NoSQL
-MatchSvc --> VectorDB
-
-note right of MatchSvc
-  Random matching
-  fallback to AI Bot
-end note
-
-note right of AI
-  Content filtering
-  & chat assistance
-end note
-
-note bottom of VectorDB
-  User embeddings
-  for matching
-end note
+' Core to Data
+UserSvc --> DB
+MatchSvc --> DB
+ChatSvc --> DB
+SocialSvc --> DB
+ConnSvc --> DB
 
 @enduml
