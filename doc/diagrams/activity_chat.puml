@@ -1,0 +1,30 @@
+@startuml
+title Activity: Chat & AI Interaction Flow
+
+start
+:Start Chat Session;
+
+repeat
+  :User types message;
+  
+  :AI Safety Check;
+  note right: Detects abuse/harassment
+  
+  if (Is Safe?) then (yes)
+    :Send Message;
+  else (no)
+    :Block Message & Warn User;
+  endif
+  
+  :AI Atmosphere Analysis;
+  note right: Updates sentiment score
+  
+  if (User requests Wingman?) then (yes)
+    :AI generates suggestion;
+    :User views suggestion;
+  endif
+  
+repeat while (Chat continues?) is (yes)
+
+stop
+@enduml

@@ -5,13 +5,13 @@ class User {
   +UUID userId
   +String nickname
   +String email
-  +Profile profile
   +UserStatus status
-  +List<Connection> datemates
+  +Date lastActive
+  +Date registrationDate
   --
-  +requestMatch()
-  +postContent()
-  +sendDatemateRequest(User)
+  +register()
+  +login()
+  +updateProfile()
 }
 
 class Profile {
@@ -21,9 +21,9 @@ class Profile {
   +Map<String, String> preferences
   +Integer age
   +String location
+  +String occupation
   --
-  +updateProfile()
-  +getBasicInfo()
+  +getCompletionRate()
 }
 
 class Connection {
@@ -59,10 +59,10 @@ abstract class ChatSession {
 
 class RandomChatSession {
   +Boolean datemateRequestSent
-  +MatchingScore matchScore
+  +Float matchCompatibilityScore
   --
   +sendDatemateRequest()
-  +getAtmosphereScore()
+  +requestWingmanAdvice()
 }
 
 class PrivateChatSession {
@@ -79,9 +79,8 @@ class Message {
   +Timestamp sentAt
   +ContentType type
   +Boolean isFlagged
-  +Boolean isAIGenerated
   --
-  +flag()
+  +markAsRead()
 }
 
 class Post {
@@ -90,8 +89,6 @@ class Post {
   +String text
   +List<String> imageUrls
   +Integer likeCount
-  +List<Comment> comments
-  +List<String> tags
   +Date publishedAt
   --
   +addComment(Comment)
@@ -106,24 +103,25 @@ class Comment {
 }
 
 interface AIService {
-  +detectAbuse(Message) : SafetyReport
-  +suggestReply(ChatSession, Profile) : String
-  +analyzeSentiment(List<Message>) : AtmosphereReport
-  +generateCompanionResponse(String) : String
-  +simulatePartner(List<Message>) : String
-  +optimizeProfile(Profile) : List<Suggestion>
-  +matchUsers(User, List<User>) : MatchingScore
+  +detectAbuse(content: String) : SafetyResult
+  +getWingmanAdvice(context: List<Message>) : String
+  +analyzeAtmosphere(history: List<Message>) : SentimentMetrics
+  +chatWithCompanion(input: String) : String
+  +simulateMissEx(history: List<Message>) : String
+  +practiceMode(scenario: String) : String
+  +optimizeProfile(profile: Profile) : List<Suggestion>
+  +calculateMatchScore(userA: User, userB: User) : Float
 }
 
-class SafetyReport {
-  +Boolean isAbusive
-  +Float confidenceScore
-  +List<String> reasons
+class SafetyResult {
+  +Boolean isSafe
+  +Float confidence
+  +String reason
 }
 
-class AtmosphereReport {
-  +String mood
-  +Float positivityScore
+class SentimentMetrics {
+  +String tone
+  +Float positivity
   +List<String> suggestions
 }
 
@@ -147,24 +145,8 @@ Post --> User : authored by
 Comment --> User : authored by
 
 ' AI Integration
+RandomChatSession ..> AIService : uses
 Message ..> AIService : analyzed by
-RandomChatSession ..> AIService : uses Wingman/Atmosphere
-Post ..> AIService : moderated by
 Profile ..> AIService : optimized by
-User ..> AIService : matched by
-
-SafetyReport <.. AIService
-AtmosphereReport <.. AIService
-
-note right of RandomChatSession
-  Used for anonymous matching.
-  Datemate request can be sent
-  after good conversation.
-end note
-
-note right of PrivateChatSession
-  Only available between
-  accepted datemates.
-end note
 
 @enduml
