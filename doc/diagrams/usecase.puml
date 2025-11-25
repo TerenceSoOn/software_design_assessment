@@ -3,7 +3,7 @@ left to right direction
 skinparam packageStyle rectangle
 
 actor "User" as U
-actor "External AI Service" as AI_API <<Service>>
+actor "AI Model Provider" as AI_API <<Service>>
 
 rectangle "FlirtNet System" {
 
@@ -77,12 +77,6 @@ UC_Post ..> UC_AI_Safety : <<include>>
 UC_EditProfile ..> UC_AI_Profile : <<extend>>
 
 ' External AI Service Connection
-UC_AI_Wingman ..> AI_API
-UC_AI_Atmosphere ..> AI_API
-UC_AI_Safety ..> AI_API
-UC_AI_Profile ..> AI_API
-UC_AI_Companion ..> AI_API
-UC_AI_Ex ..> AI_API
-UC_AI_Practice ..> AI_API
+"AI Services Integration" ..> AI_API : uses
 
 @enduml

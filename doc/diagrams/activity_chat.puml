@@ -6,18 +6,21 @@ start
 
 repeat
   :User types message;
+  :Send Message;
   
-  :AI Safety Check;
-  note right: Detects abuse/harassment
-  
-  if (Is Safe?) then (yes)
-    :Send Message;
-  else (no)
-    :Block Message & Warn User;
+  if (User reports message?) then (yes)
+    :AI Safety Check;
+    note right: Detects abuse/harassment
+    
+    if (Is Violation?) then (yes)
+      :Take Action & Warn Violator;
+    endif
   endif
   
-  :AI Atmosphere Analysis;
-  note right: Updates sentiment score
+  if (AI Atmosphere enabled?) then (yes)
+    :AI Atmosphere Analysis;
+    note right: Updates sentiment score
+  endif
   
   if (User requests Wingman?) then (yes)
     :AI generates suggestion;

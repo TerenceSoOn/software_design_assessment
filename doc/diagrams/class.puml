@@ -113,17 +113,6 @@ interface AIService {
   +calculateMatchScore(userA: User, userB: User) : Float
 }
 
-class SafetyResult {
-  +Boolean isSafe
-  +Float confidence
-  +String reason
-}
-
-class SentimentMetrics {
-  +String tone
-  +Float positivity
-  +List<String> suggestions
-}
 
 ' Relationships
 User "1" *-- "1" Profile
