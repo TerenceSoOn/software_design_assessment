@@ -1,0 +1,16 @@
+
+> frontend@0.0.0 dev
+> vite
+
+You are using Node.js 22.11.0. Vite requires Node.js version 20.19+ or 22.12+. Please upgrade your Node.js version.
+
+  VITE v7.2.6  ready in 755 ms
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: use --host to expose
+  ➜  press h + enter to show help
+1:43:15 PM [vite] (client) ✨ new dependencies optimized: socket.io-client
+1:43:15 PM [vite] (client) ✨ optimized dependencies changed. reloading
+1:45:58 PM [vite] (client) hmr update /src/context/AuthContext.jsx, /src/pages/RegisterPage.jsx
+1:45:58 PM [vite] (client) hmr invalidate /src/context/AuthContext.jsx Could not Fast Refresh ("default" export is incompatible). Learn more at https://github.com/vitejs/vite-plugin-react/tree/main/packages/plugin-react#consistent-components-exports
+1:45:58 PM [vite] (client) page reload src/context/AuthContext.jsx

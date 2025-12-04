@@ -8,7 +8,7 @@ The function overview of FlirtNet can be simply understood as a high‑level sum
 - Private chat between datemates.
 - AI assistant: 
   - AI companion when no one matches
-  - AI "lost partner"
+  - Missed EX
   - AI matching help
   - AI wingman
   - Atmosphere analyzer
@@ -45,7 +45,6 @@ The function overview of FlirtNet can be simply understood as a high‑level sum
 ### 1.6 AI‑Supported Features
 - **FR‑16**: If a user cannot find any datemate for long time, the system will give a option that user whether need to chat with an **AI Companion** or not.
 - **FR‑17**: The system should provide an **Miss ex** option, where AI can imitate tone and style of user’s ex based on their chat history (only if the user agrees and data use is allowed).
-- **FR‑18**: The system should provide an **Intelligent Matching Assistant** that suggest better matches according to user's porfile.
 - **FR‑19**: The system should provide an **AI Wingman** that suggests opening lines or topics based on the other user’s profile.
 - **FR‑20**: The system should provide an **Atmosphere Analyzer** that gives feedback during the conversation.
 - **FR‑21**: The system should provide an **AI Profile Optimizer** that gives tips on how to improve the user’s profile.

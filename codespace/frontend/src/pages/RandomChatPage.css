@@ -1,0 +1,120 @@
+.chat-page {
+    height: calc(100vh - 80px);
+    padding-bottom: 0;
+}
+
+.chat-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 0;
+    overflow: hidden;
+}
+
+.chat-header {
+    padding: 20px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.partner-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.status-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: #ccc;
+}
+
+.status-dot.online {
+    background: var(--accent-color);
+    box-shadow: 0 0 10px var(--accent-color);
+}
+
+.messages-area {
+    flex: 1;
+    padding: 20px;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    background: var(--background);
+}
+
+.message {
+    display: flex;
+    max-width: 80%;
+}
+
+.message.me {
+    align-self: flex-end;
+}
+
+.message.partner {
+    align-self: flex-start;
+}
+
+.message.system {
+    align-self: center;
+    max-width: 100%;
+    margin: 10px 0;
+}
+
+.message-bubble {
+    padding: 12px 18px;
+    border-radius: 18px;
+    font-size: 16px;
+    box-shadow: var(--shadow-clay);
+}
+
+.message.me .message-bubble {
+    background: var(--primary-color);
+    color: white;
+    border-bottom-right-radius: 4px;
+}
+
+.message.partner .message-bubble {
+    background: var(--surface);
+    color: var(--text-primary);
+    border-bottom-left-radius: 4px;
+}
+
+.message.system .message-bubble {
+    background: rgba(0, 0, 0, 0.05);
+    color: var(--text-secondary);
+    font-size: 14px;
+    box-shadow: none;
+}
+
+.chat-input-area {
+    padding: 20px;
+    background: var(--surface);
+    display: flex;
+    gap: 15px;
+    align-items: center;
+}
+
+.chat-input {
+    margin-bottom: 0;
+}
+
+.chat-ended-actions {
+    padding: 40px;
+    text-align: center;
+    background: var(--surface);
+}
+
+.connection-prompt {
+    margin-top: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    align-items: center;
+}
