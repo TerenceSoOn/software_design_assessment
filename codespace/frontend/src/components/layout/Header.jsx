@@ -28,13 +28,10 @@ function Header() {
                                 Home
                             </Link>
                             <Link to="/square" className="nav-link">
-                                Square
+                                🌟 Community
                             </Link>
                             <Link to="/datemates" className="nav-link">
-                                Datemates
-                            </Link>
-                            <Link to="/ai-companion" className="nav-link">
-                                AI Features
+                                💑 My Dates
                             </Link>
                             <Link to="/profile" className="nav-link">
                                 Profile
@@ -52,7 +49,7 @@ function Header() {
                     )}
                 </nav>
             </div>
-        </header>
+        </header >
     );
 }
 

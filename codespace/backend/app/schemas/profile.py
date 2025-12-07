@@ -13,6 +13,7 @@ class ProfileBase(BaseModel):
     interests: List[str] = []
     age: Optional[int] = None
     gender: Optional[str] = None
+    preferred_gender: Optional[str] = None  # "male", "female", "any"
     location: Optional[str] = None
     avatar_url: Optional[str] = None
     photo_wall: List[str] = []

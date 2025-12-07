@@ -1,19 +1,39 @@
+/* Profile Page Styles */
 .profile-layout {
-    display: grid;
-    grid-template-columns: 300px 1fr;
+    display: flex;
+    /* Changed from grid to flex for better control */
+    flex-wrap: wrap;
     gap: 30px;
+    align-items: flex-start;
+    /* Important for sticky sidebar */
 }
 
 @media (max-width: 768px) {
     .profile-layout {
-        grid-template-columns: 1fr;
+        flex-direction: column;
+    }
+
+    .profile-sidebar {
+        width: 100%;
+        position: static;
+        /* Remove sticky on mobile */
     }
 }
 
 .profile-sidebar {
+    width: 300px;
+    /* Fixed width sidebar */
+    flex-shrink: 0;
     text-align: center;
     position: sticky;
     top: 100px;
+}
+
+.profile-content {
+    flex: 1;
+    /* Take remaining space */
+    min-width: 0;
+    /* Prevent overflow issues */
 }
 
 .avatar-container {

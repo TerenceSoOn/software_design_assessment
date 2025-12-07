@@ -90,27 +90,81 @@ async def check_content_safety(text: str) -> Dict[str, Any]:
         "analysis": content
     }
 
-async def get_wingman_suggestion(partner_profile: str, chat_history: List[Dict[str, str]] = None) -> List[str]:
-    """FR-19: AI Wingman"""
+async def get_wingman_suggestion(
+    partner_profile: str, 
+    chat_history: List[Dict[str, str]] = None,
+    user_profile: str = None
+) -> Dict[str, Any]:
+    """FR-19: AI Wingman - Analyze situation and provide suggestions"""
+    
+    # Build context
+    context_parts = []
+    if user_profile:
+        context_parts.append(f"User A (the person asking for help):\n{user_profile}")
+    if partner_profile:
+        context_parts.append(f"User B (the person they're chatting with):\n{partner_profile}")
+    
+    chat_context = ""
+    if chat_history:
+        chat_context = "\n".join([f"{msg.get('role', 'user')}: {msg.get('content', '')}" for msg in chat_history])
+    
     system_prompt = (
-        "You are a professional dating coach and 'wingman'. "
-        "Based on the following user profile, suggest 3 creative, personalized "
-        "opening lines or conversation starters that are respectful and engaging."
+        "You are a dating coach helping User A continue their conversation with User B.\n\n"
+        "RULES:\n"
+        "1. Analyze the situation briefly\n"
+        "2. Provide EXACTLY 3 message suggestions\n"
+        "3. Each suggestion must be ONLY the message text - NO explanations, NO 'Why it works', NO numbering\n\n"
+        "RESPOND IN THIS EXACT JSON FORMAT:\n"
+        '{"analysis": "One sentence describing the current vibe", "suggestions": ["First message to send", "Second message to send", "Third message to send"]}\n\n'
+        "CRITICAL: suggestions array must contain ONLY the actual messages User A should send. Nothing else."
     )
+    
+    user_content = ""
+    if context_parts:
+        user_content += "\n\n".join(context_parts) + "\n\n"
+    if chat_context:
+        user_content += f"Chat History:\n{chat_context}\n\n"
+    user_content += "Please analyze and provide suggestions."
     
     messages = [
         {"role": "system", "content": system_prompt},
-        {"role": "user", "content": f"Partner profile: {partner_profile}"}
+        {"role": "user", "content": user_content}
     ]
     
-    if chat_history:
-        messages[1]["content"] += f"\n\nCurrent conversation context: {chat_history}"
-    
-    response = await chat_completion(messages)
+    response = await chat_completion(messages, temperature=0.7)
     if "error" in response:
-        return ["Hi there!", "How's your day going?", "I like your profile!"]
+        return {
+            "analysis": "Unable to analyze at this time.",
+            "suggestions": ["How's your day going?", "Tell me more about yourself!", "What do you enjoy doing for fun?"]
+        }
+    
+    content = response["choices"][0]["message"]["content"]
+    
+    # Try to parse JSON response
+    import json
+    try:
+        # Clean up potential markdown code blocks
+        if "```json" in content:
+            content = content.split("```json")[1].split("```")[0].strip()
+        elif "```" in content:
+            content = content.split("```")[1].split("```")[0].strip()
         
-    return response["choices"][0]["message"]["content"].split('\n')
+        result = json.loads(content)
+        return {
+            "analysis": result.get("analysis", "Analysis not available."),
+            "suggestions": result.get("suggestions", [])
+        }
+    except (json.JSONDecodeError, IndexError):
+        # Fallback: try to extract suggestions from text
+        lines = [line.strip() for line in content.split('\n') if line.strip()]
+        suggestions = [line for line in lines if line.startswith(('1.', '2.', '3.', '-', '*'))][:3]
+        if not suggestions:
+            suggestions = lines[:3] if len(lines) >= 3 else ["Say something nice!", "Ask about their interests!", "Share something about yourself!"]
+        return {
+            "analysis": content[:200] if len(content) > 200 else content,
+            "suggestions": [s.lstrip('0123456789.-* ') for s in suggestions]
+        }
+
 
 async def optimize_profile(profile_text: str) -> str:
     """FR-21: AI Profile Optimizer"""
@@ -154,18 +208,40 @@ async def analyze_atmosphere(chat_history: List[Dict[str, str]]) -> Dict[str, An
         
     return {"analysis": response["choices"][0]["message"]["content"]}
 
-async def practice_chat_response(message: str, history: List[Dict[str, str]] = None, scenario: str = "first_date") -> str:
-    """FR-22: AI Practice Mode"""
-    scenario_prompts = {
-        "first_date": "Act as someone on a first date. Be friendly, curious, and slightly nervous.",
-        "casual_chat": "Act as a casual match on a dating app. Be relaxed and conversational.",
-        "flirty": "Act as someone who's interested and flirty, but respectful.",
-    }
+async def practice_chat_response(
+    message: str, 
+    history: List[Dict[str, str]] = None, 
+    scenario: str = "first_date",
+    user_profile: Dict[str, Any] = None,
+    preferences: Dict[str, Any] = None
+) -> str:
+    """FR-22: AI Practice Mode with Dynamic Persona"""
     
-    system_prompt = (
-        f"You are practicing dating conversation. {scenario_prompts.get(scenario, scenario_prompts['first_date'])} "
-        "Respond naturally to the user's messages. Be friendly but realistic. Do not break character."
-    )
+    system_prompt = ""
+    
+    if scenario == "random_persona":
+        # Generate a dynamic persona based on user preferences
+        preferred_gender = preferences.get("preferred_gender", "Any") if preferences else "Any"
+        user_gender = user_profile.get("gender", "User") if user_profile else "User"
+        
+        system_prompt = (
+            f"You are a potential match for a {user_gender} user on a dating app. "
+            f"Your gender is {preferred_gender}. "
+            "Create a unique, random personality for yourself (e.g., shy bookworm, adventurous traveler, witty comedian). "
+            "IMPORTANT: Act like a 100% real person. Do NOT be overly polite or customer-service like. "
+            "You can be slightly awkward, blunt, or use slang if it fits your persona. "
+            "Do not reveal you are an AI unless explicitly asked. Keep responses concise and natural."
+        )
+    else:
+        scenario_prompts = {
+            "first_date": "Act as someone on a first date. Be friendly but realistic. Don't be too perfect.",
+            "casual_chat": "Act as a casual match. You can be relaxed, maybe a bit dry or playful. Avoid formal language.",
+            "flirty": "Act as someone who's interested. Be bold but realistic.",
+        }
+        system_prompt = (
+            f"You are practicing dating conversation. {scenario_prompts.get(scenario, scenario_prompts['first_date'])} "
+            "Respond naturally. Do NOT sound like a helpful assistant. Be a real human with flaws."
+        )
     
     messages = [{"role": "system", "content": system_prompt}]
     if history:
@@ -178,11 +254,27 @@ async def practice_chat_response(message: str, history: List[Dict[str, str]] = N
         
     return response["choices"][0]["message"]["content"]
 
-async def imitate_ex(message: str, history: List[Dict[str, str]] = None, chat_history_context: str = None) -> str:
-    """FR-17: Miss Ex"""
+async def imitate_ex(
+    message: str, 
+    history: List[Dict[str, str]] = None, 
+    chat_history_context: str = None,
+    partner_profile: str = None
+) -> str:
+    """FR-17: Miss Ex / Simulate Reply"""
+    
+    context_instruction = ""
+    if chat_history_context:
+        context_instruction += f"STRICTLY imitate the communication style found in this chat history: '{chat_history_context}'. "
+    
+    if partner_profile:
+        context_instruction += f"Act as the person described in this profile: '{partner_profile}'. "
+        
     system_prompt = (
-        f"Imitate the communication style found in the following chat history context: "
-        f"'{chat_history_context or 'casual and friendly'}'. Respond to the user's message in that style."
+        f"{context_instruction}"
+        "Respond to the user's message in that EXACT style and character. "
+        "If the history shows short, rude, or dry replies, mimic that. "
+        "Do NOT be polite if the context isn't. Do NOT act like an AI assistant. "
+        "If no specific style is provided, act as a distant ex-partner."
     )
     
     messages = [

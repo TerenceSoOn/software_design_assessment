@@ -8,10 +8,14 @@ Handles:
 - Connection/disconnection handling
 """
 import socketio
+import uuid
 from collections import deque
 from typing import Dict, Optional
+from datetime import datetime
 from app.config import settings
 from app.utils.security import decode_access_token
+from app.database import SessionLocal
+from app.models.random_chat_history import RandomChatHistory
 
 # Create Socket.IO server
 sio = socketio.AsyncServer(
@@ -21,7 +25,7 @@ sio = socketio.AsyncServer(
 
 # Data structures for matching
 waiting_queue: deque = deque()  # Users waiting for a match
-active_chats: Dict[str, dict] = {}  # sid -> {partner_sid, user_id, partner_user_id}
+active_chats: Dict[str, dict] = {}  # sid -> {partner_sid, user_id, partner_user_id, session_id}
 sid_to_user: Dict[str, dict] = {}  # sid -> {user_id, gender, preferred_gender, profile}
 
 
@@ -75,34 +79,45 @@ async def try_match_user(sid: str):
             # Remove from queue
             waiting_queue.remove(waiting_sid)
             
+            # Generate unique session ID for this chat
+            session_id = str(uuid.uuid4())
+            
             # Create chat session
             active_chats[sid] = {
                 'partner_sid': waiting_sid,
                 'user_id': current_user['user_id'],
-                'partner_user_id': waiting_user['user_id']
+                'partner_user_id': waiting_user['user_id'],
+                'session_id': session_id
             }
             active_chats[waiting_sid] = {
                 'partner_sid': sid,
                 'user_id': waiting_user['user_id'],
-                'partner_user_id': current_user['user_id']
+                'partner_user_id': current_user['user_id'],
+                'session_id': session_id
             }
             
             # Notify both users of the match
             await sio.emit('match_found', {
                 'partner': {
                     'user_id': waiting_user['user_id'],
-                    'display_name': waiting_user['profile']['display_name'],
-                    'age': waiting_user['profile']['age'],
-                    'interests': waiting_user['profile']['interests']
+                    'display_name': waiting_user['profile'].get('display_name'),
+                    'age': waiting_user['profile'].get('age'),
+                    'interests': waiting_user['profile'].get('interests'),
+                    'bio': waiting_user['profile'].get('bio'),
+                    'gender': waiting_user['profile'].get('gender'),
+                    'avatar_url': waiting_user['profile'].get('avatar_url')
                 }
             }, room=sid)
             
             await sio.emit('match_found', {
                 'partner': {
                     'user_id': current_user['user_id'],
-                    'display_name': current_user['profile']['display_name'],
-                    'age': current_user['profile']['age'],
-                    'interests': current_user['profile']['interests']
+                    'display_name': current_user['profile'].get('display_name'),
+                    'age': current_user['profile'].get('age'),
+                    'interests': current_user['profile'].get('interests'),
+                    'bio': current_user['profile'].get('bio'),
+                    'gender': current_user['profile'].get('gender'),
+                    'avatar_url': current_user['profile'].get('avatar_url')
                 }
             }, room=waiting_sid)
             
@@ -115,7 +130,7 @@ async def try_match_user(sid: str):
 
 
 @sio.event
-async def connect(sid, environ):
+async def connect(sid, environ, auth=None):
     """Handle new Socket.IO connection."""
     print(f"Client connected: {sid}")
 
@@ -195,9 +210,29 @@ async def send_message(sid, data):
     
     partner_sid = active_chats[sid]['partner_sid']
     sender_user_id = active_chats[sid]['user_id']
+    receiver_user_id = active_chats[sid]['partner_user_id']
+    session_id = active_chats[sid]['session_id']
+    
+    message_text = data.get('message')
+    
+    # Save message to database (random chat history)
+    try:
+        db = SessionLocal()
+        history_entry = RandomChatHistory(
+            session_id=session_id,
+            sender_id=sender_user_id,
+            receiver_id=receiver_user_id,
+            message_text=message_text,
+            sent_at=datetime.utcnow()
+        )
+        db.add(history_entry)
+        db.commit()
+        db.close()
+    except Exception as e:
+        print(f"Error saving chat history: {e}")
     
     message_data = {
-        'message': data.get('message'),
+        'message': message_text,
         'timestamp': data.get('timestamp'),
         'sender_id': sender_user_id
     }

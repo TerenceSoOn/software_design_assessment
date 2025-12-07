@@ -9,7 +9,7 @@ import SquarePage from './pages/SquarePage';
 import DatematesPage from './pages/DatematesPage';
 import RandomChatPage from './pages/RandomChatPage';
 import MessagesPage from './pages/MessagesPage';
-import AICompanionPage from './pages/AICompanionPage';
+
 
 // Protected Route wrapper
 const ProtectedRoute = ({ children }) => {
@@ -48,11 +48,7 @@ function App() {
             <DatematesPage />
           </ProtectedRoute>
         } />
-        <Route path="/ai-companion" element={
-          <ProtectedRoute>
-            <AICompanionPage />
-          </ProtectedRoute>
-        } />
+
         <Route path="/random-chat" element={
           <ProtectedRoute>
             <RandomChatPage />

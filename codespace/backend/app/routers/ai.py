@@ -1,11 +1,10 @@
-"""
-AI Router - Endpoints for AI-powered features.
-"""
 from fastapi import APIRouter, Depends, HTTPException, status
 from typing import List, Dict, Any, Optional
 from pydantic import BaseModel
-from app.utils.dependencies import get_current_user
+from sqlalchemy.orm import Session
+from app.utils.dependencies import get_current_user, get_db
 from app.models.user import User
+from app.models.profile import Profile
 from app.utils.deepseek import (
     get_ai_companion_response,
     check_content_safety,
@@ -24,24 +23,27 @@ class ChatRequest(BaseModel):
     message: str
     history: Optional[List[Dict[str, str]]] = None
     scenario: Optional[str] = None  # For practice mode
+    user_profile: Optional[Dict[str, Any]] = None # For dynamic persona
+    preferences: Optional[Dict[str, Any]] = None # For dynamic persona
 
 class SafetyCheckRequest(BaseModel):
-    message: str  # Changed from 'text' to match test
+    message: str
 
 class WingmanRequest(BaseModel):
     partner_profile: str
-    chat_history: Optional[List[Dict[str, str]]] = []  # Added for context
+    chat_history: Optional[List[Dict[str, str]]] = []
 
 class AtmosphereRequest(BaseModel):
-    chat_history: List[Dict[str, str]]  # Changed from conversation_text
+    chat_history: List[Dict[str, str]]
 
 class ProfileOptimizeRequest(BaseModel):
-    current_bio: str  # Changed from profile_text to match test
+    current_bio: str
 
 class MissExRequest(BaseModel):
     message: str
     history: Optional[List[Dict[str, str]]] = None
-    ex_chat_history: Optional[str] = None  # Changed from ex_style_samples
+    ex_chat_history: Optional[str] = None
+    target_user_id: Optional[int] = None # New: Target user to imitate
 
 # --- Endpoints ---
 
@@ -49,12 +51,11 @@ class MissExRequest(BaseModel):
 async def ai_companion_chat(request: ChatRequest, current_user: User = Depends(get_current_user)):
     """
     FR-16 & FR-22: Chat with AI Companion or Practice Mode.
-    
-    If scenario is provided, it's practice mode.
-    Otherwise, it's companion mode for dating advice.
     """
     if request.scenario:
-        # Practice mode
+        # Practice mode logic handles fetching profile if not provided
+        # But here we can inject it if needed, or let practice_chat_endpoint handle it
+        # For now, we'll just pass through
         response = await practice_chat_response(request.message, request.history, request.scenario)
     else:
         # Companion mode
@@ -65,10 +66,40 @@ async def ai_companion_chat(request: ChatRequest, current_user: User = Depends(g
 @router.post("/practice")
 async def practice_chat_endpoint(request: ChatRequest, current_user: User = Depends(get_current_user)):
     """FR-22: Practice dating conversation (alias for companion with scenario)."""
+    
+    # Fetch user profile and preferences from DB if not provided in request
+    user_profile_data = request.user_profile
+    preferences_data = request.preferences
+    
+    if not user_profile_data or not preferences_data:
+        # Access profile via relationship (assuming backref 'profile' returns a list or object)
+        # Since we don't have easy access to relationship loading strategy here without session, 
+        # we rely on lazy loading or explicit query if needed. 
+        # But wait, current_user is detached? No, usually attached if from dependency.
+        # Let's assume current_user.profile works.
+        
+        profile = current_user.profile
+        if isinstance(profile, list) and profile:
+            profile = profile[0]
+        
+        if profile:
+            if not user_profile_data:
+                user_profile_data = {
+                    "gender": profile.gender,
+                    "age": profile.age,
+                    "interests": profile.interests
+                }
+            if not preferences_data:
+                preferences_data = {
+                    "preferred_gender": profile.preferred_gender
+                }
+    
     response = await practice_chat_response(
         request.message, 
         request.history, 
-        request.scenario or "first_date"
+        request.scenario or "random_persona",
+        user_profile_data,
+        preferences_data
     )
     return {"response": response}
 
@@ -79,13 +110,26 @@ async def safety_check(request: SafetyCheckRequest, current_user: User = Depends
     return result
 
 @router.post("/wingman")
-async def wingman_suggestions(request: WingmanRequest, current_user: User = Depends(get_current_user)):
-    """FR-19: Get conversation starters and suggestions based on partner's profile."""
-    suggestions = await get_wingman_suggestion(
-        request.partner_profile,
-        request.chat_history
+async def wingman_suggestions(
+    request: WingmanRequest, 
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
+    """FR-19: Get conversation analysis and suggestions based on profiles and chat history."""
+    
+    # Get current user's profile (User A)
+    user_profile = db.query(Profile).filter(Profile.user_id == current_user.id).first()
+    user_profile_str = None
+    if user_profile:
+        user_profile_str = f"Name: {user_profile.display_name}, Bio: {user_profile.bio or 'No bio'}, Interests: {user_profile.interests or []}"
+    
+    result = await get_wingman_suggestion(
+        partner_profile=request.partner_profile,  # User B profile (already stringified from frontend)
+        chat_history=request.chat_history,
+        user_profile=user_profile_str  # User A profile
     )
-    return {"suggestions": suggestions}
+    # Result is already a dict with 'analysis' and 'suggestions'
+    return result
 
 @router.post("/atmosphere")
 async def atmosphere_analyze(request: AtmosphereRequest, current_user: User = Depends(get_current_user)):
@@ -100,11 +144,31 @@ async def profile_optimize(request: ProfileOptimizeRequest, current_user: User =
     return {"suggestions": suggestions}
 
 @router.post("/miss-ex")
-async def miss_ex_chat(request: MissExRequest, current_user: User = Depends(get_current_user)):
+async def miss_ex_chat(
+    request: MissExRequest, 
+    current_user: User = Depends(get_current_user),
+    db: Session = Depends(get_db)
+):
     """FR-17: Chat with AI that imitates ex's communication style."""
+    
+    partner_profile_str = None
+    
+    if request.target_user_id:
+        # Fetch target user's profile
+        target_profile = db.query(Profile).filter(Profile.user_id == request.target_user_id).first()
+        if target_profile:
+            partner_profile_str = (
+                f"Name: {target_profile.display_name}, "
+                f"Age: {target_profile.age}, "
+                f"Gender: {target_profile.gender}, "
+                f"Bio: {target_profile.bio}, "
+                f"Interests: {', '.join(target_profile.interests) if target_profile.interests else 'None'}"
+            )
+    
     response = await imitate_ex(
         request.message, 
         request.history, 
-        request.ex_chat_history
+        request.ex_chat_history,
+        partner_profile_str
     )
     return {"response": response}

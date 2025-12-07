@@ -9,7 +9,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from app.config import settings
 from app.database import init_db
 import socketio
-from app.routers import auth, profiles, posts, connections, ai, messages
+from fastapi.staticfiles import StaticFiles
+from app.routers import auth, profiles, posts, datemates, ai, messages, upload
 from app.utils.socketio_server import sio
 
 # Create FastAPI application
@@ -28,13 +29,17 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
+# Mount static files
+app.mount("/static", StaticFiles(directory="static"), name="static")
+
 # Register all routers
 app.include_router(auth.router)
 app.include_router(profiles.router)
 app.include_router(posts.router)
-app.include_router(connections.router)
+app.include_router(datemates.router)
 app.include_router(ai.router)
 app.include_router(messages.router)
+app.include_router(upload.router)
 
 
 @app.on_event("startup")

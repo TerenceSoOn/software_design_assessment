@@ -54,9 +54,13 @@ export const AuthProvider = ({ children }) => {
         setProfile(updatedProfile);
     };
 
+    // Get token from localStorage for Socket.IO auth
+    const token = localStorage.getItem('token');
+
     const value = {
         user,
         profile,
+        token,
         loading,
         login,
         register,

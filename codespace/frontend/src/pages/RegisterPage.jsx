@@ -4,7 +4,7 @@
 import { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import * as authService from '../services/authService';
+import { authService } from '../services/authService';
 import './RegisterPage.css';
 
 function RegisterPage() {
@@ -63,7 +63,10 @@ function RegisterPage() {
             await login(formData.username, formData.password);
             navigate('/');
         } catch (err) {
-            setError(err.response?.data?.detail || 'Registration failed. Please try again.');
+            console.error('Registration error:', err);
+            console.error('Error response:', err.response);
+            console.error('Error message:', err.message);
+            setError(err.response?.data?.detail || err.message || 'Registration failed. Please try again.');
         } finally {
             setLoading(false);
         }

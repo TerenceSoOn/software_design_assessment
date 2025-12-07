@@ -27,6 +27,18 @@ export const profileService = {
         const response = await api.put('/profiles/me', profileData);
         return response.data;
     },
+
+    /**
+     * Upload user avatar.
+     */
+    async uploadAvatar(file) {
+        const formData = new FormData();
+        formData.append('file', file);
+        // Assuming the upload endpoint is mounted at /upload/image
+        // We need to use 'Content-Type': 'multipart/form-data' which axios handles automatically with FormData
+        const response = await api.post('/upload/image', formData);
+        return response.data; // Expected { url: "..." }
+    },
 };
 
 export default profileService;

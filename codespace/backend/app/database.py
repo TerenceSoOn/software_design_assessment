@@ -48,7 +48,7 @@ def init_db():
     Call this when starting the app.
     """
     # Import all models here so they are registered with Base
-    from app.models import user, profile, chat, connection, post, message
+    from app.models import user, profile, chat, connection, post, message, random_chat_history
     
     # Create all tables
     Base.metadata.create_all(bind=engine)
