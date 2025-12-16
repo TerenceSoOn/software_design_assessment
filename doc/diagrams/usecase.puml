@@ -1,0 +1,82 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+
+actor "User" as U
+actor "AI Model Provider" as AI_API <<Service>>
+
+rectangle "FlirtNet System" {
+
+  package "User Management" {
+    usecase "Register/Login" as UC_Auth
+    usecase "Edit Profile" as UC_EditProfile
+    usecase "Manage Photo Wall" as UC_Photos
+  }
+
+  package "Discovery (Random Match)" {
+    usecase "Start Random Match" as UC_Match
+    usecase "Chat with Stranger" as UC_ChatRandom
+    usecase "View Stranger Profile" as UC_ViewProfile
+    usecase "Send Datemate Request" as UC_SendReq_Match
+  }
+
+  package "Datemate System" {
+    usecase "Accept/Reject Request" as UC_HandleReq
+    usecase "Private Chat with Datemate" as UC_ChatPrivate
+    usecase "View Datemate List" as UC_ViewDatemates
+  }
+
+  package "Public Square" {
+    usecase "Publish Post" as UC_Post
+    usecase "Comment/Like Post" as UC_Interact
+    usecase "Send Datemate Request from Post" as UC_SendReq_Post
+    usecase "Follow Topics/Tags" as UC_Follow
+  }
+
+  package "AI Services Integration" {
+    usecase "Get Conversation Advice\n(Wingman)" as UC_AI_Wingman
+    usecase "Analyze Conversation Sentiment" as UC_AI_Atmosphere
+    usecase "Detect Abuse/Harassment" as UC_AI_Safety
+    usecase "Optimize Profile" as UC_AI_Profile
+    usecase "Chat with AI Companion" as UC_AI_Companion
+    usecase "Simulate Partner (Miss Ex)" as UC_AI_Ex
+    usecase "Practice Mode" as UC_AI_Practice
+  }
+}
+
+' User Interactions
+U --> UC_Auth
+U --> UC_EditProfile
+U --> UC_Photos
+
+U --> UC_Match
+U --> UC_ChatRandom
+U --> UC_ViewProfile
+U --> UC_SendReq_Match
+
+U --> UC_HandleReq
+U --> UC_ChatPrivate
+U --> UC_ViewDatemates
+
+U --> UC_Post
+U --> UC_Interact
+U --> UC_Follow
+U --> UC_SendReq_Post
+
+' Direct AI Feature Usage
+U --> UC_AI_Companion
+U --> UC_AI_Ex
+U --> UC_AI_Practice
+
+' AI Integration (Includes/Extends)
+UC_ChatRandom ..> UC_AI_Wingman : <<extend>>
+UC_ChatRandom ..> UC_AI_Atmosphere : <<include>>
+UC_ChatRandom ..> UC_AI_Safety : <<include>>
+UC_ChatPrivate ..> UC_AI_Safety : <<include>>
+UC_Post ..> UC_AI_Safety : <<include>>
+UC_EditProfile ..> UC_AI_Profile : <<extend>>
+
+' External AI Service Connection
+"AI Services Integration" ..> AI_API : uses
+
+@enduml

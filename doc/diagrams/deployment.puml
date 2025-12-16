@@ -1,0 +1,21 @@
+@startuml
+left to right direction
+
+node "Client Device" {
+  component "Web Browser"
+}
+
+node "Application Server" {
+  component "API Gateway"
+  component "Core Services"
+  component "AI Modules"
+}
+
+node "Database Server" {
+  database "FlirtNet DB"
+}
+
+"Client Device" -- "Application Server" : HTTPS / WSS
+"Application Server" -- "Database Server" : JDBC / Internal
+
+@enduml

@@ -1,0 +1,99 @@
+.connections-page {
+    min-height: 80vh;
+}
+
+.connections-layout {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.section h2 {
+    margin-bottom: 20px;
+    color: var(--text-primary);
+    font-size: 24px;
+}
+
+.empty-text {
+    color: var(--text-secondary);
+    font-style: italic;
+}
+
+.requests-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.request-card {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px;
+}
+
+.request-info {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    font-weight: 600;
+}
+
+.avatar-small {
+    width: 40px;
+    height: 40px;
+    background: var(--primary-light);
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--primary-dark);
+    font-weight: bold;
+}
+
+.request-actions {
+    display: flex;
+    gap: 10px;
+}
+
+.connections-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 20px;
+}
+
+.connection-card {
+    text-align: center;
+    padding: 30px;
+}
+
+.connection-avatar {
+    width: 80px;
+    height: 80px;
+    background: linear-gradient(135deg, #a8edea 0%, #fed6e3 100%);
+    border-radius: 50%;
+    margin: 0 auto 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 32px;
+    color: white;
+    box-shadow: var(--shadow-clay);
+}
+
+.connection-card h3 {
+    margin-bottom: 5px;
+    color: var(--text-primary);
+}
+
+.connection-date {
+    font-size: 14px;
+    color: var(--text-secondary);
+    margin-bottom: 20px;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 40px;
+    color: var(--text-secondary);
+}

@@ -1,0 +1,16 @@
+--- Setting up users ---
+
+--- Starting Concurrent Chat Verification ---
+[user_b] Connected to socket
+[user_b] Joining random chat...
+[user_a] Connected to socket
+[user_a] Joining random chat...
+[user_a] Match found! Partner: None
+[user_b] Match found! Partner: None
+[user_a] Sending message...
+[user_b] Received message: Hello from user_a
+[user_b] Verified message receipt!
+[user_a] Disconnected
+[user_b] Disconnected
+
+✅ SUCCESS: Multi-user random chat verified!

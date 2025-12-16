@@ -1,0 +1,35 @@
+/Users/terence/Library/Mobile Documents/com~apple~CloudDocs/学习/软件设计/software_design_assessment/codespace/backend/app/main.py:45: DeprecationWarning: 
+        on_event is deprecated, use lifespan event handlers instead.
+
+        Read more about it in the
+        [FastAPI docs for Lifespan Events](https://fastapi.tiangolo.com/advanced/events/).
+        
+  @app.on_event("startup")
+INFO:     Started server process [29373]
+INFO:     Waiting for application startup.
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8000 (Press CTRL+C to quit)
+🚀 Starting FlirtNet backend...
+✅ Database initialized successfully!
+✅ Database initialized successfully!
+✅ Server ready at http://localhost:8000
+📚 API docs at http://localhost:8000/docs
+🔌 Socket.IO ready at http://localhost:8000/socket.io/
+INFO:     127.0.0.1:61575 - "POST /auth/register HTTP/1.1" 400 Bad Request
+(trapped) error reading bcrypt version
+Traceback (most recent call last):
+  File "/Users/terence/Library/Mobile Documents/com~apple~CloudDocs/学习/软件设计/software_design_assessment/codespace/backend/venv/lib/python3.13/site-packages/passlib/handlers/bcrypt.py", line 620, in _load_backend_mixin
+    version = _bcrypt.__about__.__version__
+              ^^^^^^^^^^^^^^^^^
+AttributeError: module 'bcrypt' has no attribute '__about__'
+INFO:     127.0.0.1:61575 - "POST /auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61575 - "POST /auth/register HTTP/1.1" 400 Bad Request
+INFO:     127.0.0.1:61575 - "POST /auth/login HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61578 - "GET /socket.io/?transport=polling&EIO=4&t=1765017701.7750342 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61579 - "GET /socket.io/?transport=polling&EIO=4&t=1765017701.7747478 HTTP/1.1" 200 OK
+INFO:     127.0.0.1:61578 - "WebSocket /socket.io/?transport=websocket&EIO=4&sid=JKtnmmihSxOgF-7vAAAA&t=1765017701.777998" [accepted]
+INFO:     connection open
+INFO:     127.0.0.1:61579 - "WebSocket /socket.io/?transport=websocket&EIO=4&sid=l_mu_hbxGWWt3_38AAAB&t=1765017701.7782981" [accepted]
+INFO:     connection open
+INFO:     connection closed
+INFO:     connection closed

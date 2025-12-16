@@ -1,0 +1,29 @@
+@startuml
+title Activity: Public Square Interaction Flow
+
+start
+:User publishes Post;
+
+:AI Safety Check;
+note right: Detects abuse/harassment
+
+if (Is Safe?) then (yes)
+  :Post Published;
+  
+  fork
+    :Other Users view Post;
+    :Like / Comment;
+  fork again
+    :Other User sends Datemate Request;
+    if (Accept Request?) then (yes)
+      :Establish Datemate Connection;
+    else (no)
+      :Ignore Request;
+    endif
+  end fork
+else (no)
+  :Block Post & Warn User;
+endif
+
+stop
+@enduml
