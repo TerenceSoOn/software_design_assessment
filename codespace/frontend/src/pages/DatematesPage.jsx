@@ -91,17 +91,21 @@ function DatematesPage() {
 
     if (loading) return <div className="loading">Loading connections...</div>;
 
+    // ... (imports remain)
+
     return (
         <div className="container connections-page">
             <div className="connections-layout">
-                <div className="section">
+
+                {/* Pending Requests Section - Horizontal Scroll */}
+                <div className="section requests-section">
                     <h2>Pending Requests</h2>
                     {pendingRequests.length === 0 ? (
                         <p className="empty-text">No pending requests.</p>
                     ) : (
                         <div className="requests-list">
                             {pendingRequests.map(req => (
-                                <div key={req.id} className="request-card card">
+                                <div key={req.id} className="request-card">
                                     <div className="request-info">
                                         <div className="avatar-small" style={{
                                             backgroundColor: '#FF69B4',
@@ -112,11 +116,12 @@ function DatematesPage() {
                                             width: '40px',
                                             height: '40px',
                                             borderRadius: '50%',
-                                            fontWeight: 'bold'
+                                            fontWeight: 'bold',
+                                            flexShrink: 0
                                         }}>
                                             {req.requesterProfile?.display_name?.[0]?.toUpperCase() || 'U'}
                                         </div>
-                                        <span>{req.requesterProfile?.display_name || `User #${req.requester_id}`} wants to connect</span>
+                                        <span>{req.requesterProfile?.display_name || `User #${req.requester_id}`}</span>
                                     </div>
                                     <div className="request-actions">
                                         <button
@@ -126,7 +131,7 @@ function DatematesPage() {
                                             Accept
                                         </button>
                                         <button
-                                            className="btn btn-secondary btn-sm"
+                                            className="btn btn-ghost btn-sm"
                                             onClick={() => handleReject(req.id)}
                                         >
                                             Reject
@@ -138,42 +143,46 @@ function DatematesPage() {
                     )}
                 </div>
 
+                {/* My Datemates Section - Vertical List */}
                 <div className="section">
                     <h2>My Datemates</h2>
                     {datemates.length === 0 ? (
-                        <div className="empty-state card">
+                        <div className="empty-state">
                             <p>No connections yet.</p>
                             <p>Start a random chat to meet people!</p>
                         </div>
                     ) : (
-                        <div className="connections-grid">
+                        <div className="connections-grid"> {/* Used as list container now */}
                             {datemates.map(conn => (
-                                <div key={conn.id} className="connection-card card">
-                                    <div className="connection-avatar" style={{
-                                        backgroundColor: '#FF69B4',
-                                        color: 'white',
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        width: '80px',
-                                        height: '80px',
-                                        borderRadius: '50%',
-                                        fontWeight: 'bold',
-                                        fontSize: '2rem',
-                                        margin: '0 auto 15px'
-                                    }}>
-                                        {conn.partnerProfile?.display_name?.[0]?.toUpperCase() || 'D'}
+                                <div
+                                    key={conn.id}
+                                    className="connection-card"
+                                    onClick={() => startChat(conn.id)}
+                                >
+                                    {conn.partnerProfile?.avatar_url ? (
+                                        <img
+                                            src={`${conn.partnerProfile.avatar_url}?t=${Date.now()}`}
+                                            alt={conn.partnerProfile?.display_name}
+                                            className="connection-avatar"
+                                        />
+                                    ) : (
+                                        <div className="connection-avatar">
+                                            {conn.partnerProfile?.display_name?.[0]?.toUpperCase() || 'D'}
+                                        </div>
+                                    )}
+
+                                    <div className="connection-info">
+                                        <h3>{conn.partnerProfile?.display_name || 'Datemate'}</h3>
+                                        <p className="connection-date">
+                                            Connected {new Date(conn.responded_at).toLocaleDateString()}
+                                        </p>
                                     </div>
-                                    <h3>{conn.partnerProfile?.display_name || 'Datemate'}</h3>
-                                    <p className="connection-date">
-                                        Connected since {new Date(conn.responded_at).toLocaleDateString()}
-                                    </p>
-                                    <button
-                                        className="btn btn-primary btn-full"
-                                        onClick={() => startChat(conn.id)}
-                                    >
-                                        Message
-                                    </button>
+
+                                    <div className="connection-actions">
+                                        <button className="btn btn-primary btn-icon">
+                                            💬
+                                        </button>
+                                    </div>
                                 </div>
                             ))}
                         </div>

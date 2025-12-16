@@ -1,4 +1,5 @@
 import React from 'react';
+import './AIChatModal.css';
 
 /**
  * AI Chat Modal Component
@@ -17,14 +18,14 @@ const AIChatModal = ({ isOpen, onClose, history, onSend, inputText, setInputText
     };
 
     return (
-        <div className="modal-overlay">
-            <div className="modal-content ai-chat-modal">
-                <div className="modal-header">
+        <div className="ai-chat-overlay" onClick={onClose}>
+            <div className="modal-content ai-chat-modal" onClick={e => e.stopPropagation()}>
+                <div className="ai-modal-header">
                     <h3>{title}</h3>
-                    <button className="close-btn" onClick={onClose}>&times;</button>
+                    <button className="ai-close-btn" onClick={onClose}>&times;</button>
                 </div>
-                <div className="modal-body">
-                    <div className="ai-messages" style={{ flex: 1, overflowY: 'auto', marginBottom: '15px' }}>
+                <div className="ai-modal-body">
+                    <div className="ai-messages">
                         {history.map((msg, idx) => (
                             <div key={idx} className={`message ${msg.role === 'user' ? 'me' : 'partner'}`}>
                                 <div className="message-bubble">
@@ -34,14 +35,13 @@ const AIChatModal = ({ isOpen, onClose, history, onSend, inputText, setInputText
                         ))}
                         <div ref={messagesEndRef} />
                     </div>
-                    <form onSubmit={handleSubmit} className="chat-input-area" style={{ display: 'flex', gap: '10px' }}>
+                    <form onSubmit={handleSubmit} className="chat-input-area">
                         <input
                             type="text"
-                            className="input chat-input"
+                            className="chat-input"
                             placeholder="Type a message..."
                             value={inputText}
                             onChange={(e) => setInputText(e.target.value)}
-                            style={{ flex: 1 }}
                         />
                         <button type="submit" className="btn btn-primary">Send</button>
                     </form>

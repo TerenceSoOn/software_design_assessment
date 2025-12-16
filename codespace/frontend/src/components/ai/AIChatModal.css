@@ -1,0 +1,188 @@
+/*
+ * AIChatModal - Liquid Glass AI Companion
+ */
+
+.ai-chat-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(5px);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: fadeIn 0.2s ease;
+}
+
+.ai-chat-modal {
+    display: flex;
+    flex-direction: column;
+    height: 80vh;
+    max-height: 700px;
+    width: 100%;
+    max-width: 600px;
+    background: transparent;
+    border-radius: var(--radius-2xl);
+    box-shadow: var(--shadow-glass);
+    border: 1px solid var(--glass-border);
+    overflow: hidden;
+    animation: slideUp 0.3s ease;
+}
+
+.ai-modal-header {
+    padding: var(--space-lg);
+    background: var(--romantic-gradient);
+    color: var(--text-white);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.ai-modal-header h3 {
+    margin: 0;
+    font-size: 1.3rem;
+    font-weight: 600;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.ai-close-btn {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    font-size: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.ai-close-btn:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: rotate(90deg);
+}
+
+.ai-modal-body {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background: var(--glass-white);
+    overflow: hidden;
+}
+
+.ai-messages {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+    overflow-y: auto;
+    padding: var(--space-lg);
+    background: transparent;
+}
+
+.ai-messages .message {
+    max-width: 85%;
+    display: flex;
+    flex-direction: column;
+    animation: fadeIn 0.3s ease;
+}
+
+.ai-messages .message.me {
+    align-self: flex-end;
+    align-items: flex-end;
+}
+
+.ai-messages .message.partner,
+.ai-messages .message.assistant {
+    align-self: flex-start;
+    align-items: flex-start;
+}
+
+.ai-messages .message-bubble {
+    padding: 12px 18px;
+    border-radius: var(--radius-xl);
+    font-size: 0.95rem;
+    line-height: 1.5;
+    box-shadow: var(--shadow-soft);
+    position: relative;
+    backdrop-filter: blur(5px);
+}
+
+.ai-messages .message.me .message-bubble {
+    background: var(--primary-gradient);
+    color: var(--text-white);
+    border-bottom-right-radius: var(--radius-xl);
+    box-shadow: 0 4px 15px rgba(255, 107, 157, 0.3);
+}
+
+.ai-messages .message.partner .message-bubble,
+.ai-messages .message.assistant .message-bubble {
+    background: var(--glass-white-strong);
+    color: var(--text-primary);
+    border-bottom-left-radius: var(--radius-xl);
+    border: 1px solid var(--glass-border);
+}
+
+/* Input Area */
+.chat-input-area {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    padding: var(--space-lg);
+    background: var(--glass-white);
+    border-top: 1px solid var(--glass-border);
+    backdrop-filter: var(--blur-medium);
+}
+
+.chat-input {
+    flex: 1;
+    padding: 14px 20px;
+    background: rgba(255, 255, 255, 0.6);
+    border: 2px solid transparent;
+    border-radius: var(--radius-full);
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    backdrop-filter: blur(5px);
+}
+
+.chat-input:focus {
+    outline: none;
+    border-color: var(--primary-start);
+    background: rgba(255, 255, 255, 0.9);
+    box-shadow: 0 0 15px rgba(255, 107, 157, 0.2);
+}
+
+.chat-input-area .btn {
+    border-radius: var(--radius-full);
+    padding: 0 24px;
+    font-weight: 600;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}

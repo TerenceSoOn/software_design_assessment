@@ -142,7 +142,14 @@ def create_comment(
     db.commit()
     db.refresh(new_comment)
     
-    return new_comment
+    # Get author profile
+    profile = db.query(Profile).filter(Profile.user_id == current_user.id).first()
+    
+    response = CommentResponse.model_validate(new_comment)
+    response.author_name = profile.display_name if profile else current_user.username
+    response.author_avatar_url = profile.avatar_url if profile else None
+    
+    return response
 
 
 @router.get("/{post_id}/comments", response_model=List[CommentResponse])
@@ -152,4 +159,12 @@ def get_comments(post_id: int, db: Session = Depends(get_db)):
         PostComment.post_id == post_id
     ).order_by(PostComment.created_at).all()
     
-    return comments
+    result = []
+    for comment in comments:
+        profile = db.query(Profile).filter(Profile.user_id == comment.user_id).first()
+        response = CommentResponse.model_validate(comment)
+        response.author_name = profile.display_name if profile else f"User #{comment.user_id}"
+        response.author_avatar_url = profile.avatar_url if profile else None
+        result.append(response)
+    
+    return result

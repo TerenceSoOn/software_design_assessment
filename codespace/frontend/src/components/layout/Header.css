@@ -1,17 +1,22 @@
+/* 
+ * Header - Liquid Glass Navigation Bar
+ */
+
 .header {
-    background: rgba(255, 255, 255, 0.8);
-    backdrop-filter: blur(10px);
-    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+    background: var(--glass-white);
+    backdrop-filter: var(--blur-medium);
+    -webkit-backdrop-filter: var(--blur-medium);
     position: sticky;
     top: 0;
     z-index: 100;
-    border-bottom: 1px solid rgba(255, 255, 255, 0.3);
+    border-bottom: 1px solid var(--glass-border);
+    box-shadow: 0 4px 30px rgba(0, 0, 0, 0.06);
 }
 
 .header-container {
     max-width: 1200px;
     margin: 0 auto;
-    padding: 15px 20px;
+    padding: 14px 24px;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -21,42 +26,74 @@
     text-decoration: none;
     display: flex;
     align-items: center;
-    gap: 10px;
+    gap: 8px;
 }
 
 .logo h1 {
-    font-size: 26px;
-    background: linear-gradient(45deg, var(--primary-dark), var(--primary-color));
+    font-size: 1.6rem;
+    background: var(--romantic-gradient);
     -webkit-background-clip: text;
     background-clip: text;
     -webkit-text-fill-color: transparent;
     margin: 0;
-    font-weight: 800;
+    font-weight: 700;
+    letter-spacing: -0.5px;
 }
 
 .nav {
     display: flex;
-    gap: 15px;
+    gap: 8px;
     align-items: center;
 }
 
 .nav-link {
-    color: var(--text-primary);
+    color: var(--text-secondary);
     text-decoration: none;
-    font-weight: 600;
-    padding: 8px 16px;
-    border-radius: var(--border-radius-sm);
-    transition: all 0.3s ease;
+    font-weight: 500;
+    font-size: 0.95rem;
+    padding: 10px 16px;
+    border-radius: var(--radius-lg);
+    transition: all 0.25s ease;
+    position: relative;
 }
 
 .nav-link:hover {
-    background: var(--surface);
-    color: var(--primary-dark);
-    box-shadow: var(--shadow-clay);
+    background: var(--glass-pink);
+    color: var(--primary-start);
 }
 
-.btn-sm {
-    padding: 8px 20px;
-    font-size: 14px;
-    border-radius: 20px;
+.nav-link.active {
+    background: var(--glass-pink);
+    color: var(--primary-start);
+}
+
+/* Mobile Responsive */
+@media (max-width: 768px) {
+    .header-container {
+        padding: 12px 16px;
+    }
+
+    .logo h1 {
+        font-size: 1.3rem;
+    }
+
+    .nav {
+        gap: 4px;
+    }
+
+    .nav-link {
+        padding: 8px 10px;
+        font-size: 0.85rem;
+    }
+
+    /* Hide text on mobile, keep icons */
+    .nav-link:not(.btn) {
+        font-size: 0.8rem;
+    }
+}
+
+@media (max-width: 480px) {
+    .nav-link:not(.btn) span {
+        display: none;
+    }
 }

@@ -236,26 +236,41 @@ function MessagesPage() {
 
     return (
         <div className="container messages-page">
-            <div className="messages-card card">
-                <div className="messages-header">
-                    <h3>Datemate Chat</h3>
+            <div className="chat-wrapper">
+                <div className="chat-header">
+                    <div className="chat-header-info">
+                        {partner?.display_name ? (
+                            <div className="chat-partner-avatar-placeholder">
+                                {partner.display_name[0].toUpperCase()}
+                            </div>
+                        ) : (
+                            <div className="chat-partner-avatar-placeholder">?</div>
+                        )}
+                        <div className="chat-partner-details">
+                            <h3>{partner?.display_name || 'Datemate'}</h3>
+                            <div className="chat-partner-status online">Online</div>
+                        </div>
+                    </div>
                 </div>
 
-                <div className="messages-list">
+                <div className="messages-container">
                     {messages.map(msg => (
-                        <div key={msg.id} className={`msg-row ${msg.sender}`}>
-                            <div className="msg-bubble">
+                        <div key={msg.id} className={`message ${msg.sender}`}>
+                            <div className="message-bubble">
                                 {msg.text}
+                            </div>
+                            <div className="message-time">
+                                {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
                             </div>
                         </div>
                     ))}
                     <div ref={messagesEndRef} />
                 </div>
 
-                <form onSubmit={handleSend} className="msg-input-area">
+                <form onSubmit={handleSend} className="message-input-area">
                     <input
                         type="text"
-                        className="input"
+                        className="message-input"
                         value={inputText}
                         onChange={(e) => setInputText(e.target.value)}
                         placeholder="Type a message..."
@@ -264,21 +279,23 @@ function MessagesPage() {
                         type="button"
                         className="btn btn-ghost"
                         onClick={openWingman}
-                        title="How to respond to this?"
-                        style={{ marginRight: '5px', fontSize: '1rem' }}
+                        title="Wingman Help"
+                        style={{ marginRight: '5px', fontSize: '1.2rem', padding: '0 10px' }}
                     >
-                        💡 Help
+                        💡
                     </button>
                     <button
                         type="button"
                         className="btn btn-ghost"
                         onClick={handleOpenMissEx}
-                        title="I miss this one so much"
-                        style={{ marginRight: '10px', fontSize: '1.2rem' }}
+                        title="Miss Ex"
+                        style={{ marginRight: '5px', fontSize: '1.2rem', padding: '0 10px' }}
                     >
-                        💔 Miss
+                        💔
                     </button>
-                    <button type="submit" className="btn btn-primary">Send</button>
+                    <button type="submit" className="send-btn">
+                        ➤
+                    </button>
                 </form>
             </div>
 
@@ -298,7 +315,7 @@ function MessagesPage() {
                 inputText={missExInput}
                 setInputText={setMissExInput}
                 messagesEndRef={missExEndRef}
-                title={`💔 Reminiscing ${partner?.display_name || 'your ex'}...`}
+                title={`💔 Reminiscing about ${partner?.display_name || 'an old flame'}...`}
             />
         </div>
     );

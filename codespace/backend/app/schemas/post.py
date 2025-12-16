@@ -73,6 +73,9 @@ class CommentResponse(BaseModel):
     user_id: int
     comment_text: str
     created_at: datetime
+    author_name: Optional[str] = None
+    author_avatar_url: Optional[str] = None
     
     class Config:
         from_attributes = True
+
