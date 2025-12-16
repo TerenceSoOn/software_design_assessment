@@ -10,7 +10,6 @@ import './RegisterPage.css';
 function RegisterPage() {
     const [formData, setFormData] = useState({
         username: '',
-        email: '',
         password: '',
         confirmPassword: '',
         gender: '',
@@ -53,7 +52,6 @@ function RegisterPage() {
         try {
             await authService.register({
                 username: formData.username,
-                email: formData.email,
                 password: formData.password,
                 gender: formData.gender,
                 preferred_gender: formData.preferred_gender
@@ -64,8 +62,6 @@ function RegisterPage() {
             navigate('/');
         } catch (err) {
             console.error('Registration error:', err);
-            console.error('Error response:', err.response);
-            console.error('Error message:', err.message);
             setError(err.response?.data?.detail || err.message || 'Registration failed. Please try again.');
         } finally {
             setLoading(false);
@@ -87,18 +83,6 @@ function RegisterPage() {
                                 className="input"
                                 placeholder="Username"
                                 value={formData.username}
-                                onChange={handleChange}
-                                required
-                            />
-                        </div>
-
-                        <div className="form-group">
-                            <input
-                                type="email"
-                                name="email"
-                                className="input"
-                                placeholder="Email"
-                                value={formData.email}
                                 onChange={handleChange}
                                 required
                             />

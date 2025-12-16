@@ -28,18 +28,19 @@ def register(user_data: UserRegister, db: Session = Depends(get_db)):
             detail="Username already taken"
         )
     
-    # Check if email already exists
-    existing_email = db.query(User).filter(User.email == user_data.email).first()
-    if existing_email:
-        raise HTTPException(
-            status_code=status.HTTP_400_BAD_REQUEST,
-            detail="Email already registered"
-        )
+    # Check if email already exists (only if email provided)
+    if user_data.email:
+        existing_email = db.query(User).filter(User.email == user_data.email).first()
+        if existing_email:
+            raise HTTPException(
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Email already registered"
+            )
     
-    # Create new user
+    # Create new user (email can be None)
     new_user = User(
         username=user_data.username,
-        email=user_data.email,
+        email=user_data.email,  # Can be None now
         password_hash=hash_password(user_data.password)
     )
     db.add(new_user)

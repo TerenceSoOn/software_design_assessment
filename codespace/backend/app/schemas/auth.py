@@ -2,12 +2,13 @@
 Authentication schemas for login/register requests and responses.
 """
 from pydantic import BaseModel, EmailStr
+from typing import Optional
 
 
 class UserRegister(BaseModel):
     """Schema for user registration request."""
     username: str
-    email: EmailStr
+    email: Optional[str] = None  # Email is now optional
     password: str
     gender: str  # "male", "female", "other"
     preferred_gender: str  # "male", "female", "any"

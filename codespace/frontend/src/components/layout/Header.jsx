@@ -1,18 +1,23 @@
 /**
  * Header Component - Navigation bar
  */
-import { Link, useNavigate } from 'react-router-dom';
+import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 import './Header.css';
 
 function Header() {
     const { user, profile, logout } = useAuth();
     const navigate = useNavigate();
+    const location = useLocation();
 
     const handleLogout = () => {
         logout();
         navigate('/login');
     };
+
+    // Determine which auth button to show based on current page
+    const isOnLoginPage = location.pathname === '/login';
+    const isOnRegisterPage = location.pathname === '/register';
 
     return (
         <header className="header">
@@ -42,9 +47,19 @@ function Header() {
                         </>
                     ) : (
                         <>
-                            <Link to="/login" className="btn btn-primary btn-sm">
-                                Login
-                            </Link>
+                            {isOnLoginPage ? (
+                                <Link to="/register" className="btn btn-primary btn-sm">
+                                    Register
+                                </Link>
+                            ) : isOnRegisterPage ? (
+                                <Link to="/login" className="btn btn-primary btn-sm">
+                                    Login
+                                </Link>
+                            ) : (
+                                <Link to="/login" className="btn btn-primary btn-sm">
+                                    Login
+                                </Link>
+                            )}
                         </>
                     )}
                 </nav>
@@ -54,3 +69,4 @@ function Header() {
 }
 
 export default Header;
+

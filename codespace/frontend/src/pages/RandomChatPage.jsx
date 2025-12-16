@@ -330,7 +330,7 @@ function RandomChatPage() {
     };
 
     return (
-        <div className="container chat-page">
+        <div className="random-chat-page">
             <AIChatModal
                 isOpen={showAIChat}
                 onClose={() => setShowAIChat(false)}
@@ -350,144 +350,116 @@ function RandomChatPage() {
                 onSelectSuggestion={handleWingmanSelect}
             />
 
-            <div className="chat-container card">
+            <div className="chat-container">
+                {/* Chat Header */}
                 <div className="chat-header">
-                    <div className="partner-info">
-                        <div className={`status-dot ${status === 'matched' ? 'online' : 'offline'}`}></div>
-                        <h3>
-                            {status === 'searching' ? 'Searching...' :
-                                status === 'matched' ? (partner?.display_name || 'Random Stranger') :
-                                    'Disconnected'}
-                        </h3>
+                    <div className="header-left">
+                        <div className="partner-info">
+                            {status === 'matched' && partner ? (
+                                <>
+                                    <div className="partner-avatar-container">
+                                        {partner.avatar_url ? (
+                                            <img src={partner.avatar_url} alt="Partner" className="partner-avatar-img" />
+                                        ) : (
+                                            <div className="partner-avatar-placeholder">
+                                                {partner.display_name?.[0]?.toUpperCase() || '?'}
+                                            </div>
+                                        )}
+                                        <span className={`status-indicator ${status === 'matched' ? 'online' : ''}`}></span>
+                                    </div>
+                                    <div className="partner-text">
+                                        <h3>{partner.display_name || 'Random Stranger'}</h3>
+                                        {partner.bio && <p className="partner-bio">{partner.bio.slice(0, 50)}...</p>}
+                                    </div>
+                                </>
+                            ) : (
+                                <div className="partner-text">
+                                    <h3>{status === 'searching' ? '🔍 Searching for a match...' : 'Disconnected'}</h3>
+                                </div>
+                            )}
+                        </div>
                     </div>
-                    {status === 'matched' && partner && (
-                        <div className="partner-profile-preview">
-                            <div className="partner-avatar" style={{
-                                width: '50px',
-                                height: '50px',
-                                borderRadius: '50%',
-                                overflow: 'hidden',
-                                backgroundColor: '#FF69B4',
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                fontWeight: 'bold',
-                                fontSize: '1.2rem',
-                                color: 'white'
-                            }}>
-                                {partner.avatar_url ? (
-                                    <img src={partner.avatar_url} alt="Partner" style={{ width: '100%', height: '100%', objectFit: 'cover' }} />
-                                ) : (
-                                    partner.display_name?.[0]?.toUpperCase() || '?'
-                                )}
+                    <div className="header-right">
+                        {status === 'matched' && partner?.interests && partner.interests.length > 0 && (
+                            <div className="partner-tags">
+                                {partner.interests.slice(0, 3).map((tag, i) => (
+                                    <span key={i} className="interest-tag">{tag}</span>
+                                ))}
                             </div>
-                            <div className="partner-details">
-                                {partner.bio && <p className="partner-bio">{partner.bio.slice(0, 80)}...</p>}
-                                {partner.interests && partner.interests.length > 0 && (
-                                    <div className="partner-interests">
-                                        {partner.interests.slice(0, 3).map((interest, i) => (
-                                            <span key={i} className="interest-tag">{interest}</span>
-                                        ))}
+                        )}
+                        <button className="leave-btn" onClick={handleLeave}>
+                            Leave Chat
+                        </button>
+                    </div>
+                </div>
+
+                {/* Messages Area */}
+                <div className="messages-area">
+                    {messages.map(msg => (
+                        <div key={msg.id} className={`message ${msg.sender}`}>
+                            <div className="message-bubble">
+                                {msg.text}
+                            </div>
+                        </div>
+                    ))}
+                    <div ref={messagesEndRef} />
+                </div>
+
+                {/* Input Area or Status */}
+                {status === 'matched' ? (
+                    <form onSubmit={handleSend} className="chat-input-area">
+                        <button
+                            type="button"
+                            className="help-btn"
+                            onClick={openWingman}
+                            title="Get help from AI Wingman"
+                        >
+                            💡 Help
+                        </button>
+                        <input
+                            type="text"
+                            className="chat-input"
+                            placeholder="Type your message..."
+                            value={inputText}
+                            onChange={(e) => setInputText(e.target.value)}
+                        />
+                        <button type="submit" className="send-btn">
+                            <span>➤</span>
+                        </button>
+                    </form>
+                ) : (
+                    <div className="status-area">
+                        {status === 'searching' ? (
+                            <div className="searching-container">
+                                <div className="loader"></div>
+                                <p>Looking for someone compatible...</p>
+                                <button className="btn btn-outline" onClick={toggleAIChat}>
+                                    🤖 Chat with AI while waiting
+                                </button>
+                            </div>
+                        ) : (
+                            <div className="ended-container">
+                                <p className="ended-text">Chat ended</p>
+                                {partner && (
+                                    <div className="ended-actions">
+                                        <p>Enjoyed chatting with {partner.display_name}?</p>
+                                        {renderDatemateButton()}
                                     </div>
                                 )}
+                                <div className="nav-buttons">
+                                    <button className="btn btn-primary" onClick={() => window.location.reload()}>
+                                        New Random Chat
+                                    </button>
+                                    <button className="btn btn-secondary" onClick={() => navigate('/')}>
+                                        Return Home
+                                    </button>
+                                </div>
                             </div>
-                        </div>
-                    )}
-                </div>
-                <button className="btn btn-secondary btn-sm" onClick={handleLeave}>
-                    Leave Chat
-                </button>
-            </div>
-
-
-
-            <div className="messages-area">
-                {messages.map(msg => (
-                    <div key={msg.id} className={`message ${msg.sender}`}>
-                        <div className="message-bubble">
-                            {msg.text}
-                        </div>
+                        )}
                     </div>
-                ))}
-                <div ref={messagesEndRef} />
+                )}
             </div>
-
-            {status === 'matched' ? (
-                <form onSubmit={handleSend} className="chat-input-area">
-                    <button
-                        type="button"
-                        className="btn btn-secondary btn-icon"
-                        onClick={openWingman}
-                        title="Get help from AI Wingman"
-                    >
-                        💡 Help
-                    </button>
-                    <input
-                        type="text"
-                        className="input chat-input"
-                        placeholder="Type a message..."
-                        value={inputText}
-                        onChange={(e) => setInputText(e.target.value)}
-                    />
-                    <button type="submit" className="send-btn">➤</button>
-                </form>
-            ) : (
-                <div className="chat-ended-actions">
-                    {status === 'searching' ? (
-                        <div className="searching-animation">
-                            <p className="searching-text">Looking for someone compatible...</p>
-                            <div className="loader"></div>
-                            <button
-                                className="btn btn-outline mt-20"
-                                onClick={toggleAIChat}
-                            >
-                                🤖 Chat with AI while waiting
-                            </button>
-                        </div>
-                    ) : (
-                        <>
-                            <p>Chat ended.</p>
-                            {partner && (
-                                <div className="connection-prompt">
-                                    <p>Did you enjoy the chat with {partner.display_name}?</p>
-                                    {renderDatemateButton()}
-                                    <button
-                                        className="btn btn-secondary"
-                                        onClick={() => window.location.reload()}
-                                    >
-                                        New Random Chat
-                                    </button>
-                                    <button
-                                        className="btn btn-outline"
-                                        onClick={() => navigate('/')}
-                                    >
-                                        Return Home
-                                    </button>
-                                </div>
-                            )}
-                            {!partner && (
-                                <div className="connection-prompt">
-                                    <p>Ready for another chat?</p>
-                                    <button
-                                        className="btn btn-primary"
-                                        onClick={() => window.location.reload()}
-                                    >
-                                        New Random Chat
-                                    </button>
-                                    <button
-                                        className="btn btn-secondary"
-                                        onClick={() => navigate('/')}
-                                    >
-                                        Return Home
-                                    </button>
-                                </div>
-                            )}
-                        </>
-                    )}
-                </div>
-            )}
         </div>
-
     );
 }
 

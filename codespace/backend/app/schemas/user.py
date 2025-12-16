@@ -9,7 +9,7 @@ from typing import Optional
 class UserBase(BaseModel):
     """Base user schema with common fields."""
     username: str
-    email: str
+    email: Optional[str] = None
 
 
 class UserCreate(UserBase):

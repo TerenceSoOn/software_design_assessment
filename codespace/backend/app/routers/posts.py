@@ -6,6 +6,7 @@ from sqlalchemy.orm import Session
 from typing import List
 from app.database import get_db
 from app.models.user import User
+from app.models.profile import Profile
 from app.models.post import Post, PostLike, PostComment
 from app.schemas.post import PostCreate, PostResponse, CommentCreate, CommentResponse
 from app.utils.dependencies import get_current_user
@@ -30,10 +31,15 @@ def create_post(
     db.commit()
     db.refresh(new_post)
     
-    # Add counts
+    # Get author profile
+    profile = db.query(Profile).filter(Profile.user_id == current_user.id).first()
+    
+    # Add counts and author info
     response = PostResponse.model_validate(new_post)
     response.like_count = 0
     response.comment_count = 0
+    response.author_name = profile.display_name if profile else current_user.username
+    response.author_avatar_url = profile.avatar_url if profile else None
     
     return response
 
@@ -47,12 +53,17 @@ def get_posts(
     """Get all posts (feed)."""
     posts = db.query(Post).order_by(Post.created_at.desc()).offset(skip).limit(limit).all()
     
-    # Add counts for each post
+    # Add counts and author info for each post
     result = []
     for post in posts:
+        # Get author profile
+        profile = db.query(Profile).filter(Profile.user_id == post.user_id).first()
+        
         response = PostResponse.model_validate(post)
         response.like_count = db.query(PostLike).filter(PostLike.post_id == post.id).count()
         response.comment_count = db.query(PostComment).filter(PostComment.post_id == post.id).count()
+        response.author_name = profile.display_name if profile else f"User #{post.user_id}"
+        response.author_avatar_url = profile.avatar_url if profile else None
         result.append(response)
     
     return result

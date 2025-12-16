@@ -201,25 +201,42 @@ function SquarePage() {
                         {posts.map(post => (
                             <div key={post.id} className="post-card card">
                                 <div className="post-header">
-                                    <div
-                                        className="post-avatar"
-                                        onClick={() => handleViewProfile(post.user_id)}
-                                        style={{
-                                            cursor: 'pointer',
-                                            backgroundColor: '#FF69B4',
-                                            color: 'white',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            width: '40px',
-                                            height: '40px',
-                                            borderRadius: '50%',
-                                            fontWeight: 'bold'
-                                        }}
-                                        title="View Profile"
-                                    >
-                                        {post.author_name?.[0]?.toUpperCase() || 'U'}
-                                    </div>
+                                    {post.author_avatar_url ? (
+                                        <img
+                                            src={post.author_avatar_url}
+                                            alt={post.author_name}
+                                            className="post-avatar"
+                                            onClick={() => handleViewProfile(post.user_id)}
+                                            style={{
+                                                cursor: 'pointer',
+                                                width: '40px',
+                                                height: '40px',
+                                                borderRadius: '50%',
+                                                objectFit: 'cover'
+                                            }}
+                                            title="View Profile"
+                                        />
+                                    ) : (
+                                        <div
+                                            className="post-avatar"
+                                            onClick={() => handleViewProfile(post.user_id)}
+                                            style={{
+                                                cursor: 'pointer',
+                                                backgroundColor: '#FF69B4',
+                                                color: 'white',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                width: '40px',
+                                                height: '40px',
+                                                borderRadius: '50%',
+                                                fontWeight: 'bold'
+                                            }}
+                                            title="View Profile"
+                                        >
+                                            {post.author_name?.[0]?.toUpperCase() || 'U'}
+                                        </div>
+                                    )}
                                     <div className="post-meta">
                                         <span
                                             className="post-author"

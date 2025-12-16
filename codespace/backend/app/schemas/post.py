@@ -47,6 +47,8 @@ class PostResponse(BaseModel):
     updated_at: datetime
     like_count: int = 0
     comment_count: int = 0
+    author_name: Optional[str] = None
+    author_avatar_url: Optional[str] = None
     
     class Config:
         from_attributes = True
