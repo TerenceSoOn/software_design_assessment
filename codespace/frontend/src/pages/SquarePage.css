@@ -4,8 +4,9 @@
 
 .square-page {
     min-height: calc(100vh - 80px);
-    padding: var(--space-xl) var(--space-md);
-    max-width: 700px;
+    padding: var(--space-lg) var(--space-md);
+    max-width: 600px;
+    /* Tighter focus for feed */
     margin: 0 auto;
 }
 
@@ -37,8 +38,8 @@
     border-radius: var(--radius-xl);
     border: 1px solid var(--glass-border);
     box-shadow: var(--shadow-soft);
-    padding: var(--space-lg);
-    margin-bottom: var(--space-xl);
+    padding: var(--space-md);
+    margin-bottom: var(--space-lg);
     animation: slideUp 0.4s ease;
 }
 

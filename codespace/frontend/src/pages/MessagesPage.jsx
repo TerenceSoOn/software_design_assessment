@@ -59,17 +59,23 @@ function MessagesPage() {
                     // But if we stick to connection ID, we need logic here.
 
                     // Let's assume for now we can get the partner ID. 
-                    // If `user` is not loaded yet, we might have issues.
-                    // Let's fetch messages using the connection's partner ID.
-
+                    // Calculate partner ID
                     const partnerId = connection.requester_id === user?.id ? connection.receiver_id : connection.requester_id;
 
-                    // Mock partner profile for now since connection doesn't have full profile
-                    // In a real app, we'd fetch profile by ID.
+                    // Fetch partner profile explicitly since connection object lacks it
+                    let fetchedProfile = {};
+                    try {
+                        fetchedProfile = await import('../services/profileService').then(m => m.profileService.getProfile(partnerId));
+                    } catch (err) {
+                        console.error("Failed to fetch partner profile", err);
+                    }
+
                     setPartner({
                         id: partnerId,
-                        display_name: `User ${partnerId}`, // Placeholder
-                        bio: "Datemate"
+                        display_name: fetchedProfile.display_name || `User ${partnerId}`,
+                        bio: fetchedProfile.bio || "Datemate",
+                        avatar_url: fetchedProfile.avatar_url,
+                        interests: fetchedProfile.interests
                     });
 
                     // 2. Fetch messages
@@ -315,7 +321,7 @@ function MessagesPage() {
                 inputText={missExInput}
                 setInputText={setMissExInput}
                 messagesEndRef={missExEndRef}
-                title={`💔 Reminiscing about ${partner?.display_name || 'an old flame'}...`}
+                title={`💔${partner?.display_name}.copy`}
             />
         </div>
     );

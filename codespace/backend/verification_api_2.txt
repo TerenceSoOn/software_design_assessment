@@ -1,3 +1,0 @@
-Testing Registration...
-❌ Registration failed: 502 
-Skipping remaining tests due to registration failure.

@@ -359,7 +359,7 @@ function SquarePage() {
 
             {/* Profile Modal */}
             {showProfileModal && selectedProfile && (
-                <div className="modal-overlay" onClick={() => setShowProfileModal(false)}>
+                <div className="profile-modal-overlay" onClick={() => setShowProfileModal(false)}>
                     <div className="profile-modal" onClick={(e) => e.stopPropagation()}>
                         {selectedProfile.avatar_url ? (
                             <img

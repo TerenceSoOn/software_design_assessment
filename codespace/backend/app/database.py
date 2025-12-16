@@ -7,16 +7,17 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.orm import sessionmaker
 from app.config import settings
 
-# Check if using SQLite or PostgreSQL
-if settings.DATABASE_URL.startswith("sqlite"):
-    # SQLite setup (simpler for development)
-    engine = create_engine(
-        settings.DATABASE_URL,
-        connect_args={"check_same_thread": False}  # Needed for SQLite
-    )
-else:
-    # PostgreSQL setup
-    engine = create_engine(settings.DATABASE_URL)
+# Check if using SQLite (default and only supported DB now)
+db_url = settings.DATABASE_URL
+if not db_url.startswith("sqlite"):
+    print(f"WARNING: Postgres config detected ({db_url}) but not supported. Falling back to SQLite.")
+    db_url = "sqlite:///./flirtnet.db"
+
+# SQLite setup
+engine = create_engine(
+    db_url,
+    connect_args={"check_same_thread": False}  # Needed for SQLite
+)
 
 # Create session factory
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
