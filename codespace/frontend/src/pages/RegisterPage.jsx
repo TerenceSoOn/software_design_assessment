@@ -50,19 +50,48 @@ function RegisterPage() {
         setLoading(true);
 
         try {
-            await authService.register({
+            console.log('开始注册，发送数据:', {
+                username: formData.username,
+                password: '***',
+                gender: formData.gender,
+                preferred_gender: formData.preferred_gender
+            });
+            
+            const registerResult = await authService.register({
                 username: formData.username,
                 password: formData.password,
                 gender: formData.gender,
                 preferred_gender: formData.preferred_gender
             });
+            
+            console.log('注册成功:', registerResult);
 
             // Auto login after registration
+            console.log('开始自动登录...');
             await login(formData.username, formData.password);
+            console.log('登录成功，跳转首页');
             navigate('/');
         } catch (err) {
-            console.error('Registration error:', err);
-            setError(err.response?.data?.detail || err.message || 'Registration failed. Please try again.');
+            console.error('Registration error - 完整错误信息:', err);
+            console.error('错误类型:', err.constructor.name);
+            console.error('错误消息:', err.message);
+            console.error('错误响应:', err.response);
+            console.error('错误请求配置:', err.config);
+            
+            // 更详细的错误信息
+            let errorMessage = 'Registration failed. Please try again.';
+            if (err.response) {
+                // 服务器返回了响应
+                errorMessage = err.response.data?.detail || err.response.statusText || `Server error: ${err.response.status}`;
+            } else if (err.request) {
+                // 请求已发送但没有收到响应
+                errorMessage = 'Network error: No response from server. Please check if backend is running.';
+            } else {
+                // 请求配置出错
+                errorMessage = err.message || 'Request setup error';
+            }
+            
+            setError(errorMessage);
         } finally {
             setLoading(false);
         }

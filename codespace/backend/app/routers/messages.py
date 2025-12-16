@@ -3,7 +3,7 @@ Messages router - Private messaging between datemates.
 """
 from fastapi import APIRouter, Depends, HTTPException, status
 from sqlalchemy.orm import Session
-from typing import List
+from typing import List, Optional
 from datetime import datetime
 from app.database import get_db
 from app.models.user import User
@@ -18,7 +18,8 @@ router = APIRouter(prefix="/messages", tags=["Messages"])
 
 class MessageCreate(BaseModel):
     """Schema for creating a message."""
-    content: str
+    content: Optional[str] = ""  # 允许为空（纯图片消息）
+    image_url: Optional[str] = None  # 图片 URL
 
 
 class MessageResponse(BaseModel):
@@ -26,7 +27,8 @@ class MessageResponse(BaseModel):
     id: int
     sender_id: int
     receiver_id: int
-    content: str
+    content: Optional[str] = ""
+    image_url: Optional[str] = None  # 图片 URL
     is_read: bool
     created_at: datetime
     
@@ -51,7 +53,8 @@ def get_all_conversations(
             id=msg.id,
             sender_id=msg.sender_id,
             receiver_id=msg.receiver_id,
-            content=msg.message_text,
+            content=msg.message_text or "",
+            image_url=msg.image_url,
             is_read=msg.read_at is not None,
             created_at=msg.sent_at
         ))
@@ -92,7 +95,8 @@ def get_messages_with_user(
             id=msg.id,
             sender_id=msg.sender_id,
             receiver_id=msg.receiver_id,
-            content=msg.message_text,
+            content=msg.message_text or "",
+            image_url=msg.image_url,
             is_read=msg.read_at is not None,
             created_at=msg.sent_at
         ))
@@ -121,12 +125,20 @@ def send_message(
             detail="You can only message users who are your datemates"
         )
     
+    # 验证：至少要有文本或图片
+    if not message_data.content and not message_data.image_url:
+        raise HTTPException(
+            status_code=400,
+            detail="Message must have content or image"
+        )
+    
     # Create message
     new_message = PrivateMessage(
         connection_id=connection.id,
         sender_id=current_user.id,
         receiver_id=user_id,
-        message_text=message_data.content
+        message_text=message_data.content or "",
+        image_url=message_data.image_url
     )
     db.add(new_message)
     db.commit()
@@ -136,7 +148,8 @@ def send_message(
         id=new_message.id,
         sender_id=new_message.sender_id,
         receiver_id=new_message.receiver_id,
-        content=new_message.message_text,
+        content=new_message.message_text or "",
+        image_url=new_message.image_url,
         is_read=new_message.read_at is not None,
         created_at=new_message.sent_at
     )
@@ -165,7 +178,8 @@ def mark_message_read(
         id=message.id,
         sender_id=message.sender_id,
         receiver_id=message.receiver_id,
-        content=message.message_text,
+        content=message.message_text or "",
+        image_url=message.image_url,
         is_read=message.read_at is not None,
         created_at=message.sent_at
     )

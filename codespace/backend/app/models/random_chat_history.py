@@ -18,7 +18,8 @@ class RandomChatHistory(Base):
     session_id = Column(String(100), index=True, nullable=False)  # UUID to group conversation
     sender_id = Column(Integer, ForeignKey("users.id"), nullable=False)
     receiver_id = Column(Integer, ForeignKey("users.id"), nullable=False)
-    message_text = Column(Text, nullable=False)
+    message_text = Column(Text, nullable=True)  # 允许为空（纯图片消息）
+    image_url = Column(String(500), nullable=True)  # 图片 URL
     sent_at = Column(DateTime, default=datetime.utcnow, nullable=False)
     
     # Relationships

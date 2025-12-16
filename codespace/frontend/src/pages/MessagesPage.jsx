@@ -20,6 +20,11 @@ function MessagesPage() {
     const [loading, setLoading] = useState(true);
     const messagesEndRef = useRef(null);
 
+    // Image upload state
+    const [selectedImage, setSelectedImage] = useState(null);
+    const [uploadingImage, setUploadingImage] = useState(false);
+    const fileInputRef = useRef(null);
+
     // Miss Ex modal state
     const [showMissEx, setShowMissEx] = useState(false);
     const [missExHistory, setMissExHistory] = useState([]);
@@ -84,6 +89,7 @@ function MessagesPage() {
                         id: m.id,
                         sender: m.sender_id === user?.id ? 'me' : 'partner',
                         text: m.content,
+                        imageUrl: m.image_url,
                         createdAt: m.created_at
                     })));
                 } else {
@@ -129,6 +135,7 @@ function MessagesPage() {
                     id: msg.id,
                     sender: msg.sender_id === partner.id ? 'them' : 'me',
                     text: msg.content,
+                    imageUrl: msg.image_url,
                     createdAt: msg.created_at
                 }));
                 setMessages(formattedMessages);
@@ -209,21 +216,65 @@ function MessagesPage() {
         setShowWingman(false);
     };
 
+    // Handle image selection
+    const handleImageSelect = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        
+        // Validate file type
+        if (!file.type.startsWith('image/')) {
+            alert('请选择图片文件');
+            return;
+        }
+        
+        // Validate file size (5MB limit)
+        if (file.size > 5 * 1024 * 1024) {
+            alert('图片大小不能超过 5MB');
+            return;
+        }
+        
+        setUploadingImage(true);
+        try {
+            const response = await messageService.uploadImage(file);
+            setSelectedImage(response.url);
+        } catch (error) {
+            console.error('图片上传失败:', error);
+            alert('图片上传失败，请重试');
+        } finally {
+            setUploadingImage(false);
+        }
+    };
+
+    // Clear selected image
+    const clearSelectedImage = () => {
+        setSelectedImage(null);
+        if (fileInputRef.current) {
+            fileInputRef.current.value = '';
+        }
+    };
+
     const handleSend = async (e) => {
         e.preventDefault();
-        if (!inputText.trim() || !partner) return;
+        // Allow sending if there's text or image
+        if ((!inputText.trim() && !selectedImage) || !partner) return;
 
         try {
-            const sentMsg = await messageService.sendMessage(partner.id, inputText);
+            const sentMsg = await messageService.sendMessage(
+                partner.id, 
+                inputText || "", 
+                selectedImage
+            );
 
             const newMsg = {
                 id: sentMsg.id,
                 sender: 'me',
                 text: sentMsg.content,
+                imageUrl: sentMsg.image_url,
                 createdAt: sentMsg.created_at
             };
             setMessages([...messages, newMsg]);
             setInputText('');
+            clearSelectedImage();
         } catch (error) {
             console.error("Failed to send message", error);
             alert("Failed to send message");
@@ -260,48 +311,101 @@ function MessagesPage() {
                 </div>
 
                 <div className="messages-container">
-                    {messages.map(msg => (
-                        <div key={msg.id} className={`message ${msg.sender}`}>
-                            <div className="message-bubble">
-                                {msg.text}
+                    {messages.map(msg => {
+                        // Debug: log message data
+                        if (msg.imageUrl) {
+                            console.log('🖼️ 渲染消息 - 有图片:', { id: msg.id, text: msg.text, imageUrl: msg.imageUrl });
+                        }
+                        return (
+                            <div key={msg.id} className={`message ${msg.sender}`}>
+                                <div className="message-bubble">
+                                    {msg.imageUrl && msg.imageUrl.trim() !== '' && (
+                                        <img 
+                                            src={msg.imageUrl} 
+                                            alt="Message image" 
+                                            className="message-image"
+                                            onClick={() => window.open(msg.imageUrl, '_blank')}
+                                            onError={(e) => {
+                                                console.error('图片加载失败:', msg.imageUrl);
+                                                e.target.style.display = 'none';
+                                            }}
+                                        />
+                                    )}
+                                    {msg.text && msg.text.trim() !== '' && (
+                                        <div className="message-text">{msg.text}</div>
+                                    )}
+                                </div>
+                                <div className="message-time">
+                                    {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                </div>
                             </div>
-                            <div className="message-time">
-                                {new Date(msg.createdAt).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
-                            </div>
-                        </div>
-                    ))}
+                        );
+                    })}
                     <div ref={messagesEndRef} />
                 </div>
 
                 <form onSubmit={handleSend} className="message-input-area">
-                    <input
-                        type="text"
-                        className="message-input"
-                        value={inputText}
-                        onChange={(e) => setInputText(e.target.value)}
-                        placeholder="Type a message..."
-                    />
-                    <button
-                        type="button"
-                        className="btn btn-ghost"
-                        onClick={openWingman}
-                        title="Wingman Help"
-                        style={{ marginRight: '5px', fontSize: '1.2rem', padding: '0 10px' }}
-                    >
-                        💡
-                    </button>
-                    <button
-                        type="button"
-                        className="btn btn-ghost"
-                        onClick={handleOpenMissEx}
-                        title="Miss Ex"
-                        style={{ marginRight: '5px', fontSize: '1.2rem', padding: '0 10px' }}
-                    >
-                        💔
-                    </button>
-                    <button type="submit" className="send-btn">
-                        ➤
-                    </button>
+                    {/* Image preview */}
+                    {selectedImage && (
+                        <div className="selected-image-preview">
+                            <img src={selectedImage} alt="Preview" />
+                            <button 
+                                type="button" 
+                                className="remove-image-btn"
+                                onClick={clearSelectedImage}
+                            >
+                                ✕
+                            </button>
+                        </div>
+                    )}
+                    <div className="input-row">
+                        {/* Hidden file input */}
+                        <input
+                            type="file"
+                            ref={fileInputRef}
+                            accept="image/*"
+                            onChange={handleImageSelect}
+                            style={{ display: 'none' }}
+                        />
+                        <input
+                            type="text"
+                            className="message-input"
+                            value={inputText}
+                            onChange={(e) => setInputText(e.target.value)}
+                            placeholder="Type a message..."
+                        />
+                        <button
+                            type="button"
+                            className="btn btn-ghost"
+                            onClick={() => fileInputRef.current?.click()}
+                            title="Upload Image"
+                            disabled={uploadingImage}
+                            style={{ marginRight: '5px', fontSize: '1.2rem', padding: '0 10px' }}
+                        >
+                            {uploadingImage ? '⏳' : '📷'}
+                        </button>
+                        <button
+                            type="button"
+                            className="btn btn-ghost"
+                            onClick={openWingman}
+                            title="Wingman Help"
+                            style={{ marginRight: '5px', fontSize: '1.2rem', padding: '0 10px' }}
+                        >
+                            💡
+                        </button>
+                        <button
+                            type="button"
+                            className="btn btn-ghost"
+                            onClick={handleOpenMissEx}
+                            title="Miss Ex"
+                            style={{ marginRight: '5px', fontSize: '1.2rem', padding: '0 10px' }}
+                        >
+                            💔
+                        </button>
+                        <button type="submit" className="send-btn" disabled={uploadingImage}>
+                            ➤
+                        </button>
+                    </div>
                 </form>
             </div>
 

@@ -14,12 +14,27 @@ export const messageService = {
 
     /**
      * Send a private message.
+     * @param {number} receiverId - Receiver user ID
+     * @param {string} content - Message text content
+     * @param {string|null} imageUrl - Optional image URL
      */
-    async sendMessage(receiverId, content) {
+    async sendMessage(receiverId, content, imageUrl = null) {
         const response = await api.post(`/messages/${receiverId}`, {
-            content
+            content: content || "",
+            image_url: imageUrl
         });
         return response.data;
+    },
+
+    /**
+     * Upload an image and return the URL.
+     * @param {File} file - Image file to upload
+     */
+    async uploadImage(file) {
+        const formData = new FormData();
+        formData.append('file', file);
+        const response = await api.post('/upload/image', formData);
+        return response.data; // { url: "..." }
     },
 
     /**

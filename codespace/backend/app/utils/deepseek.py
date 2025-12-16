@@ -16,6 +16,12 @@ async def chat_completion(
     Call DeepSeek chat completions API (OpenAI-compatible).
     POST https://api.deepseek.com/v1/chat/completions
     """
+    # Check if API key is configured
+    if not settings.DEEPSEEK_API_KEY or settings.DEEPSEEK_API_KEY.strip() == "":
+        error_msg = "DeepSeek API key is not configured. Please set DEEPSEEK_API_KEY in .env file."
+        print(f"❌ {error_msg}")
+        return {"error": error_msg, "error_type": "missing_api_key"}
+    
     headers = {
         "Authorization": f"Bearer {settings.DEEPSEEK_API_KEY}",
         "Content-Type": "application/json"
@@ -37,9 +43,18 @@ async def chat_completion(
             )
             response.raise_for_status()
             return response.json()
-        except httpx.HTTPError as e:
-            print(f"DeepSeek API Error: {e}")
-            return {"error": str(e)}
+        except httpx.HTTPStatusError as e:
+            error_msg = f"DeepSeek API returned error {e.response.status_code}: {e.response.text}"
+            print(f"❌ {error_msg}")
+            return {"error": error_msg, "error_type": "api_error", "status_code": e.response.status_code}
+        except httpx.RequestError as e:
+            error_msg = f"Failed to connect to DeepSeek API: {str(e)}"
+            print(f"❌ {error_msg}")
+            return {"error": error_msg, "error_type": "connection_error"}
+        except Exception as e:
+            error_msg = f"Unexpected error calling DeepSeek API: {str(e)}"
+            print(f"❌ {error_msg}")
+            return {"error": error_msg, "error_type": "unknown_error"}
 
 # --- AI Feature Implementations ---
 
@@ -58,7 +73,13 @@ async def get_ai_companion_response(message: str, history: List[Dict[str, str]] 
     
     response = await chat_completion(messages)
     if "error" in response:
-        return "I'm having trouble connecting right now. Please try again later."
+        error_type = response.get("error_type", "unknown")
+        if error_type == "missing_api_key":
+            return "AI功能未配置。请联系管理员配置 DeepSeek API Key。"
+        elif error_type == "connection_error":
+            return "无法连接到AI服务，请检查网络连接。"
+        else:
+            return "AI服务暂时不可用，请稍后再试。"
         
     return response["choices"][0]["message"]["content"]
 

@@ -52,7 +52,11 @@ def check_match_compatibility(user1: dict, user2: dict) -> bool:
         user2['preferred_gender'] == user1['gender']
     )
     
-    return user1_wants_user2 and user2_wants_user1
+    result = user1_wants_user2 and user2_wants_user1
+    print(f"[兼容性检查] User1(gender={user1['gender']}, preferred={user1['preferred_gender']}) <-> User2(gender={user2['gender']}, preferred={user2['preferred_gender']})")
+    print(f"[兼容性检查] User1 wants User2: {user1_wants_user2}, User2 wants User1: {user2_wants_user1}, 结果: {result}")
+    
+    return result
 
 
 async def try_match_user(sid: str):
@@ -63,21 +67,35 @@ async def try_match_user(sid: str):
         sid: Socket ID of the user to match
     """
     if sid not in sid_to_user:
+        print(f"[匹配] {sid} 不在 sid_to_user 中")
         return
     
     current_user = sid_to_user[sid]
+    print(f"[匹配] 尝试为用户 {sid} (user_id={current_user['user_id']}, gender={current_user['gender']}, preferred={current_user['preferred_gender']}) 寻找匹配")
+    print(f"[匹配] 当前队列长度: {len(waiting_queue)}, 队列内容: {list(waiting_queue)}")
     
     # Search through waiting queue for a compatible match
     for i, waiting_sid in enumerate(waiting_queue):
         if waiting_sid not in sid_to_user:
+            print(f"[匹配] 跳过无效的 waiting_sid: {waiting_sid}")
+            continue
+        
+        # Skip matching with self (same user_id)
+        waiting_user = sid_to_user[waiting_sid]
+        if current_user['user_id'] == waiting_user['user_id']:
+            print(f"[匹配] 跳过自己 (user_id={current_user['user_id']})")
             continue
             
-        waiting_user = sid_to_user[waiting_sid]
+        print(f"[匹配] 检查与 {waiting_sid} (user_id={waiting_user['user_id']}, gender={waiting_user['gender']}, preferred={waiting_user['preferred_gender']}) 的兼容性")
         
         # Check compatibility
-        if check_match_compatibility(current_user, waiting_user):
+        is_compatible = check_match_compatibility(current_user, waiting_user)
+        print(f"[匹配] 兼容性检查结果: {is_compatible}")
+        
+        if is_compatible:
             # Remove from queue
             waiting_queue.remove(waiting_sid)
+            print(f"[匹配] ✅ 找到匹配! {sid} <-> {waiting_sid}")
             
             # Generate unique session ID for this chat
             session_id = str(uuid.uuid4())
@@ -95,6 +113,8 @@ async def try_match_user(sid: str):
                 'partner_user_id': current_user['user_id'],
                 'session_id': session_id
             }
+            
+            print(f"[匹配] 发送 match_found 事件给 {sid} 和 {waiting_sid}")
             
             # Notify both users of the match
             await sio.emit('match_found', {
@@ -126,7 +146,10 @@ async def try_match_user(sid: str):
     # No match found, add to queue
     if sid not in waiting_queue:
         waiting_queue.append(sid)
+        print(f"[匹配] ❌ 未找到匹配，将 {sid} 加入等待队列。当前队列长度: {len(waiting_queue)}")
         await sio.emit('searching', {'message': 'Searching for a compatible partner...'}, room=sid)
+    else:
+        print(f"[匹配] {sid} 已在队列中")
 
 
 @sio.event
@@ -169,18 +192,24 @@ async def join_queue(sid, data):
     Expected data: {token: JWT token}
     """
     try:
+        print(f"[加入队列] {sid} 尝试加入队列")
+        print(f"[加入队列] 接收到的数据: {data}")
+        
         # Decode and verify JWT token
         token = data.get('token')
         if not token:
+            print(f"[加入队列] ❌ {sid} 缺少 token")
             await sio.emit('error', {'message': 'Authentication token required'}, room=sid)
             return
         
         payload = decode_access_token(token)
         if not payload:
+            print(f"[加入队列] ❌ {sid} token 无效或过期")
             await sio.emit('error', {'message': 'Invalid or expired token'}, room=sid)
             return
         
         user_id = payload.get('user_id')
+        print(f"[加入队列] {sid} token 验证成功, user_id={user_id}")
         
         # Get user profile from database (we'll need to pass db session)
         # For now, use data from frontend
@@ -191,13 +220,17 @@ async def join_queue(sid, data):
             'profile': data.get('profile', {})
         }
         
+        print(f"[加入队列] {sid} 用户数据: gender={user_data['gender']}, preferred_gender={user_data['preferred_gender']}, profile={user_data['profile']}")
+        
         sid_to_user[sid] = user_data
         
         # Try to find a match
         await try_match_user(sid)
         
     except Exception as e:
-        print(f"Error in join_queue: {e}")
+        import traceback
+        print(f"[加入队列] ❌ Error in join_queue for {sid}: {e}")
+        print(traceback.format_exc())
         await sio.emit('error', {'message': 'Failed to join queue'}, room=sid)
 
 
@@ -206,7 +239,7 @@ async def send_message(sid, data):
     """
     Send a message to the matched partner.
     
-    Expected data: {message: str, timestamp: str}
+    Expected data: {message: str, timestamp: str, image_url: str (optional)}
     """
     if sid not in active_chats:
         await sio.emit('error', {'message': 'Not in an active chat'}, room=sid)
@@ -217,7 +250,15 @@ async def send_message(sid, data):
     receiver_user_id = active_chats[sid]['partner_user_id']
     session_id = active_chats[sid]['session_id']
     
-    message_text = data.get('message')
+    message_text = data.get('message', '')
+    image_url = data.get('image_url')  # 图片 URL
+    
+    print(f"[接收消息] 从 {sid} 收到: message='{message_text[:50] if message_text else ''}', image_url={image_url}")
+    
+    # 验证：至少要有文本或图片
+    if not message_text and not image_url:
+        await sio.emit('error', {'message': 'Message must have content or image'}, room=sid)
+        return
     
     # Save message to database (random chat history)
     try:
@@ -226,7 +267,8 @@ async def send_message(sid, data):
             session_id=session_id,
             sender_id=sender_user_id,
             receiver_id=receiver_user_id,
-            message_text=message_text,
+            message_text=message_text or "",
+            image_url=image_url,
             sent_at=datetime.utcnow()
         )
         db.add(history_entry)
@@ -235,11 +277,16 @@ async def send_message(sid, data):
     except Exception as e:
         print(f"Error saving chat history: {e}")
     
+    # 确保 image_url 总是被包含（即使是 None）
     message_data = {
-        'message': message_text,
+        'message': message_text or "",
+        'image_url': image_url if image_url else None,  # 明确设置为 None 而不是省略
         'timestamp': data.get('timestamp'),
         'sender_id': sender_user_id
     }
+    
+    print(f"[发送消息] 发送给 {partner_sid}: message='{message_text[:50] if message_text else ''}', image_url={image_url}")
+    print(f"[发送消息] 完整数据: {message_data}")
     
     # Send to partner
     await sio.emit('receive_message', message_data, room=partner_sid)

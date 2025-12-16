@@ -52,16 +52,23 @@ async def ai_companion_chat(request: ChatRequest, current_user: User = Depends(g
     """
     FR-16 & FR-22: Chat with AI Companion or Practice Mode.
     """
-    if request.scenario:
-        # Practice mode logic handles fetching profile if not provided
-        # But here we can inject it if needed, or let practice_chat_endpoint handle it
-        # For now, we'll just pass through
-        response = await practice_chat_response(request.message, request.history, request.scenario)
-    else:
-        # Companion mode
-        response = await get_ai_companion_response(request.message, request.history)
-    
-    return {"response": response}
+    try:
+        if request.scenario:
+            # Practice mode logic handles fetching profile if not provided
+            # But here we can inject it if needed, or let practice_chat_endpoint handle it
+            # For now, we'll just pass through
+            response = await practice_chat_response(request.message, request.history, request.scenario)
+        else:
+            # Companion mode
+            response = await get_ai_companion_response(request.message, request.history)
+        
+        return {"response": response}
+    except Exception as e:
+        print(f"Error in ai_companion_chat: {e}")
+        raise HTTPException(
+            status_code=status.HTTP_500_INTERNAL_SERVER_ERROR,
+            detail=f"AI服务错误: {str(e)}"
+        )
 
 @router.post("/practice")
 async def practice_chat_endpoint(request: ChatRequest, current_user: User = Depends(get_current_user)):

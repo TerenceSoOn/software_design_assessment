@@ -7,6 +7,7 @@ import { io } from 'socket.io-client';
 import { useAuth } from '../context/AuthContext';
 import { datemateService } from '../services/datemateService';
 import { aiService } from '../services/aiService';
+import { messageService } from '../services/messageService';
 import AIChatModal from '../components/ai/AIChatModal';
 import WingmanModal from '../components/ai/WingmanModal';
 import './RandomChatPage.css';
@@ -38,6 +39,11 @@ function RandomChatPage() {
     // Connection Status State
     const [connectionStatus, setConnectionStatus] = useState({ isConnected: false, isPending: false, status: 'none' });
 
+    // Image upload state
+    const [selectedImage, setSelectedImage] = useState(null);
+    const [uploadingImage, setUploadingImage] = useState(false);
+    const fileInputRef = useRef(null);
+
     // Initialize Socket.IO connection
     useEffect(() => {
         if (!token) return; // Wait for token
@@ -57,10 +63,10 @@ function RandomChatPage() {
         setSocket(newSocket);
 
         newSocket.on('connect', () => {
-            console.log('Connected to socket server');
+            console.log('✅ Connected to socket server, socket ID:', newSocket.id);
             setStatus('searching');
             // Join queue immediately upon connection
-            newSocket.emit('join_queue', {
+            const joinData = {
                 token,
                 gender: profile?.gender,
                 preferred_gender: profile?.preferred_gender,
@@ -72,10 +78,13 @@ function RandomChatPage() {
                     gender: profile?.gender,
                     avatar_url: profile?.avatar_url
                 }
-            });
+            };
+            console.log('📤 发送 join_queue 事件:', joinData);
+            newSocket.emit('join_queue', joinData);
         });
 
         newSocket.on('match_found', (data) => {
+            console.log('🎉 收到 match_found 事件:', data);
             setStatus('matched');
             setPartner(data.partner);
             setMessages([{
@@ -91,14 +100,29 @@ function RandomChatPage() {
                     .catch(err => console.error("Failed to check status", err));
             }
         });
+        
+        newSocket.on('searching', (data) => {
+            console.log('🔍 收到 searching 事件:', data);
+        });
+        
+        newSocket.on('error', (data) => {
+            console.error('❌ Socket.IO 错误:', data);
+        });
 
         newSocket.on('receive_message', (data) => {
-            setMessages(prev => [...prev, {
+            console.log('📥 收到消息 - 原始数据:', data);
+            console.log('📥 收到消息 - image_url 值:', data.image_url, '类型:', typeof data.image_url);
+            
+            const newMessage = {
                 id: Date.now(),
                 sender: 'partner',
-                text: data.message,
+                text: data.message || '',
+                imageUrl: data.image_url || null,  // 确保即使是 null/undefined 也设置为 null
                 timestamp: data.timestamp
-            }]);
+            };
+            
+            console.log('📥 收到消息 - 处理后:', newMessage);
+            setMessages(prev => [...prev, newMessage]);
         });
 
         newSocket.on('partner_disconnected', () => {
@@ -182,41 +206,85 @@ function RandomChatPage() {
         }
     }, [messages, status]);
 
+    // Handle image selection
+    const handleImageSelect = async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+        
+        // Validate file type
+        if (!file.type.startsWith('image/')) {
+            alert('请选择图片文件');
+            return;
+        }
+        
+        // Validate file size (5MB limit)
+        if (file.size > 5 * 1024 * 1024) {
+            alert('图片大小不能超过 5MB');
+            return;
+        }
+        
+        setUploadingImage(true);
+        try {
+            const response = await messageService.uploadImage(file);
+            setSelectedImage(response.url);
+        } catch (error) {
+            console.error('图片上传失败:', error);
+            alert('图片上传失败，请重试');
+        } finally {
+            setUploadingImage(false);
+        }
+    };
+
+    // Clear selected image
+    const clearSelectedImage = () => {
+        setSelectedImage(null);
+        if (fileInputRef.current) {
+            fileInputRef.current.value = '';
+        }
+    };
+
     const handleSend = async (e) => {
         e.preventDefault();
-        if (!inputText.trim() || status !== 'matched') return;
+        // Allow sending if there's text or image
+        if ((!inputText.trim() && !selectedImage) || status !== 'matched') return;
 
         const messageText = inputText;
+        const imageUrl = selectedImage;
         setInputText('');
+        clearSelectedImage();
 
         // Optimistic UI update
         setMessages(prev => [...prev, {
             id: Date.now(),
             sender: 'me',
-            text: messageText
+            text: messageText,
+            imageUrl: imageUrl
         }]);
 
-        // Check safety (AI feature)
-        try {
-            const safetyCheck = await aiService.checkSafety(messageText);
-            if (!safetyCheck.is_safe) {
-                setMessages(prev => [...prev, {
-                    id: Date.now() + 1,
-                    sender: 'system',
-                    text: `⚠️ Warning: Your message was flagged as potentially unsafe (${safetyCheck.reason}). Please be respectful.`
-                }]);
-                // Don't send if unsafe? Or just warn? For now, we warn but send (or could block)
-                // If strictly blocking: return; 
+        // Check safety (AI feature) - only for text
+        if (messageText) {
+            try {
+                const safetyCheck = await aiService.checkSafety(messageText);
+                if (!safetyCheck.is_safe) {
+                    setMessages(prev => [...prev, {
+                        id: Date.now() + 1,
+                        sender: 'system',
+                        text: `⚠️ Warning: Your message was flagged as potentially unsafe (${safetyCheck.reason}). Please be respectful.`
+                    }]);
+                }
+            } catch (err) {
+                console.error('Safety check failed', err);
             }
-        } catch (err) {
-            console.error('Safety check failed', err);
         }
 
         // Send to server
-        socket.emit('send_message', {
-            message: messageText,
+        const sendData = {
+            message: messageText || "",
+            image_url: imageUrl || null,
             timestamp: new Date().toISOString()
-        });
+        };
+        console.log('📤 发送消息:', sendData);
+        socket.emit('send_message', sendData);
     };
 
     const handleLeave = () => {
@@ -398,37 +466,89 @@ function RandomChatPage() {
 
                 {/* Messages Area */}
                 <div className="messages-area">
-                    {messages.map(msg => (
-                        <div key={msg.id} className={`message ${msg.sender}`}>
-                            <div className="message-bubble">
-                                {msg.text}
+                    {messages.map(msg => {
+                        // Debug: log message data
+                        if (msg.imageUrl) {
+                            console.log('🖼️ 渲染消息 - 有图片:', { id: msg.id, text: msg.text, imageUrl: msg.imageUrl });
+                        }
+                        return (
+                            <div key={msg.id} className={`message ${msg.sender}`}>
+                                <div className="message-bubble">
+                                    {msg.imageUrl && msg.imageUrl.trim() !== '' && (
+                                        <img 
+                                            src={msg.imageUrl} 
+                                            alt="Message image" 
+                                            className="message-image"
+                                            onClick={() => window.open(msg.imageUrl, '_blank')}
+                                            onError={(e) => {
+                                                console.error('图片加载失败:', msg.imageUrl);
+                                                e.target.style.display = 'none';
+                                            }}
+                                        />
+                                    )}
+                                    {msg.text && msg.text.trim() !== '' && (
+                                        <div className="message-text">{msg.text}</div>
+                                    )}
+                                </div>
                             </div>
-                        </div>
-                    ))}
+                        );
+                    })}
                     <div ref={messagesEndRef} />
                 </div>
 
                 {/* Input Area or Status */}
                 {status === 'matched' ? (
                     <form onSubmit={handleSend} className="chat-input-area">
-                        <button
-                            type="button"
-                            className="help-btn"
-                            onClick={openWingman}
-                            title="Get help from AI Wingman"
-                        >
-                            💡 Help
-                        </button>
-                        <input
-                            type="text"
-                            className="chat-input"
-                            placeholder="Type your message..."
-                            value={inputText}
-                            onChange={(e) => setInputText(e.target.value)}
-                        />
-                        <button type="submit" className="send-btn">
-                            <span>➤</span>
-                        </button>
+                        {/* Image preview */}
+                        {selectedImage && (
+                            <div className="selected-image-preview">
+                                <img src={selectedImage} alt="Preview" />
+                                <button 
+                                    type="button" 
+                                    className="remove-image-btn"
+                                    onClick={clearSelectedImage}
+                                >
+                                    ✕
+                                </button>
+                            </div>
+                        )}
+                        <div className="input-row">
+                            {/* Hidden file input */}
+                            <input
+                                type="file"
+                                ref={fileInputRef}
+                                accept="image/*"
+                                onChange={handleImageSelect}
+                                style={{ display: 'none' }}
+                            />
+                            <button
+                                type="button"
+                                className="help-btn"
+                                onClick={openWingman}
+                                title="Get help from AI Wingman"
+                            >
+                                💡 Help
+                            </button>
+                            <button
+                                type="button"
+                                className="image-btn"
+                                onClick={() => fileInputRef.current?.click()}
+                                title="Upload Image"
+                                disabled={uploadingImage}
+                            >
+                                {uploadingImage ? '⏳' : '📷'}
+                            </button>
+                            <input
+                                type="text"
+                                className="chat-input"
+                                placeholder="Type your message..."
+                                value={inputText}
+                                onChange={(e) => setInputText(e.target.value)}
+                            />
+                            <button type="submit" className="send-btn" disabled={uploadingImage}>
+                                <span>➤</span>
+                            </button>
+                        </div>
                     </form>
                 ) : (
                     <div className="status-area">
