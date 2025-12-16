@@ -28,6 +28,7 @@ def register(user_data: UserRegister, db: Session = Depends(get_db)):
             detail="Username already taken"
         )
     
+    
     # Check if email already exists (only if email provided)
     if user_data.email:
         existing_email = db.query(User).filter(User.email == user_data.email).first()

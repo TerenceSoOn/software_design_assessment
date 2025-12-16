@@ -106,7 +106,12 @@ async def get_wingman_suggestion(
     
     chat_context = ""
     if chat_history:
-        chat_context = "\n".join([f"{msg.get('role', 'user')}: {msg.get('content', '')}" for msg in chat_history])
+        # Explicitly map roles to User A (User) and User B (Partner/Assistant) to avoid confusion
+        role_map = {"user": "User A", "assistant": "User B", "system": "System"}
+        chat_context = "\n".join([
+            f"{role_map.get(msg.get('role', 'user'), 'User')}: {msg.get('content', '')}" 
+            for msg in chat_history
+        ])
     
     system_prompt = (
         "You are a dating coach helping User A continue their conversation with User B.\n\n"

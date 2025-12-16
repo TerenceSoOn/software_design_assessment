@@ -42,7 +42,10 @@ function RandomChatPage() {
     useEffect(() => {
         if (!token) return; // Wait for token
 
-        const newSocket = io('http://localhost:8000', {
+        // Use the API URL from environment variables (which now points to LAN IP)
+        const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+
+        const newSocket = io(apiUrl, {
             path: '/socket.io/',
             transports: ['websocket', 'polling'],
             reconnection: true,

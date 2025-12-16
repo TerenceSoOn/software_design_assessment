@@ -293,8 +293,13 @@ function SquarePage() {
                                 <div className="comments-section">
                                     <div className="comments-list">
                                         {comments[post.id]?.map(comment => (
-                                            <div key={comment.id} className="comment">
-                                                <div className="comment-avatar">
+                                            <div key={comment.id} className="comment-item">
+                                                <div
+                                                    className="comment-avatar"
+                                                    onClick={() => handleViewProfile(comment.user_id)}
+                                                    style={{ cursor: 'pointer' }}
+                                                    title="View Profile"
+                                                >
                                                     {comment.author_avatar_url ? (
                                                         <img
                                                             src={`${comment.author_avatar_url}?t=${Date.now()}`}
@@ -308,15 +313,19 @@ function SquarePage() {
                                                     )}
                                                 </div>
                                                 <div className="comment-content">
-                                                    <div className="comment-author-name">
+                                                    <span
+                                                        className="comment-author-name"
+                                                        onClick={() => handleViewProfile(comment.user_id)}
+                                                        style={{ cursor: 'pointer' }}
+                                                    >
                                                         {comment.author_name || `User #${comment.user_id}`}
-                                                    </div>
+                                                    </span>
                                                     <div className="comment-text">
                                                         {comment.comment_text}
                                                     </div>
-                                                    <div className="comment-time">
+                                                    <span className="comment-time">
                                                         {new Date(comment.created_at).toLocaleString()}
-                                                    </div>
+                                                    </span>
                                                 </div>
                                             </div>
                                         ))}

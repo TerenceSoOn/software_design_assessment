@@ -161,7 +161,7 @@
 
 .chat-input-area .btn {
     border-radius: var(--radius-full);
-    padding: 0 24px;
+    padding: 24 24px;
     font-weight: 600;
 }
 

@@ -273,7 +273,8 @@
 
 .comment-item {
     display: flex;
-    gap: var(--space-md);
+    gap: var(--space-sm);
+    align-items: flex-start;
 }
 
 .comment-avatar {
@@ -281,44 +282,61 @@
 }
 
 .avatar-small {
-    width: 36px;
-    height: 36px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     object-fit: cover;
     border: 2px solid var(--glass-border-strong);
+    transition: transform 0.2s ease;
 }
 
 .avatar-placeholder-small {
-    width: 36px;
-    height: 36px;
+    width: 32px;
+    height: 32px;
     border-radius: 50%;
     background: var(--accent-gradient);
     display: flex;
     align-items: center;
     justify-content: center;
     color: white;
-    font-size: 0.8rem;
+    font-size: 0.75rem;
     font-weight: 600;
+    transition: transform 0.2s ease;
 }
 
 .comment-content {
     flex: 1;
-    background: white;
-    padding: var(--space-md);
-    border-radius: var(--radius-lg);
+    min-width: 0;
 }
 
 .comment-author-name {
     font-weight: 600;
-    font-size: 0.9rem;
+    font-size: 0.85rem;
     color: var(--text-primary);
-    margin-bottom: 2px;
+    display: inline;
 }
 
 .comment-text {
     font-size: 0.9rem;
     color: var(--text-secondary);
-    line-height: 1.5;
+    line-height: 1.4;
+    margin-top: 2px;
+}
+
+.comment-time {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+    margin-top: 4px;
+    display: block;
+}
+
+.comment-author-name:hover {
+    color: var(--primary-start);
+}
+
+.comment-avatar:hover .avatar-small,
+.comment-avatar:hover .avatar-placeholder-small {
+    transform: scale(1.05);
 }
 
 /* Comment Input */

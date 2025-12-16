@@ -20,7 +20,7 @@ from app.models.random_chat_history import RandomChatHistory
 # Create Socket.IO server
 sio = socketio.AsyncServer(
     async_mode='asgi',
-    cors_allowed_origins=settings.CORS_ORIGINS if isinstance(settings.CORS_ORIGINS, list) else [settings.CORS_ORIGINS]
+    cors_allowed_origins='*' # Allow all origins for Socket.IO
 )
 
 # Data structures for matching
@@ -136,21 +136,25 @@ async def connect(sid, environ, auth=None):
 
 
 @sio.event
-async def disconnect(sid):
+async def disconnect(sid, reason=None):
     """Handle Socket.IO disconnection."""
-    print(f"Client disconnected: {sid}")
+    print(f"Client disconnected: {sid}, reason: {reason}")
     
     # Remove from queue if waiting
-    if sid in waiting_queue:
-        waiting_queue.remove(sid)
+    try:
+        if sid in waiting_queue:
+            waiting_queue.remove(sid)
+    except ValueError:
+        pass # Already removed
     
     # Notify partner if in active chat
     if sid in active_chats:
-        partner_sid = active_chats[sid]['partner_sid']
-        if partner_sid in active_chats:
-            await sio.emit('partner_disconnected', {}, room=partner_sid)
-            del active_chats[partner_sid]
-        del active_chats[sid]
+        chat_info = active_chats.pop(sid, None)
+        if chat_info:
+            partner_sid = chat_info.get('partner_sid')
+            if partner_sid and partner_sid in active_chats:
+                await sio.emit('partner_disconnected', {}, room=partner_sid)
+                active_chats.pop(partner_sid, None)
     
     # Remove user data
     if sid in sid_to_user:
