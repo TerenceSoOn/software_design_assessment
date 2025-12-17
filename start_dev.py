@@ -26,27 +26,67 @@ def get_lan_ip():
     except Exception:
         return "127.0.0.1"
 
-def check_dependencies():
-    """Check if backend dependencies are installed."""
-    print("🔍 Checking dependencies...")
-    venv_python = os.path.join("codespace", "backend", "venv", "bin", "python3")
+def setup_backend():
+    """Setup backend: create venv if needed, install dependencies."""
+    backend_dir = os.path.join("codespace", "backend")
+    venv_dir = os.path.join(backend_dir, "venv")
+    venv_python = os.path.join(venv_dir, "bin", "python3")
+    requirements_file = os.path.join(backend_dir, "requirements.txt")
     
+    # Check if venv exists
     if not os.path.exists(venv_python):
-        print("❌ Virtual environment not found. Run: cd codespace/backend && python3 -m venv venv")
-        return False
+        print("📦 Creating virtual environment...")
+        result = subprocess.run(
+            ["python3", "-m", "venv", venv_dir],
+            capture_output=True,
+            text=True
+        )
+        if result.returncode != 0:
+            print(f"❌ Failed to create venv: {result.stderr}")
+            return False
+        print("✅ Virtual environment created")
     
-    # Check if bcrypt is installed with correct version
+    # Check if dependencies need to be installed
     result = subprocess.run(
-        [venv_python, "-c", "import bcrypt; print(bcrypt.__version__)"],
+        [venv_python, "-c", "import bcrypt; import fastapi; import uvicorn"],
         capture_output=True,
         text=True
     )
     
     if result.returncode != 0:
-        print("❌ Dependencies not installed. Run: cd codespace/backend && source venv/bin/activate && pip install -r requirements.txt")
-        return False
+        print("📦 Installing backend dependencies...")
+        pip_path = os.path.join(venv_dir, "bin", "pip")
+        result = subprocess.run(
+            [pip_path, "install", "-r", requirements_file],
+            capture_output=True,
+            text=True
+        )
+        if result.returncode != 0:
+            print(f"❌ Failed to install dependencies: {result.stderr}")
+            return False
+        print("✅ Dependencies installed")
+    else:
+        print("✅ Backend dependencies OK")
     
-    print("✅ Dependencies OK")
+    # Check frontend node_modules
+    frontend_dir = os.path.join("codespace", "frontend")
+    node_modules = os.path.join(frontend_dir, "node_modules")
+    
+    if not os.path.exists(node_modules):
+        print("📦 Installing frontend dependencies...")
+        result = subprocess.run(
+            ["npm", "install"],
+            cwd=frontend_dir,
+            capture_output=True,
+            text=True
+        )
+        if result.returncode != 0:
+            print(f"❌ Failed to install npm packages: {result.stderr}")
+            return False
+        print("✅ Frontend dependencies installed")
+    else:
+        print("✅ Frontend dependencies OK")
+    
     return True
 
 def update_frontend_env(ip):
@@ -91,13 +131,19 @@ def run_services(ip):
         sys.exit(0)
 
 if __name__ == "__main__":
-    # Check dependencies first
-    if not check_dependencies():
+    # Setup backend (create venv + install deps if needed)
+    if not setup_backend():
         sys.exit(1)
     
     # Get current IP
     current_ip = get_lan_ip()
     print(f"🔍 Detected LAN IP: {current_ip}")
+    
+    # Update config
+    update_frontend_env(current_ip)
+    
+    # Run services
+    run_services(current_ip)
     
     # Update config
     update_frontend_env(current_ip)

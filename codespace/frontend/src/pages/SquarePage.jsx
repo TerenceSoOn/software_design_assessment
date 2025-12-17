@@ -8,6 +8,14 @@ import { profileService } from '../services/profileService';
 import { useAuth } from '../context/AuthContext';
 import './SquarePage.css';
 
+// Fix localhost URLs to use the actual API URL
+const fixImageUrl = (url) => {
+    if (!url) return url;
+    // Replace localhost with the actual API URL from environment
+    const apiUrl = import.meta.env.VITE_API_URL || 'http://localhost:8000';
+    return url.replace('http://localhost:8000', apiUrl);
+};
+
 function SquarePage() {
     const [posts, setPosts] = useState([]);
     const [loading, setLoading] = useState(true);
@@ -262,7 +270,7 @@ function SquarePage() {
                                         {post.image_urls.map((url, idx) => (
                                             <img
                                                 key={idx}
-                                                src={url}
+                                                src={fixImageUrl(url)}
                                                 alt={`Post image ${idx + 1}`}
                                                 className="post-image"
                                                 onError={(e) => {

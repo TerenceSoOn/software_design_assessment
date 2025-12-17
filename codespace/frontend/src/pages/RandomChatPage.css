@@ -7,12 +7,12 @@
     padding: var(--space-lg);
     display: flex;
     justify-content: center;
-    align-items: stretch;
+    align-items: flex-start;
 }
 
 .chat-container {
     width: 100%;
-    max-width: 800px;
+    max-width: 1000px;
     display: flex;
     flex-direction: column;
     background: var(--glass-white);
@@ -277,12 +277,10 @@
 
 /* Status Area (Searching/Ended) */
 .status-area {
-    flex: 1;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: var(--space-2xl);
-    min-height: 350px;
+    padding: var(--space-xl);
 }
 
 .searching-container {
