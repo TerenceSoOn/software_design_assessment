@@ -98,6 +98,7 @@ async def try_match_user(sid: str):
             
             # Notify both users of the match
             await sio.emit('match_found', {
+                'session_id': session_id,
                 'partner': {
                     'user_id': waiting_user['user_id'],
                     'display_name': waiting_user['profile'].get('display_name'),
@@ -110,6 +111,7 @@ async def try_match_user(sid: str):
             }, room=sid)
             
             await sio.emit('match_found', {
+                'session_id': session_id,
                 'partner': {
                     'user_id': current_user['user_id'],
                     'display_name': current_user['profile'].get('display_name'),

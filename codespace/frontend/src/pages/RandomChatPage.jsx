@@ -7,6 +7,7 @@ import { io } from 'socket.io-client';
 import { useAuth } from '../context/AuthContext';
 import { datemateService } from '../services/datemateService';
 import { aiService } from '../services/aiService';
+import { reportUser } from '../services/reportService';
 import AIChatModal from '../components/ai/AIChatModal';
 import WingmanModal from '../components/ai/WingmanModal';
 import './RandomChatPage.css';
@@ -17,6 +18,7 @@ function RandomChatPage() {
     const [inputText, setInputText] = useState('');
     const [status, setStatus] = useState('connecting'); // connecting, searching, matched, disconnected
     const [partner, setPartner] = useState(null);
+    const [sessionId, setSessionId] = useState(null);
     const [showConnectionRequest, setShowConnectionRequest] = useState(false);
     const messagesEndRef = useRef(null);
     const { user, profile, token } = useAuth();
@@ -78,6 +80,7 @@ function RandomChatPage() {
         newSocket.on('match_found', (data) => {
             setStatus('matched');
             setPartner(data.partner);
+            setSessionId(data.session_id);
             setMessages([{
                 id: Date.now(),
                 sender: 'system',
@@ -312,6 +315,27 @@ function RandomChatPage() {
         setShowWingman(false);
     };
 
+    const handleReport = async () => {
+        if (!partner || !sessionId) return;
+        const reason = window.prompt("Why are you reporting this user?");
+        if (reason) {
+            try {
+                const result = await reportUser({
+                    reported_user_id: partner.user_id,
+                    chat_type: "random",
+                    session_id: sessionId,
+                    reason: reason
+                });
+                alert(result.message);
+                if (result.action_taken === "deleted") {
+                     handleLeave();
+                }
+            } catch (error) {
+                alert("Failed to report user: " + (error.response?.data?.detail || error.message));
+            }
+        }
+    };
+
     const renderDatemateButton = () => {
         if (connectionStatus.isConnected) {
             return <button className="btn btn-outline" disabled>You are datemates</button>;
@@ -393,6 +417,15 @@ function RandomChatPage() {
                         <button className="leave-btn" onClick={handleLeave}>
                             Leave Chat
                         </button>
+                        {status === 'matched' && (
+                            <button 
+                                className="leave-btn" 
+                                style={{backgroundColor: '#dc3545', marginLeft: '10px'}}
+                                onClick={handleReport}
+                            >
+                                Report
+                            </button>
+                        )}
                     </div>
                 </div>
 

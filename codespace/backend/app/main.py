@@ -10,7 +10,7 @@ from app.config import settings
 from app.database import init_db
 import socketio
 from fastapi.staticfiles import StaticFiles
-from app.routers import auth, profiles, posts, datemates, ai, messages, upload
+from app.routers import auth, profiles, posts, datemates, ai, messages, upload, report
 from app.utils.socketio_server import sio
 
 # Create FastAPI application
@@ -42,6 +42,7 @@ app.include_router(datemates.router)
 app.include_router(ai.router)
 app.include_router(messages.router)
 app.include_router(upload.router)
+app.include_router(report.router)
 
 
 @app.on_event("startup")
