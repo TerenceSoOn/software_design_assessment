@@ -4,7 +4,7 @@ Upload Router - Handle file uploads.
 import os
 import shutil
 import uuid
-from fastapi import APIRouter, UploadFile, File, HTTPException
+from fastapi import APIRouter, UploadFile, File, HTTPException, Request
 from app.config import settings
 
 router = APIRouter(prefix="/upload", tags=["Upload"])
@@ -13,7 +13,7 @@ UPLOAD_DIR = "static/uploads"
 os.makedirs(UPLOAD_DIR, exist_ok=True)
 
 @router.post("/image")
-async def upload_image(file: UploadFile = File(...)):
+async def upload_image(request: Request, file: UploadFile = File(...)):
     """
     Upload an image file.
     Returns the URL of the uploaded file.
@@ -32,6 +32,6 @@ async def upload_image(file: UploadFile = File(...)):
     except Exception as e:
         raise HTTPException(status_code=500, detail=f"Failed to save file: {str(e)}")
         
-    # Return URL (assuming static files are served from /static)
-    # In production, this should be a full URL or CDN link
-    return {"url": f"http://localhost:8000/static/uploads/{filename}"}
+    # Use the request's base URL to construct the full URL
+    base_url = str(request.base_url).rstrip('/')
+    return {"url": f"{base_url}/static/uploads/{filename}"}

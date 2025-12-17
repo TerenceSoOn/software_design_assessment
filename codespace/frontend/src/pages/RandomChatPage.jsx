@@ -436,9 +436,6 @@ function RandomChatPage() {
                             <div className="searching-container">
                                 <div className="loader"></div>
                                 <p>Looking for someone compatible...</p>
-                                <button className="btn btn-outline" onClick={toggleAIChat}>
-                                    🤖 Chat with AI while waiting
-                                </button>
                             </div>
                         ) : (
                             <div className="ended-container">

@@ -26,6 +26,29 @@ def get_lan_ip():
     except Exception:
         return "127.0.0.1"
 
+def check_dependencies():
+    """Check if backend dependencies are installed."""
+    print("🔍 Checking dependencies...")
+    venv_python = os.path.join("codespace", "backend", "venv", "bin", "python3")
+    
+    if not os.path.exists(venv_python):
+        print("❌ Virtual environment not found. Run: cd codespace/backend && python3 -m venv venv")
+        return False
+    
+    # Check if bcrypt is installed with correct version
+    result = subprocess.run(
+        [venv_python, "-c", "import bcrypt; print(bcrypt.__version__)"],
+        capture_output=True,
+        text=True
+    )
+    
+    if result.returncode != 0:
+        print("❌ Dependencies not installed. Run: cd codespace/backend && source venv/bin/activate && pip install -r requirements.txt")
+        return False
+    
+    print("✅ Dependencies OK")
+    return True
+
 def update_frontend_env(ip):
     """Update the frontend .env file with the new IP."""
     env_path = os.path.join("codespace", "frontend", ".env")
@@ -68,6 +91,10 @@ def run_services(ip):
         sys.exit(0)
 
 if __name__ == "__main__":
+    # Check dependencies first
+    if not check_dependencies():
+        sys.exit(1)
+    
     # Get current IP
     current_ip = get_lan_ip()
     print(f"🔍 Detected LAN IP: {current_ip}")

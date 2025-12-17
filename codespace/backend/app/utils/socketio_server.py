@@ -249,14 +249,15 @@ async def send_message(sid, data):
 async def leave_chat(sid):
     """User voluntarily leaves the current chat."""
     if sid in active_chats:
-        partner_sid = active_chats[sid]['partner_sid']
+        chat_info = active_chats.pop(sid, None)
+        if chat_info:
+            partner_sid = chat_info.get('partner_sid')
+            
+            # Notify partner
+            if partner_sid and partner_sid in active_chats:
+                await sio.emit('partner_left', {}, room=partner_sid)
+                active_chats.pop(partner_sid, None)
         
-        # Notify partner
-        if partner_sid in active_chats:
-            await sio.emit('partner_left', {}, room=partner_sid)
-            del active_chats[partner_sid]
-        
-        del active_chats[sid]
         await sio.emit('chat_ended', {}, room=sid)
 
 
