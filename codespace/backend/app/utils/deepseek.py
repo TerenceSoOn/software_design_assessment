@@ -17,9 +17,15 @@ async def chat_completion(
     POST https://api.deepseek.com/v1/chat/completions
     """
     headers = {
-        "Authorization": f"Bearer {settings.DEEPSEEK_API_KEY}",
         "Content-Type": "application/json"
     }
+    
+    # Only add authorization header if API key is present
+    if settings.DEEPSEEK_API_KEY and settings.DEEPSEEK_API_KEY.strip():
+        headers["Authorization"] = f"Bearer {settings.DEEPSEEK_API_KEY}"
+    else:
+        # Debugging: Print warning if API key is missing
+        print("WARNING: DeepSeek API Key is missing or empty. AI features will fail.")
     
     payload = {
         "model": model,

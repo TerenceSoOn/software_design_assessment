@@ -11,6 +11,9 @@ from app.schemas.report import ReportRequest, ReportResponse
 from app.utils.dependencies import get_current_user
 from app.utils.deepseek import judge_chat_behavior
 
+from app.models.profile import Profile
+from app.models.connection import DatemateConnection
+
 router = APIRouter(prefix="/report", tags=["Report"])
 
 @router.post("/", response_model=ReportResponse)
@@ -88,7 +91,28 @@ async def report_user(
             
             try:
                 # Manual cleanup might be needed if cascade isn't configured in models
-                # But let's try direct delete first.
+                # Delete related profile first (1:1 relationship)
+                db.query(Profile).filter(Profile.user_id == request.reported_user_id).delete()
+                
+                # Delete messages (sender or receiver) - Optional, depending on policy, but needed for FK constraints
+                db.query(PrivateMessage).filter(or_(
+                    PrivateMessage.sender_id == request.reported_user_id,
+                    PrivateMessage.receiver_id == request.reported_user_id
+                )).delete()
+                
+                # Delete connections
+                db.query(DatemateConnection).filter(or_(
+                    DatemateConnection.requester_id == request.reported_user_id,
+                    DatemateConnection.receiver_id == request.reported_user_id
+                )).delete()
+
+                # Delete random chat history
+                db.query(RandomChatHistory).filter(or_(
+                    RandomChatHistory.sender_id == request.reported_user_id,
+                    RandomChatHistory.receiver_id == request.reported_user_id
+                )).delete()
+                
+                # Finally delete user
                 db.delete(user_to_delete)
                 db.commit()
                 
