@@ -1,139 +1,106 @@
-# FlirtNet: Fostering Genuine Connections in a Digital World
-## Software Design Assessment
+# FlirtNet Presentation Structure
 
-**Team Members:**
-*   Junlin Li
-*   Hongjia Huang
-*   Jiachen Pan
-*   Junrui Liang
-*   Yueshen Wang
+## Core Value Proposition
 
----
-
-# Session 1: The Vision & The "Why"
-**Speaker:** Junlin Li
-
-## Slide 2: The Problem - "The Lonely Crowd"
-*   **The Paradox:** We are more connected than ever, yet loneliness is rising.
-*   **Fragmentation:**
-    *   Users juggle multiple apps: Tinder for dating, Reddit for forums, WhatsApp for chat.
-    *   There is no unified journey from "Stranger" to "Partner."
-*   **The "Cold" Start:**
-    *   Traditional apps offer little guidance.
-    *   Shy or anxious users struggle to break the ice.
-
-## Slide 3: Our Philosophy
-*   **Human-Centric Design:**
-    *   **Social First:** Technology is the bridge, not the destination.
-    *   **Supportive:** We believe a platform should actively help users connect, not just match them.
-*   **The Goal:**
-    *   To create a safe, unified ecosystem where users can express themselves, meet spontaneously, and build deep, lasting relationships.
-
-## Slide 4: Technology Snapshot
-*   **Built for Performance & Scale:**
-    *   **Frontend:** **React** with **Vite** for a responsive, high-performance user interface.
-    *   **Backend:** **FastAPI** provides high-speed, asynchronous processing.
-    *   **Real-Time:** **Socket.IO** enables event-driven, instant messaging.
-    *   **Intelligence:** **DeepSeek LLM** integration for context-aware AI features.
+**FlirtNet helps everyone become better at dating & socializing:**
+1. **Smart Coaching** - Wingman for flirty suggestions, Practice Mode to train
+2. **Random Matching** - Fun, low-pressure way to meet people
+3. **Miss Ex** - Emotional support for those who lost someone
 
 ---
 
-# Session 2: Basic Social Features & Reliability
-**Speaker:** Jiachen Pan
+## Actual Features We Built
 
-## Slide 5: The Public Square
-*   **Community Feed:**
-    *   A dynamic space for users to share thoughts, images, and interests via **Tags**.
-    *   Designed to foster discovery based on shared hobbies rather than just appearance.
-*   **User Experience:**
-    *   **Multimedia Support:** Seamlessly handles text and image content.
-    *   **Interaction:** Built-in Like and Comment systems to encourage community engagement.
-
-## Slide 6: Identity & Connections
-*   **Datemate System:**
-    *   **Mutual Connection:** A formal "Datemate" status that requires mutual acceptance, ensuring consent.
-    *   **Profile Customization:** Rich user profiles with bios and avatars to showcase personality.
-*   **Lifecycle Management:**
-    *   **Request Flow:** Send -> Pending -> Accept/Reject.
-    *   **Termination:** "Delete Datemate" feature allows users to cleanly dissolve connections and remove associated private messages.
-
-## Slide 7: System Reliability & Security
-*   **Trust & Safety:**
-    *   **Secure Authentication:** Verifies identity on every action to prevent unauthorized access.
-    *   **Data Protection:** Industry-standard encryption protects user credentials and personal data.
-*   **Performance:**
-    *   Built on a robust infrastructure that ensures the app runs consistently and reliably.
+| Feature | What It Does |
+|---------|--------------|
+| User Registration/Login | Create account, login |
+| User Profile | Bio, avatar, interests, age, location |
+| Community Square | Post, like, comment, view profiles |
+| Datemate System | Send request, accept/reject, connect |
+| Private Messaging | Chat with datemates |
+| Random Chat | Queue match, 1-on-1 chat with strangers |
+| Smart Wingman | Flirty suggestions during chat |
+| Practice Mode | Practice flirting with virtual partner |
+| Safety Check | Warns about hostile messages |
+| Miss Ex | Talk to someone you miss |
 
 ---
 
-# Session 3: Real-Time Interaction
-**Speaker:** Junrui Liang
+# Proposed Structure (5 Speakers)
 
-## Slide 8: Instant Communication
-*   **Real-Time Connection:**
-    *   **Random Chat:** Spontaneous 1-on-1 conversations with new people.
-    *   **Private Messaging:** Secure, private channels for "Datemates."
-*   **The Experience:**
-    *   Messages are delivered instantly, creating a natural, conversational flow like a phone call rather than email.
-    *   Designed to handle multiple active conversations simultaneously without lag.
+## Part 1: Opening (🟢 BEST SPEAKER)
+**Time: 2-3 min | Type: Narrative**
 
-## Slide 9: Trust & Safety Workflow
-*   **AI Content Safety:**
-    *   **Automated Detection:** Real-time analysis of messages to detect abuse, harassment, or aggressive behavior using **DeepSeek**.
-*   **User Reporting:**
-    *   **Manual Action:** One-click reporting mechanism for users to flag harmful content that slips through.
-    *   **Review System:** Flags incidents for administrative review (Ban/Suspend).
+- **Slide 1:** Title slide
+- **Slide 2:** The problem - "Everyone can improve at dating"
+  - Not just shy people - everyone wants to be more charming
+  - No tool helps you practice and improve
+- **Slide 3:** FlirtNet's solution
+  - Smart coaching (Wingman, Practice Mode)
+  - Fun social features (Random Chat, Community)
+  - Emotional support (Miss Ex)
 
 ---
 
-# Session 4: Smart Connection Support
-**Speaker:** Yueshen Wang
+## Part 2: Community & Profiles (🟠 OK SPEAKER)
+**Time: 2-3 min | Type: Feature + Demo**
 
-## Slide 10: Overcoming Social Barriers
-*   **AI Companion:**
-    *   **Empathetic Chatbot:** A "warm-up" partner for users who haven't found a match, providing emotional support and conversation practice.
-*   **Smart Wingman:**
-    *   **Context-Aware Suggestions:** Analyzes the chat history to suggest relevant topics or replies.
-    *   **User Agency:** Suggestions are optional; the user remains in control of the conversation.
-
-## Slide 11: Intelligent Context Awareness
-*   **Understanding the Conversation:**
-    *   To give relevant social advice, the system analyzes the **entire conversation flow**, not just keywords.
-    *   It understands tone, topics (e.g., movies, hobbies), and emotional context.
-*   **Seamless Experience:**
-    *   The support is on-demand and unobtrusive.
-    *   Designed to be fast and non-blocking, so the user stays in the flow of the chat while receiving help.
-
-## Slide 12: Designing a Social Coach
-*   **The Persona:**
-    *   We designed the system to be a **polite, encouraging coach**.
-*   **Promoting Healthy Interaction:**
-    *   **Open-Ended Questions:** The system prioritizes suggestions that invite a reply, turning a dead-end statement into a dialogue.
-    *   **Safety & Respect:** Explicitly instructed to avoid aggressive or inappropriate lines, fostering a respectful dating environment.
+- **Slide 4:** Community Square - share interests, find people
+- **Slide 5:** User Profiles - showcase yourself
+- **DEMO:** Show feed, click avatar, view profile
 
 ---
 
-# Session 5: The Full Experience & Future
-**Speaker:** Hongjia Huang
+## Part 3: Datemate & Messaging (🔴 WEAKER SPEAKER #1)
+**Time: 2 min | Type: Demo-Heavy**
 
-## Slide 13: The Demo (Video)
-*   **Narrative Arc:**
-    1.  **Onboarding:** Registration and Login.
-    2.  **Discovery:** Browsing the Public Square.
-    3.  **Connection:** Starting a Random Chat.
-    4.  **Assistance:** Using the **Smart Wingman** to break the ice.
-    5.  **Safety:** **Reporting** a harmful user.
-    6.  **Commitment:** Sending a "Datemate" request.
-    7.  **Closure:** Deleting a connection.
+- **Slide 6:** Datemate flow diagram
+- **Slide 7:** Private messaging
+- **HEAVY DEMO:** Send request → Accept → Message
 
-## Slide 14: Future Roadmap
-*   **What's Next?**
-    *   **Voice & Video:** Moving beyond text-only chat to deeper interaction.
-    *   **Advanced Matching:** Deep learning analysis of personality for better random matches.
-    *   **Mobile App:** React Native version for iOS/Android.
+---
 
-## Slide 15: Conclusion
-*   **Summary:**
-    *   FlirtNet is more than a chat app; it's a supportive social ecosystem.
-    *   We combine **safe spaces**, **real-time connection**, and **intelligent support** to solve the problem of digital loneliness.
-*   **Q&A**
+## Part 4: Random Chat (🔴 WEAKER SPEAKER #2)
+**Time: 2 min | Type: Demo-Heavy**
+
+- **Slide 8:** Random chat - fun way to meet
+- **HEAVY DEMO:** Join queue → Get matched → Chat
+
+---
+
+## Part 5: Smart Features (🟡 GOOD SPEAKER)
+**Time: 3 min | Type: Feature Explanation**
+
+- **Slide 9:** Smart Wingman - flirty suggestions
+- **Slide 10:** Practice Mode - train with virtual partner
+- **Slide 11:** Miss Ex - emotional support feature
+- **DEMO:** Use Wingman, maybe Practice Mode
+
+---
+
+## Part 6: Closing & Q&A (🟢 BEST SPEAKER)
+**Time: 2 min | Type: Narrative**
+
+- **Slide 12:** Summary + Thank you
+- **Q&A handling**
+
+---
+
+# Time Distribution (~12-15 min)
+
+| Part | Speaker | Time |
+|------|---------|------|
+| Opening | 🟢 Best | 2-3 min |
+| Community/Profiles | 🟠 OK | 2-3 min |
+| Datemate/Messages | 🔴 Weaker #1 | 2 min |
+| Random Chat | 🔴 Weaker #2 | 2 min |
+| Smart Features | 🟡 Good | 3 min |
+| Closing/Q&A | 🟢 Best | 2 min |
+
+---
+
+# Notes
+
+1. **Weaker speakers:** Mostly demo, short phrases
+2. **No "AI" explicitly** - Use "Smart" instead
+3. **Emphasize "flirt"** - This is FlirtNet, make it playful

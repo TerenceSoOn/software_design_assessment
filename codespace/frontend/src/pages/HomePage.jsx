@@ -56,10 +56,9 @@ function HomePage() {
     return (
         <div className="home-page">
             <div className="hero-section">
-                <h1>Ready to <span className="highlight">Spark</span> Something Special? 💕</h1>
+                <h1>💖Ready to <span className="highlight">Spark</span> Something Special? 💕</h1>
                 <p className="hero-subtitle">
-                    Meet real people, have genuine conversations, and discover your perfect match.
-                    It's dating, but actually fun! ✨
+                    Meet someone & Flirt with someone & Fall in love with someone.✨
                 </p>
 
                 <div className="action-buttons">
@@ -69,11 +68,11 @@ function HomePage() {
                         onClick={startRandomChat}
                         disabled={matching}
                     >
-                        {matching ? '🔍 Finding Someone...' : '🎲 Start Random Chat'}
+                        {matching ? '🔍 Finding Someone...' : '🔥Start Flirting!🔥'}
                     </Link>
 
                     <button onClick={startPracticeMode} className="btn btn-secondary btn-lg">
-                        🤖 Practice Mode
+                        😊Practise First?
                     </button>
 
                     {!user && (

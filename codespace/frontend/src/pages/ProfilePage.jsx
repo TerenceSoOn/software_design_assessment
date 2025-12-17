@@ -152,7 +152,7 @@ function ProfilePage() {
                                 onClick={handleOptimizeWithAI}
                                 disabled={loadingAI}
                             >
-                                {loadingAI ? '🤔 Thinking...' : '✨ Optimize with AI'}
+                                {loadingAI ? '🤔 Thinking...' : '✨ Help me Optimize'}
                             </button>
                         </div>
                     )}
