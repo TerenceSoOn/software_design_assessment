@@ -6,6 +6,7 @@ import { useParams } from 'react-router-dom';
 import { messageService } from '../services/messageService';
 import { datemateService } from '../services/datemateService';
 import { aiService } from '../services/aiService';
+import { reportUser } from '../services/reportService';
 import { useAuth } from '../context/AuthContext';
 import AIChatModal from '../components/ai/AIChatModal';
 import WingmanModal from '../components/ai/WingmanModal';
@@ -209,6 +210,28 @@ function MessagesPage() {
         setShowWingman(false);
     };
 
+    const handleReport = async () => {
+        if (!partner) return;
+        const reason = window.prompt("Why are you reporting this user?");
+        if (reason) {
+            try {
+                const result = await reportUser({
+                    reported_user_id: partner.id,
+                    chat_type: "private",
+                    partner_id: partner.id,
+                    reason: reason
+                });
+                alert(result.message);
+                if (result.action_taken === "deleted") {
+                     // User deleted, navigate away
+                     window.location.href = '/datemates';
+                }
+            } catch (error) {
+                alert("Failed to report user: " + (error.response?.data?.detail || error.message));
+            }
+        }
+    };
+
     const handleSend = async (e) => {
         e.preventDefault();
         if (!inputText.trim() || !partner) return;
@@ -257,6 +280,13 @@ function MessagesPage() {
                             <div className="chat-partner-status online">Online</div>
                         </div>
                     </div>
+                    <button 
+                        className="btn btn-sm btn-danger"
+                        style={{backgroundColor: '#dc3545', color: 'white', border: 'none', padding: '5px 10px', borderRadius: '4px', cursor: 'pointer'}}
+                        onClick={handleReport}
+                    >
+                        Report
+                    </button>
                 </div>
 
                 <div className="messages-container">

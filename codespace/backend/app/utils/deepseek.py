@@ -266,6 +266,58 @@ async def practice_chat_response(
         
     return response["choices"][0]["message"]["content"]
 
+async def judge_chat_behavior(
+    reported_user_id: int,
+    chat_history: List[Dict[str, str]]
+) -> Dict[str, Any]:
+    """
+    Judge if the reported user is guilty based on chat history.
+    """
+    system_prompt = (
+        "You are a strict moderator for a dating app. Review the chat history and determine if "
+        f"the user with ID {reported_user_id} has violated community guidelines "
+        "(harassment, hate speech, explicit content without consent, scams, etc.). "
+        "Return a JSON object with: "
+        "{'guilty': bool, 'reason': str}"
+    )
+
+    # Convert chat history to readable format
+    conversation_text = "\n".join([
+        f"User {msg.get('sender_id', 'Unknown')}: {msg.get('content', '')}" 
+        for msg in chat_history
+    ])
+
+    messages = [
+        {"role": "system", "content": system_prompt},
+        {"role": "user", "content": f"Chat History:\n{conversation_text}"}
+    ]
+
+    response = await chat_completion(messages, temperature=0.0)
+    
+    if "error" in response:
+        # Fail safe: return not guilty if AI fails
+        return {"guilty": False, "reason": "AI analysis failed"}
+
+    content = response["choices"][0]["message"]["content"]
+    
+    import json
+    try:
+        # Clean up potential markdown code blocks
+        if "```json" in content:
+            content = content.split("```json")[1].split("```")[0].strip()
+        elif "```" in content:
+            content = content.split("```")[1].split("```")[0].strip()
+            
+        result = json.loads(content)
+        return {
+            "guilty": result.get("guilty", False),
+            "reason": result.get("reason", "No reason provided")
+        }
+    except json.JSONDecodeError:
+        # Fallback heuristic
+        guilty = "guilty" in content.lower() and "not guilty" not in content.lower()
+        return {"guilty": guilty, "reason": content}
+
 async def imitate_ex(
     message: str, 
     history: List[Dict[str, str]] = None, 
