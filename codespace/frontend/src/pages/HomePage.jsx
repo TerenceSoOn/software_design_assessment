@@ -115,7 +115,7 @@ function HomePage() {
                 inputText={practiceInput}
                 setInputText={setPracticeInput}
                 messagesEndRef={practiceEndRef}
-                title="🤖 Practice Mode (Random Persona)"
+                title="🤖 Practice Mode"
             />
         </div>
     );

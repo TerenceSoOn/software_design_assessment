@@ -57,8 +57,14 @@ def run_services(ip):
             time.sleep(1)
     except KeyboardInterrupt:
         print("\n🛑 Stopping services...")
-        os.killpg(os.getpgid(backend_process.pid), signal.SIGTERM)
-        os.killpg(os.getpgid(frontend_process.pid), signal.SIGTERM)
+        try:
+            os.killpg(os.getpgid(backend_process.pid), signal.SIGTERM)
+        except (ProcessLookupError, OSError):
+            pass  # Process already terminated
+        try:
+            os.killpg(os.getpgid(frontend_process.pid), signal.SIGTERM)
+        except (ProcessLookupError, OSError):
+            pass  # Process already terminated
         sys.exit(0)
 
 if __name__ == "__main__":
