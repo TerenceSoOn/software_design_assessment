@@ -24,9 +24,16 @@ const ProtectedRoute = ({ children }) => {
   return children;
 };
 
+// Redirect to static presentation file
+const PresentationRedirect = () => {
+  window.location.href = '/presentation/index.html';
+  return <div className="loading">Redirecting to presentation...</div>;
+};
+
 function App() {
   return (
     <Routes>
+      <Route path="/presentation" element={<PresentationRedirect />} />
       <Route element={<Layout />}>
         <Route path="/" element={<HomePage />} />
         <Route path="/login" element={<LoginPage />} />

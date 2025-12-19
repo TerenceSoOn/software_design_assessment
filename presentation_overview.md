@@ -6,7 +6,7 @@
 
 **1. Background**
 
-- Many people struggle to meet new people and form a close relationships
+- Many people struggle to meet neordew people and form a close relationships
 - Existing apps focus on swiping (Tinder) or broadcasting (Instagram) -- No unified experience
 - What if someone is new to date, or too shy to start a talk?
 - What if you broke up with someone and you miss that person so much? -- Lack of humanity caring!
@@ -33,7 +33,7 @@ Speaker A
 Let me introduce some basic features of FlirtNet.
 - **Homepage**: Here is the homepage of flirtnet, isn't it looks beautiful
 - **Registeration**: Before start, you need to register for an account first. Select your gender and people you are looking for
-- **Homepage**: Then you login successfully
+- **Profile page**
 - **Edit profile**: Add your age, bio, hobby and your location. Can also edit your gender incase you change it
 - **Optimize profile**: If you are lack of confidence with your profile, no worry, we are here to help. You can get suggestions on your current profile at a click.
 - **Community system**: The community is a place where you can meet lots of new people. You can send post and view other's post.
@@ -42,9 +42,11 @@ Let me introduce some basic features of FlirtNet.
 
 Speaker B
 - **Show practice mode**
+- **Random chat matching**
 - **Random chat**
 - **use wingman**
 - **report**
+- **Report result**
 - **end chat and send datemate request**
 - **accept datemate request**
 - **Private chat(also can use wingman)**
@@ -85,16 +87,18 @@ Speaker B
 - Support voice/video chat
 - Support change password and reset password through email
 
-3. Make money, Separate Pro users and free users
+2. Make money, Separate Pro users and free users
 - Unlimited random chat
 - Unlimited Wingman
 - Unlimited profile optimizer
 - Unlock Miss Ex access
 
 
-2. Make FlirtNet more profession
+3. Make FlirtNet more profession
 - Replace SQLite with postgres
 - Provide better compatibility on Windows and mobile devices
+
+4. 公网ip, 不止局域网访问
 
 ---
 
