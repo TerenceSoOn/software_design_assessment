@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,7 +15,7 @@
             --text-light: #555;
             --slide-bg: rgba(255, 255, 255, 0.95);
         }
-        
+
         body {
             font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', sans-serif;
             margin: 0;
@@ -30,9 +31,17 @@
         }
 
         @keyframes gradientBG {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+            0% {
+                background-position: 0% 50%;
+            }
+
+            50% {
+                background-position: 100% 50%;
+            }
+
+            100% {
+                background-position: 0% 50%;
+            }
         }
 
         .slide-container {
@@ -48,7 +57,7 @@
         .slide {
             background-color: var(--slide-bg);
             border-radius: 20px;
-            box-shadow: 0 20px 50px rgba(0,0,0,0.2);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.2);
             padding: 60px 80px;
             box-sizing: border-box;
             height: 90vh;
@@ -57,9 +66,10 @@
             display: none;
             flex-direction: column;
             position: absolute;
-            overflow: hidden; /* No scrolling */
+            overflow: hidden;
+            /* No scrolling */
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255,255,255,0.5);
+            border: 1px solid rgba(255, 255, 255, 0.5);
         }
 
         /* Active Slide Animation */
@@ -69,11 +79,12 @@
         }
 
         @keyframes cardEntrance {
-            from { 
+            from {
                 opacity: 0;
                 transform: translateY(50px) scale(0.95);
             }
-            to { 
+
+            to {
                 opacity: 1;
                 transform: translateY(0) scale(1);
             }
@@ -112,18 +123,20 @@
             border-radius: 50px;
             font-size: 1em;
             font-weight: 600;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
             letter-spacing: 0.5px;
         }
 
         /* Content Layout */
         .content {
             flex-grow: 1;
-            font-size: 1.3em; /* Reduced to prevent overflow */
+            font-size: 1.3em;
+            /* Reduced to prevent overflow */
             line-height: 1.5;
             display: flex;
             flex-direction: column;
-            justify-content: flex-start; /* Align to top for consistent title position */
+            justify-content: flex-start;
+            /* Align to top for consistent title position */
         }
 
         /* Two Column Layout for Text + Image */
@@ -149,7 +162,7 @@
             max-width: 100%;
             max-height: 500px;
             border-radius: 15px;
-            box-shadow: 0 15px 35px rgba(0,0,0,0.2);
+            box-shadow: 0 15px 35px rgba(0, 0, 0, 0.2);
             transition: transform 0.3s ease;
             object-fit: cover;
         }
@@ -163,7 +176,7 @@
             margin-bottom: 1em;
             color: var(--secondary-color);
             font-weight: 700;
-            border-bottom: 2px solid rgba(0,0,0,0.05);
+            border-bottom: 2px solid rgba(0, 0, 0, 0.05);
             padding-bottom: 10px;
             display: inline-block;
         }
@@ -230,13 +243,13 @@
         .title-slide h1 {
             font-size: 6em;
             color: white;
-            text-shadow: 4px 4px 15px rgba(0,0,0,0.2);
+            text-shadow: 4px 4px 15px rgba(0, 0, 0, 0.2);
             margin-bottom: 10px;
         }
-        
+
         .title-slide h2 {
-            color: rgba(255,255,255,0.95);
-            text-shadow: 2px 2px 5px rgba(0,0,0,0.2);
+            color: rgba(255, 255, 255, 0.95);
+            text-shadow: 2px 2px 5px rgba(0, 0, 0, 0.2);
             font-size: 2.5em;
             font-weight: 400;
         }
@@ -250,17 +263,17 @@
         }
 
         .team-member {
-            background: rgba(255,255,255,0.15);
+            background: rgba(255, 255, 255, 0.15);
             padding: 15px 35px;
             border-radius: 50px;
             font-size: 1.3em;
             backdrop-filter: blur(5px);
-            border: 1px solid rgba(255,255,255,0.3);
+            border: 1px solid rgba(255, 255, 255, 0.3);
             transition: all 0.3s ease;
         }
 
         .team-member:hover {
-            background: rgba(255,255,255,0.3);
+            background: rgba(255, 255, 255, 0.3);
             transform: translateY(-5px);
         }
 
@@ -275,7 +288,7 @@
         }
 
         .btn {
-            background-color: rgba(255,255,255,0.8);
+            background-color: rgba(255, 255, 255, 0.8);
             color: var(--secondary-color);
             border: none;
             width: 50px;
@@ -284,7 +297,7 @@
             cursor: pointer;
             font-size: 1.2em;
             transition: all 0.3s;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
             display: flex;
             align-items: center;
             justify-content: center;
@@ -300,11 +313,11 @@
             position: fixed;
             bottom: 30px;
             left: 30px;
-            color: rgba(0,0,0,0.5);
+            color: rgba(0, 0, 0, 0.5);
             font-size: 1.2em;
             font-weight: bold;
             z-index: 1000;
-            background: rgba(255,255,255,0.5);
+            background: rgba(255, 255, 255, 0.5);
             padding: 5px 15px;
             border-radius: 20px;
         }
@@ -321,33 +334,100 @@
         }
 
         /* Animations */
-        .slide.active h2 { animation: slideInDown 0.8s ease forwards; opacity: 0; }
-        .slide.active .content { animation: fadeIn 1s ease 0.3s forwards; opacity: 0; }
-        .slide.active .slide-image { animation: zoomIn 0.8s ease 0.5s forwards; opacity: 0; transform: scale(0.9); }
-        
-        @keyframes slideInDown { from { transform: translateY(-30px); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        @keyframes zoomIn { from { transform: scale(0.9); opacity: 0; } to { transform: scale(1); opacity: 1; } }
+        .slide.active h2 {
+            animation: slideInDown 0.8s ease forwards;
+            opacity: 0;
+        }
+
+        .slide.active .content {
+            animation: fadeIn 1s ease 0.3s forwards;
+            opacity: 0;
+        }
+
+        .slide.active .slide-image {
+            animation: zoomIn 0.8s ease 0.5s forwards;
+            opacity: 0;
+            transform: scale(0.9);
+        }
+
+        @keyframes slideInDown {
+            from {
+                transform: translateY(-30px);
+                opacity: 0;
+            }
+
+            to {
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+            }
+
+            to {
+                opacity: 1;
+            }
+        }
+
+        @keyframes zoomIn {
+            from {
+                transform: scale(0.9);
+                opacity: 0;
+            }
+
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
 
         @media print {
-            body { overflow: visible; height: auto; background: white; }
-            .slide { display: block !important; position: relative; height: auto; width: 100%; margin-bottom: 50px; box-shadow: none; border: 1px solid #ddd; page-break-after: always; opacity: 1 !important; transform: none !important; }
-            .controls, .slide-number, .progress-bar { display: none; }
-            .slide-image { max-height: 300px; }
+            body {
+                overflow: visible;
+                height: auto;
+                background: white;
+            }
+
+            .slide {
+                display: block !important;
+                position: relative;
+                height: auto;
+                width: 100%;
+                margin-bottom: 50px;
+                box-shadow: none;
+                border: 1px solid #ddd;
+                page-break-after: always;
+                opacity: 1 !important;
+                transform: none !important;
+            }
+
+            .controls,
+            .slide-number,
+            .progress-bar {
+                display: none;
+            }
+
+            .slide-image {
+                max-height: 300px;
+            }
         }
     </style>
 </head>
+
 <body>
     <div class="progress-bar" id="progressBar"></div>
     <div class="slide-container" id="slideContainer">
-        
+
         <!-- Title Slide -->
         <div class="slide title-slide active">
             <div>
                 <h1>FlirtNet</h1>
                 <h2>Fostering Genuine Connections in a Digital World</h2>
                 <p style="font-size: 1.8em; margin-top: 30px; opacity: 0.9;">Software Design Assessment</p>
-                
+
                 <div class="team-list">
                     <div class="team-member">Junlin Li</div>
                     <div class="team-member">Hongjia Huang</div>
@@ -370,7 +450,8 @@
                     <li><strong>The Paradox:</strong> We are more connected than ever, yet loneliness is rising.</li>
                     <li><strong>Fragmentation:</strong>
                         <ul class="sub-list">
-                            <li>Users juggle multiple apps: Tinder for dating, Reddit for forums, WhatsApp for chat.</li>
+                            <li>Users juggle multiple apps: Tinder for dating, Reddit for forums, WhatsApp for chat.
+                            </li>
                             <li>There is no unified journey from "Stranger" to "Partner."</li>
                         </ul>
                     </li>
@@ -395,12 +476,14 @@
                     <li><strong>Human-Centric Design:</strong>
                         <ul class="sub-list">
                             <li><strong>Social First:</strong> Technology is the bridge, not the destination.</li>
-                            <li><strong>Supportive:</strong> We believe a platform should actively help users connect, not just match them.</li>
+                            <li><strong>Supportive:</strong> We believe a platform should actively help users connect,
+                                not just match them.</li>
                         </ul>
                     </li>
                     <li><strong>The Goal:</strong>
                         <ul class="sub-list">
-                            <li>To create a safe, unified ecosystem where users can express themselves, meet spontaneously, and build deep, lasting relationships.</li>
+                            <li>To create a safe, unified ecosystem where users can express themselves, meet
+                                spontaneously, and build deep, lasting relationships.</li>
                         </ul>
                     </li>
                 </ul>
@@ -442,7 +525,8 @@
                 <ul>
                     <li><strong>Built for Performance & Scale:</strong>
                         <ul class="sub-list">
-                            <li><strong>Frontend:</strong> <strong>React</strong> with <strong>Vite</strong> for a responsive UI.</li>
+                            <li><strong>Frontend:</strong> <strong>React</strong> with <strong>Vite</strong> for a
+                                responsive UI.</li>
                             <li><strong>Backend:</strong> <strong>FastAPI</strong> for high-speed async processing.</li>
                             <li><strong>Real-Time:</strong> <strong>Socket.IO</strong> for instant messaging.</li>
                             <li><strong>Intelligence:</strong> <strong>DeepSeek LLM</strong> for AI features.</li>
@@ -463,7 +547,9 @@
                 <ul>
                     <li><strong>Community Feed:</strong>
                         <ul class="sub-list">
-                            <li>A dynamic space for users to share thoughts, images, and interests via <strong>Tags</strong>.</li>
+                            <li>A dynamic space for users to share thoughts, images, and interests via
+                                <strong>Tags</strong>.
+                            </li>
                             <li>Designed to foster discovery based on shared hobbies.</li>
                         </ul>
                     </li>
@@ -487,7 +573,8 @@
                 <ul>
                     <li><strong>Datemate System:</strong>
                         <ul class="sub-list">
-                            <li><strong>Mutual Connection:</strong> A formal "Datemate" status requiring mutual acceptance.</li>
+                            <li><strong>Mutual Connection:</strong> A formal "Datemate" status requiring mutual
+                                acceptance.</li>
                             <li><strong>Profile Customization:</strong> Rich user profiles with bios and avatars.</li>
                         </ul>
                     </li>
@@ -559,7 +646,8 @@
                 <ul>
                     <li><strong>AI Content Safety:</strong>
                         <ul class="sub-list">
-                            <li><strong>Automated Detection:</strong> Real-time analysis of messages to detect abuse using <strong>DeepSeek</strong>.</li>
+                            <li><strong>Automated Detection:</strong> Real-time analysis of messages to detect abuse
+                                using <strong>DeepSeek</strong>.</li>
                         </ul>
                     </li>
                     <li><strong>User Reporting:</strong>
@@ -697,7 +785,9 @@
                     <li><strong>Summary:</strong>
                         <ul class="sub-list">
                             <li>FlirtNet is more than a chat app; it's a supportive social ecosystem.</li>
-                            <li>We combine <strong>safe spaces</strong>, <strong>real-time connection</strong>, and <strong>intelligent support</strong>.</li>
+                            <li>We combine <strong>safe spaces</strong>, <strong>real-time connection</strong>, and
+                                <strong>intelligent support</strong>.
+                            </li>
                         </ul>
                     </li>
                     <li><strong>Q&A</strong></li>
@@ -769,4 +859,5 @@
         updateSlideNumber();
     </script>
 </body>
+
 </html>

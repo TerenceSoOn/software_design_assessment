@@ -164,11 +164,10 @@ function SquarePage() {
         <div className="square-page">
             <div className="square-header">
                 <h1>🌟 Community</h1>
-                <p>Share moments, connect with others</p>
+                <p>Share Your Moment</p>
             </div>
 
             <div className="create-post-card">
-                <h3>Share your thoughts</h3>
                 <form onSubmit={handleCreatePost}>
                     <textarea
                         className="input textarea"
@@ -200,7 +199,7 @@ function SquarePage() {
                             className="btn btn-primary"
                             disabled={!newPostContent.trim() || uploading}
                         >
-                            {uploading ? 'Uploading...' : '📝 Post'}
+                            {uploading ? 'Uploading...' : 'Post'}
                         </button>
                     </div>
                 </form>

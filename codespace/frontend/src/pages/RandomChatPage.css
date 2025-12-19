@@ -138,6 +138,44 @@
     background: rgba(255, 255, 255, 0.25);
 }
 
+/* Partner Details */
+.partner-name-row {
+    display: flex;
+    align-items: baseline;
+    gap: 8px;
+}
+
+.partner-demographics {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    font-weight: 500;
+    opacity: 0.8;
+}
+
+.partner-bio {
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+    margin: 4px 0 6px 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 300px;
+}
+
+.partner-tags-mini {
+    display: flex;
+    gap: 6px;
+    flex-wrap: wrap;
+}
+
+.mini-tag {
+    font-size: 0.7rem;
+    padding: 2px 8px;
+    background: rgba(0, 0, 0, 0.05);
+    border-radius: 10px;
+    color: var(--text-secondary);
+}
+
 /* Messages Area */
 .messages-area {
     flex: 1;

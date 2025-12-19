@@ -298,7 +298,7 @@ function ProfilePage() {
 
                         {aiSuggestions && (
                             <div className="ai-suggestions" style={{ marginTop: '20px', padding: '20px', background: 'var(--glass-purple)', borderRadius: '16px' }}>
-                                <h4>🤖 AI Suggestions</h4>
+                                <h4>🤖Suggestions</h4>
                                 <p style={{ marginTop: '10px' }}>{aiSuggestions}</p>
                                 <button
                                     className="btn btn-sm btn-secondary"

@@ -342,7 +342,13 @@
 /* Comment Input */
 .comment-form {
     display: flex;
-    gap: var(--space-sm);
+    gap: var(--space-md);
+}
+
+.add-comment {
+    display: flex;
+    gap: var(--space-md);
+    margin-top: var(--space-sm);
 }
 
 .comment-form input {
@@ -391,7 +397,7 @@
 }
 
 .profile-modal {
-    background: var(--glass-white-strong);
+    background: rgba(255, 255, 255, 0.9);
     backdrop-filter: var(--blur-heavy);
     border-radius: var(--radius-2xl);
     border: 1px solid var(--glass-border-strong);

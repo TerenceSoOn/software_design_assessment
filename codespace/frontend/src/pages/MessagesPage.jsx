@@ -223,8 +223,8 @@ function MessagesPage() {
                 });
                 alert(result.message);
                 if (result.action_taken === "deleted") {
-                     // User deleted, navigate away
-                     window.location.href = '/datemates';
+                    // User deleted, navigate away
+                    window.location.href = '/datemates';
                 }
             } catch (error) {
                 alert("Failed to report user: " + (error.response?.data?.detail || error.message));
@@ -276,17 +276,34 @@ function MessagesPage() {
                             <div className="chat-partner-avatar-placeholder">?</div>
                         )}
                         <div className="chat-partner-details">
-                            <h3>{partner?.display_name || 'Datemate'}</h3>
-                            <div className="chat-partner-status online">Online</div>
+                            <div className="partner-name-row">
+                                <h3>{partner?.display_name || 'Datemate'}</h3>
+                                {partner && (partner.age || partner.gender) && (
+                                    <span className="partner-demographics">
+                                        {partner.age && `${partner.age} y/o`}
+                                        {partner.gender && (partner.gender === 'Male' ? ' ♂' : partner.gender === 'Female' ? ' ♀' : '')}
+                                    </span>
+                                )}
+                            </div>
+                            {partner?.bio && <p className="partner-bio" title={partner.bio}>{partner.bio}</p>}
                         </div>
                     </div>
-                    <button 
-                        className="btn btn-sm btn-danger"
-                        style={{backgroundColor: '#dc3545', color: 'white', border: 'none', padding: '5px 10px', borderRadius: '4px', cursor: 'pointer'}}
-                        onClick={handleReport}
-                    >
-                        Report
-                    </button>
+                    <div className="chat-header-actions" style={{ display: 'flex', alignItems: 'center', gap: '15px' }}>
+                        {partner?.interests && partner.interests.length > 0 && (
+                            <div className="partner-tags-mini" style={{ marginTop: 0 }}>
+                                {partner.interests.slice(0, 3).map((tag, i) => (
+                                    <span key={i} className="mini-tag">{tag}</span>
+                                ))}
+                            </div>
+                        )}
+                        <button
+                            className="btn btn-sm btn-danger"
+                            style={{ backgroundColor: '#dc3545', color: 'white', border: 'none', padding: '5px 10px', borderRadius: '4px', cursor: 'pointer' }}
+                            onClick={handleReport}
+                        >
+                            Report
+                        </button>
+                    </div>
                 </div>
 
                 <div className="messages-container">

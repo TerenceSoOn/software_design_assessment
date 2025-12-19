@@ -22,15 +22,13 @@
   /* Romantic Gradient (Pink to Purple) */
   --romantic-gradient: linear-gradient(135deg, #FF6B9D 0%, #667eea 50%, #764ba2 100%);
 
-  /* Glass Background Colors - More Translucent */
-  --glass-white: rgba(255, 255, 255, 0.5);
-  /* Was 0.7 */
-  --glass-white-strong: rgba(255, 255, 255, 0.75);
-  /* Was 0.85 */
-  --glass-pink: rgba(255, 107, 157, 0.15);
-  --glass-purple: rgba(102, 126, 234, 0.15);
-  --glass-border: rgba(255, 255, 255, 0.5);
-  --glass-border-strong: rgba(255, 255, 255, 0.7);
+  /* Glass Background Colors - More Translucent & Glassy */
+  --glass-white: rgba(255, 255, 255, 0.35);
+  --glass-white-strong: rgba(255, 255, 255, 0.55);
+  --glass-pink: rgba(255, 107, 157, 0.12);
+  --glass-purple: rgba(102, 126, 234, 0.12);
+  --glass-border: rgba(255, 255, 255, 0.4);
+  --glass-border-strong: rgba(255, 255, 255, 0.6);
 
   /* Text Colors */
   --text-primary: #1a1a2e;
@@ -45,17 +43,15 @@
 
   /* Shadows - Softer & Glowy */
   --shadow-soft: 0 4px 20px rgba(0, 0, 0, 0.05);
-  --shadow-medium: 0 8px 32px rgba(31, 38, 135, 0.1);
-  --shadow-glass: 0 8px 32px rgba(31, 38, 135, 0.15);
-  --shadow-glow-pink: 0 0 30px rgba(255, 107, 157, 0.4);
-  --shadow-glow-purple: 0 0 30px rgba(102, 126, 234, 0.4);
+  --shadow-medium: 0 8px 32px rgba(31, 38, 135, 0.12);
+  --shadow-glass: 0 8px 32px rgba(31, 38, 135, 0.18), inset 0 0 0 1px rgba(255, 255, 255, 0.2);
+  --shadow-glow-pink: 0 0 40px rgba(255, 107, 157, 0.5);
+  --shadow-glow-purple: 0 0 40px rgba(102, 126, 234, 0.5);
 
-  /* Blur Effects - Stronger */
-  --blur-light: blur(12px);
-  --blur-medium: blur(24px);
-  /* Was 20px */
-  --blur-heavy: blur(40px);
-  /* Was 30px */
+  /* Blur Effects - Even Stronger for Glass Effect */
+  --blur-light: blur(16px);
+  --blur-medium: blur(28px);
+  --blur-heavy: blur(48px);
 
   /* Border Radius */
   --radius-sm: 8px;

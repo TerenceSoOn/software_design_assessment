@@ -328,7 +328,7 @@ function RandomChatPage() {
                 });
                 alert(result.message);
                 if (result.action_taken === "deleted") {
-                     handleLeave();
+                    handleLeave();
                 }
             } catch (error) {
                 alert("Failed to report user: " + (error.response?.data?.detail || error.message));
@@ -395,13 +395,22 @@ function RandomChatPage() {
                                         <span className={`status-indicator ${status === 'matched' ? 'online' : ''}`}></span>
                                     </div>
                                     <div className="partner-text">
-                                        <h3>{partner.display_name || 'Random Stranger'}</h3>
-                                        {partner.bio && <p className="partner-bio">{partner.bio.slice(0, 50)}...</p>}
+                                        <div className="partner-name-row">
+                                            <h3>{partner.display_name || 'Random Stranger'}</h3>
+                                            {(partner.age || partner.gender) && (
+                                                <span className="partner-demographics">
+                                                    {partner.age && `${partner.age} y/o`}
+                                                    {partner.gender && (partner.gender === 'Male' ? ' ♂' : partner.gender === 'Female' ? ' ♀' : '')}
+                                                </span>
+                                            )}
+                                        </div>
+                                        {partner.bio && <p className="partner-bio" title={partner.bio}>{partner.bio}</p>}
+
                                     </div>
                                 </>
                             ) : (
                                 <div className="partner-text">
-                                    <h3>{status === 'searching' ? '🔍 Searching for a match...' : 'Disconnected'}</h3>
+                                    <h3>{status === 'searching' ? 'Matching...' : 'Disconnected'}</h3>
                                 </div>
                             )}
                         </div>
@@ -418,9 +427,9 @@ function RandomChatPage() {
                             Leave Chat
                         </button>
                         {status === 'matched' && (
-                            <button 
-                                className="leave-btn" 
-                                style={{backgroundColor: '#dc3545', marginLeft: '10px'}}
+                            <button
+                                className="leave-btn"
+                                style={{ backgroundColor: '#dc3545', marginLeft: '10px' }}
                                 onClick={handleReport}
                             >
                                 Report
@@ -468,7 +477,7 @@ function RandomChatPage() {
                         {status === 'searching' ? (
                             <div className="searching-container">
                                 <div className="loader"></div>
-                                <p>Looking for someone compatible...</p>
+                                <p>Looking for Your Soul Mate...</p>
                             </div>
                         ) : (
                             <div className="ended-container">

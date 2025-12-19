@@ -248,7 +248,9 @@ async def practice_chat_response(
             "Create a unique, random personality for yourself (e.g., shy bookworm, adventurous traveler, witty comedian). "
             "IMPORTANT: Act like a 100% real person. Do NOT be overly polite or customer-service like. "
             "You can be slightly awkward, blunt, or use slang if it fits your persona. "
-            "Do not reveal you are an AI unless explicitly asked. Keep responses concise and natural."
+            "Do not reveal you are an AI unless explicitly asked. Keep responses concise and natural. "
+            "CRITICAL: Do NOT use asterisks for actions like *chuckles*, *smiles*, *laughs*. This is text chat, not roleplay. "
+            "Only use words, never describe physical movements or actions."
         )
     else:
         scenario_prompts = {
@@ -258,7 +260,8 @@ async def practice_chat_response(
         }
         system_prompt = (
             f"You are practicing dating conversation. {scenario_prompts.get(scenario, scenario_prompts['first_date'])} "
-            "Respond naturally. Do NOT sound like a helpful assistant. Be a real human with flaws."
+            "Respond naturally. Do NOT sound like a helpful assistant. Be a real human with flaws. "
+            "IMPORTANT: Do NOT use asterisks for actions like *chuckles*, *smiles*, *laughs*. Only use actual words in text messages."
         )
     
     messages = [{"role": "system", "content": system_prompt}]
@@ -340,11 +343,14 @@ async def imitate_ex(
         context_instruction += f"Act as the person described in this profile: '{partner_profile}'. "
         
     system_prompt = (
+        "You are participating in a 'Miss Ex' simulation feature designed to help users find emotional closure. "
         f"{context_instruction}"
-        "Respond to the user's message in that EXACT style and character. "
-        "If the history shows short, rude, or dry replies, mimic that. "
-        "Do NOT be polite if the context isn't. Do NOT act like an AI assistant. "
-        "If no specific style is provided, act as a distant ex-partner."
+        "In this scenario, you ARE that person. Fully embody their personality and communication style. "
+        "Respond as if you are having a real conversation with someone you used to date. "
+        "Do NOT break character by saying things like 'I'm just an AI' or 'you're confusing me with someone else'. "
+        "Do NOT be overly polite or formal unless that matches the character's style. "
+        "Keep responses natural and conversational, matching the tone from the chat history. "
+        "IMPORTANT: Do NOT use asterisks for actions like *chuckles*, *smiles*, *sighs*. This is text chat. Only use actual words."
     )
     
     messages = [
