@@ -135,18 +135,12 @@ if __name__ == "__main__":
     if not setup_backend():
         sys.exit(1)
     
-    # Use stable hostname so sessions don't reset when IP changes
-    # current_ip = get_lan_ip() 
-    current_ip = "HUAWEI-Mate-Book-Pro.local"
+    # Use LAN IP for network access (uncomment hostname for stable sessions)
+    current_ip = get_lan_ip() 
+    # current_ip = "HUAWEI-Mate-Book-Pro.local"
     # current_ip = socket.gethostname() + ".local" # Alternative auto-detection
     
-    print(f"🔍 Using Stable Hostname: {current_ip}")
-    
-    # Update config
-    update_frontend_env(current_ip)
-    
-    # Run services
-    run_services(current_ip)
+    print(f"🔍 Using LAN IP: {current_ip}")
     
     # Update config
     update_frontend_env(current_ip)
