@@ -1,0 +1,833 @@
+<!doctype html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FlirtNet Presentation</title>
+
+    <!-- Reveal.js -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.0.4/reset.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.0.4/reveal.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.0.4/theme/simple.min.css">
+
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+
+    <style>
+        :root {
+            /* Vibrant Liquid Glass Palette */
+            --glass-surface: rgba(255, 255, 255, 0.25);
+            --glass-border: 1px solid rgba(255, 255, 255, 0.6);
+            --glass-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.15);
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(120deg, #FF9A9E 0%, #FECFEF 50%, #a18cd1 100%);
+            overflow: hidden;
+            color: #333;
+        }
+
+        /* -----------------------------------------------------------
+           DYNAMIC LIQUID BACKGROUND
+           ----------------------------------------------------------- */
+        .blob-cont {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+        }
+
+        .blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(60px);
+            opacity: 0.6;
+            animation: float-blob 20s infinite ease-in-out alternate;
+        }
+
+        .blob-1 {
+            top: -10%;
+            left: -10%;
+            width: 50vw;
+            height: 50vw;
+            background: #FF9A9E;
+            animation-duration: 25s;
+        }
+
+        .blob-2 {
+            bottom: -10%;
+            right: -10%;
+            width: 60vw;
+            height: 60vw;
+            background: #a18cd1;
+            animation-duration: 30s;
+            animation-delay: -5s;
+        }
+
+        .blob-3 {
+            bottom: 20%;
+            left: 20%;
+            width: 40vw;
+            height: 40vw;
+            background: #fbc2eb;
+            animation-duration: 22s;
+            animation-delay: -10s;
+        }
+
+        @keyframes float-blob {
+            0% {
+                transform: translate(0, 0) scale(1);
+            }
+
+            50% {
+                transform: translate(30px, 50px) scale(1.1);
+            }
+
+            100% {
+                transform: translate(-20px, -30px) scale(0.9);
+            }
+        }
+
+        /* -----------------------------------------------------------
+           GLASS & LAYOUT STYLES
+           ----------------------------------------------------------- */
+
+        .reveal .slides section {
+            height: 100%;
+            text-align: center;
+            padding: 0 20px;
+        }
+
+        .reveal h1,
+        .reveal h2,
+        .reveal h3 {
+            font-family: 'Inter', sans-serif;
+            font-weight: 800;
+            text-transform: none;
+            background: linear-gradient(45deg, #FF6B9D, #667eea);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 20px;
+            filter: drop-shadow(0 2px 10px rgba(0, 0, 0, 0.1));
+        }
+
+        .reveal h2 {
+            font-size: 3.5rem;
+        }
+
+        .reveal p,
+        .reveal li {
+            font-size: 1.5rem;
+            line-height: 1.6;
+            color: #4a5568;
+            font-weight: 500;
+        }
+
+        .reveal ul {
+            margin-left: 0;
+            display: inline-block;
+            text-align: left;
+        }
+
+        /* Enhanced Glass Panel */
+        .glass-panel {
+            background: var(--glass-surface);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: var(--glass-border);
+            border-radius: 24px;
+            padding: 30px;
+            box-shadow: var(--glass-shadow);
+            transition: transform 0.3s ease;
+        }
+
+        .glass-panel:hover {
+            transform: translateY(-5px);
+            background: rgba(255, 255, 255, 0.35);
+        }
+
+        /* Images - Floating & Glassy */
+        .reveal img {
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+            border: 6px solid rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(5px);
+            max-height: 75vh !important;
+            max-width: 90vw;
+            margin: 0 auto;
+            display: block;
+            animation: float-img 6s ease-in-out infinite;
+        }
+
+        /* SUPER SIZE CLASS for Homepage/Chat */
+        .reveal img.super-size {
+            max-height: 90vh !important;
+            max-width: 95vw !important;
+            border-width: 4px;
+        }
+
+        @keyframes float-img {
+
+            0%,
+            100% {
+                transform: translateY(0);
+            }
+
+            50% {
+                transform: translateY(-10px);
+            }
+        }
+
+        /* Layouts */
+        .split-layout {
+            display: grid;
+            grid-template-columns: 1fr 1.2fr;
+            /* More space for image */
+            gap: 50px;
+            align-items: center;
+            height: 100%;
+            text-align: left;
+            padding: 0 5%;
+        }
+
+        .split-layout h2 {
+            font-size: 3.5rem;
+            text-align: left;
+        }
+
+        /* Center Layout specialized for Image Slides */
+        .center-layout-image {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            /* True center for huge images */
+            height: 100%;
+            padding-top: 0;
+        }
+
+        .center-layout {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
+
+        /* Feature Grid: 3 Columns, Bigger Font */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 40px;
+            width: 95%;
+            margin: 0 auto;
+        }
+
+        .feature-grid .glass-panel {
+            padding: 40px 20px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .feature-grid h4 {
+            margin: 0 0 15px 0;
+            color: #E91E63;
+            font-size: 2rem;
+            font-weight: 800;
+        }
+
+        .feature-grid p {
+            font-size: 1.5rem;
+            margin: 0;
+            color: #555;
+            line-height: 1.4;
+        }
+
+        /* Future Work List Style */
+        .future-list {
+            list-style: none;
+            padding: 0;
+            width: 100%;
+        }
+
+        .future-list li {
+            background: rgba(255, 255, 255, 0.3);
+            margin: 15px 0;
+            padding: 20px;
+            border-radius: 15px;
+            font-size: 2rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        /* Architecture Bubbles */
+        .arch-bubbles {
+            display: flex;
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .arch-bubble {
+            background: rgba(255, 255, 255, 0.4);
+            padding: 20px 40px;
+            border-radius: 50px;
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            font-size: 1.8rem;
+            color: #E91E63;
+            font-weight: 700;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="blob-cont">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <div class="reveal">
+        <div class="slides">
+
+            <!-- 1. Title Slide -->
+            <section>
+                <div class="center-layout">
+                    <div style="font-size: 10rem; margin-bottom: 20px; animation: float-img 4s infinite;">💘</div>
+                    <h1 style="font-size: 7rem; margin-bottom: 0;">FlirtNet</h1>
+                    <p style="font-size: 2.2rem; color: #555; margin-top: 20px;">We Meet. We Flirt. We Love.</p>
+                </div>
+            </section>
+
+            <!-- 2. Opening: Background -->
+            <section>
+                <div class="split-layout">
+                    <div>
+                        <h2>Now:</h2>
+                        <ul style="list-style: none; padding: 0;">
+                            <li class="glass-panel" style="padding: 15px; margin-bottom: 20px;">
+                                <strong>Many people struggle</strong> to meet new people and form a close relationships.
+                            </li>
+                            <li class="glass-panel" style="padding: 15px; margin-bottom: 20px;">
+                                Existing apps focus on swiping (Tinder) or broadcasting (Instagram). <strong>-- No
+                                    Unified Experience</strong>
+                            </li>
+                            <li class="glass-panel" style="padding: 15px; margin-bottom: 20px;">
+                                What if someone is new to date, or too <strong>SHY</strong> to start a talk?
+                            </li>
+                            <li class="glass-panel" style="padding: 15px; margin-bottom: 20px;">
+                                What if you broke up with someone and you miss that person so much?
+                            </li>
+                            <li class="glass-panel" style="padding: 15px;">
+                                Reporting harmful info is often slow and mental abusing to stuff.<strong>-- Lack of
+                                    Humanity Caring</strong>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="center-layout">
+                        <div style="font-size: 6rem; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.2));">😢: 💖=None
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 3. Opening: Solution -->
+            <section>
+                <div class="center-layout">
+                    <h2>SO: Lets Join FlirtNet!</h2>
+                    <p style="font-size: 2.5rem; margin-bottom: 50px;">
+                        A place can actually help you <strong>Meet new people AND Fall in love</strong>
+                    </p>
+                    <div class="glass-panel" style="max-width: 900px; transform: scale(1.1);">
+                        <p style="font-size: 1.8rem; margin: 0; font-style: italic;">
+                            "No need to be afraid that you are shy or lack dating experience, We are here to help!"
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 4. Opening: Key Features -->
+            <section>
+                <div class="center-layout">
+                    <h2 style="font-size: 4rem; margin-bottom: 40px;">Key Features</h2>
+                    <div class="feature-grid">
+                        <div class="glass-panel">
+                            <h4>Random Matching</h4>
+                            <p>Meet new people Randomly.</p>
+                        </div>
+                        <div class="glass-panel">
+                            <h4>Community</h4>
+                            <p>Meet lots of new people at a time</p>
+                        </div>
+                        <div class="glass-panel">
+                            <h4>Datemate System</h4>
+                            <p>Long-lasting partnerships.</p>
+                        </div>
+                        <div class="glass-panel">
+                            <h4>Your Wingman</h4>
+                            <p>Analyze vibe & teach flirting.</p>
+                        </div>
+                        <div class="glass-panel">
+                            <h4>Miss Ex</h4>
+                            <p>Help you get out</p>
+                        </div>
+                        <div class="glass-panel">
+                            <h4>Safety</h4>
+                            <p>Quick report & ban system.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 5. SPEAKER A: Basic Features -->
+
+            <section>
+                <div class="center-layout-image">
+                    <!-- Homepage: Super Size, No Title -->
+                    <img src="../screenshots/homepage.png" alt="Homepage" class="super-size">
+                </div>
+            </section>
+
+            <!-- Register: SPLIT -->
+            <section>
+                <div class="split-layout">
+                    <div>
+                        <h2>Registration</h2>
+                        <div class="glass-panel">
+                            <p>Simple and secure account creation, with selecting your gender and whom you are looking
+                                for.</p>
+                        </div>
+                    </div>
+                    <img src="../screenshots/register.png" alt="Register" style="max-height: 80vh !important;">
+                </div>
+            </section>
+
+            <section>
+                <div class="center-layout-image">
+                    <h2>Profile</h2>
+                    <img src="../screenshots/profile.png" alt="Profile">
+                </div>
+            </section>
+
+            <!-- Edit: SPLIT -->
+            <section>
+                <div class="split-layout">
+                    <div>
+                        <h2>Edit Profile</h2>
+                        <div class="glass-panel">
+                            <p>Customize your personal details to stand out.</p>
+                        </div>
+                    </div>
+                    <img src="../screenshots/profile_edit.png" alt="Edit Profile">
+                </div>
+            </section>
+
+            <!-- Optimize: SPLIT -->
+            <section>
+                <div class="split-layout">
+                    <div>
+                        <h2>Optimize Profile</h2>
+                        <div class="glass-panel">
+                            <p>We help you polish your profile.</p>
+                        </div>
+                    </div>
+                    <img src="../screenshots/profile_optimize.png" alt="Optimize">
+                </div>
+            </section>
+
+            <section>
+                <div class="center-layout-image">
+                    <h2>The Community</h2>
+                    <img src="../screenshots/community.png" alt="Community">
+                </div>
+            </section>
+
+            <!-- Comments: SPLIT -->
+            <section>
+                <div class="split-layout">
+                    <div>
+                        <h2>Likes & Comments</h2>
+                        <div class="glass-panel">
+                            <p>Engage with others' posts actively.</p>
+                        </div>
+                    </div>
+                    <img src="../screenshots/community_comments.png" alt="Comments">
+                </div>
+            </section>
+
+            <!-- Request: SPLIT -->
+            <section>
+                <div class="split-layout">
+                    <div>
+                        <h2>Send Request</h2>
+                        <div class="glass-panel">
+                            <p>Found someone special in the community? Ask them for a date!</p>
+                        </div>
+                    </div>
+                    <img src="../screenshots/community_request_date.png" alt="Request">
+                </div>
+            </section>
+
+
+            <!-- 6. SPEAKER B: Advanced Features -->
+
+            <!-- Practice Mode: SPLIT -->
+            <section>
+                <div class="split-layout">
+                    <div>
+                        <h2>Practice Mode</h2>
+                        <div class="glass-panel">
+                            <p>Practice your self on Flirting~</p>
+                        </div>
+                    </div>
+                    <img src="../screenshots/practise_mode.png" alt="Practice">
+                </div>
+            </section>
+
+            <!-- Random Chat Match: SPLIT -->
+            <section>
+                <div class="split-layout">
+                    <div>
+                        <h2>Random Chat</h2>
+                        <div class="glass-panel">
+                            <p>Meet sombody new without hesitating</p>
+                        </div>
+                    </div>
+                    <img src="../screenshots/randomchat_matching.png" alt="Matching">
+                </div>
+            </section>
+
+            <!-- Random Chat: Center (Landscape) -->
+            <section>
+                <div class="center-layout-image">
+                    <!-- Random Chat: Super Size, No Title -->
+                    <img src="../screenshots/randomchat.png" alt="Chat" class="super-size">
+                </div>
+            </section>
+
+            <!-- Wingman: SPLIT -->
+            <section>
+                <div class="split-layout">
+                    <div>
+                        <h2>Wingman assists you</h2>
+                        <div class="glass-panel">
+                            <p>Here to Analyse the vibe and help you Flirt🔥</p>
+                        </div>
+                    </div>
+                    <img src="../screenshots/randomchat_wingman.png" alt="Wingman">
+                </div>
+            </section>
+
+            <!-- Report: SPLIT -->
+            <section>
+                <div class="split-layout">
+                    <div>
+                        <h2>Report</h2>
+                        <div class="glass-panel">
+                            <p>Report immediately if you are Harrased</p>
+                        </div>
+                    </div>
+                    <img src="../screenshots/report.png" alt="Report">
+                </div>
+            </section>
+
+            <!-- Report Result: SPLIT -->
+            <section>
+                <div class="split-layout">
+                    <div>
+                        <h2>Result</h2>
+                        <div class="glass-panel">
+                            <p>Get instant feedback, no more waiting. Bad people's account <strong>Get Banned</strong>
+                                immediately</p>
+                        </div>
+                    </div>
+                    <img src="../screenshots/report_result.png" alt="Report Result">
+                </div>
+            </section>
+
+            <!-- Leave: SPLIT -->
+            <section>
+                <div class="split-layout">
+                    <div>
+                        <h2>End Chat</h2>
+                        <div class="glass-panel">
+                            <p>Into someone? Ask for a date while chat ends!</p>
+                        </div>
+                    </div>
+                    <img src="../screenshots/randomchat_leave.png" alt="Leave">
+                </div>
+            </section>
+
+            <!-- Accept: SPLIT -->
+            <section>
+                <div class="split-layout">
+                    <div>
+                        <h2>Accept Request</h2>
+                        <div class="glass-panel">
+                            <p>Accept invitation from the right person</p>
+                        </div>
+                    </div>
+                    <img src="../screenshots/receive datemate request.png" alt="Receive Request">
+                </div>
+            </section>
+
+            <!-- Private Chat: SPLIT -->
+            <section>
+                <div class="split-layout">
+                    <div>
+                        <h2>Private Chat</h2>
+                        <div class="glass-panel">
+                            <p>Secure, private messaging, Wingman also available.</p>
+                        </div>
+                    </div>
+                    <img src="../screenshots/private_chat.png" alt="Private Chat">
+                </div>
+            </section>
+
+            <!-- Miss Ex: SPLIT -->
+            <section>
+                <div class="split-layout">
+                    <div>
+                        <h2>Miss Ex</h2>
+                        <div class="glass-panel">
+                            <p>Mess up your relation? Miss that person so much?</p>
+                        </div>
+                    </div>
+                    <img src="../screenshots/MissEX.png" alt="Miss Ex">
+                </div>
+            </section>
+
+
+            <!-- 7. Architecture - Page 1: Title & Overview -->
+            <section>
+                <div class="center-layout">
+                    <h2 style="font-size: 6rem; white-space: nowrap; margin-bottom: 20px;">Architecture & Design</h2>
+                </div>
+            </section>
+
+            <!-- 7. Architecture - Page 2: MVC -->
+            <section>
+                <div class="center-layout">
+                    <h2>MVC Design Pattern</h2>
+                    <div class="glass-panel"
+                        style="width: 50%; min-height: 350px; display: flex; align-items: center; justify-content: center;">
+                        <ul style="font-size: 1.4rem; text-align: left; padding: 0 20px;">
+                            <li style="margin-bottom: 40px; display: flex; align-items: center;">Model：Database
+                                <svg viewBox="0 0 24 24"
+                                    style="height: 1.5em; width: 1.5em; margin-left: 15px; border-radius: 22%; padding: 2px;"
+                                    fill="none" stroke="#E91E63" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+                                    <path d="M21 12c0 1.66-4 3-9 3s-9-1.34-9-3"></path>
+                                    <path d="M3 5v14c0 1.66 4 3 9 3s9-1.34 9-3V5"></path>
+                                </svg>
+                            </li>
+                            <li style="margin-bottom: 40px; display: flex; align-items: center;">View ：React
+                                <svg viewBox="0 0 24 24"
+                                    style="height: 1.5em; width: 1.5em; margin-left: 15px; border-radius: 22%; padding: 2px;"
+                                    fill="none" stroke="#61DAFB" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="2"></circle>
+                                    <ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(0 12 12)"></ellipse>
+                                    <ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(60 12 12)"></ellipse>
+                                    <ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(120 12 12)"></ellipse>
+                                </svg>
+                            </li>
+                            <li style="display: flex; align-items: center;">Controller ： FastAPI
+                                <svg viewBox="0 0 24 24"
+                                    style="height: 1.5em; width: 1.5em; margin-left: 15px; border-radius: 22%; padding: 2px;"
+                                    fill="#009688">
+                                    <path
+                                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15v-4H8l5-7v4h3l-5 7z">
+                                    </path>
+                                </svg>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 7. Architecture - Page 3: Stack -->
+            <section>
+                <div class="center-layout">
+                    <h2>Tech Stack</h2>
+                    <div class="glass-panel"
+                        style="width: 50%; min-height: 350px; display: flex; align-items: center; justify-content: center;">
+                        <ul style="font-size: 2.2rem; text-align: left; padding: 0 20px;">
+                            <li style="margin-bottom: 40px; display: flex; align-items: center;">Frontend：React
+                                <svg viewBox="0 0 24 24"
+                                    style="height: 1.5em; width: 1.5em; margin-left: 15px; border-radius: 22%; padding: 2px;"
+                                    fill="none" stroke="#61DAFB" stroke-width="2" stroke-linecap="round"
+                                    stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="2"></circle>
+                                    <ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(0 12 12)"></ellipse>
+                                    <ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(60 12 12)"></ellipse>
+                                    <ellipse cx="12" cy="12" rx="10" ry="4" transform="rotate(120 12 12)"></ellipse>
+                                </svg>
+                            </li>
+                            <li style="margin-bottom: 40px; display: flex; align-items: center;">Backend： FastAPI
+                                <svg viewBox="0 0 24 24"
+                                    style="height: 1.5em; width: 1.5em; margin-left: 15px; border-radius: 22%; padding: 2px;"
+                                    fill="#009688">
+                                    <path
+                                        d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15v-4H8l5-7v4h3l-5 7z">
+                                    </path>
+                                </svg>
+                            </li>
+                            <li style="margin-bottom: 40px; display: flex; align-items: center;">DB：SQLite
+                                <svg viewBox="0 0 24 24"
+                                    style="height: 1.5em; width: 1.5em; margin-left: 15px; border-radius: 22%; padding: 2px;"
+                                    fill="none">
+                                    <defs>
+                                        <linearGradient id="sqliteGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                                            <stop offset="0%" style="stop-color:#65C7F7;stop-opacity:1" />
+                                            <stop offset="100%" style="stop-color:#0052CC;stop-opacity:1" />
+                                        </linearGradient>
+                                    </defs>
+                                    <rect x="2" y="4" width="16" height="16" rx="2" fill="url(#sqliteGradient)" />
+                                    <path d="M12,4 Q18,6 16,18 L15,19 Q16,10 12,4 Z" fill="#003B57" />
+                                </svg>
+                            </li>
+                            <li style="display: flex; align-items: center;">Socket.IO
+                                <svg viewBox="0 0 24 24"
+                                    style="height: 1.5em; width: 1.5em; margin-left: 15px; border-radius: 22%; padding: 2px;"
+                                    fill="#010101">
+                                    <circle cx="12" cy="12" r="10" stroke="white" stroke-width="2" />
+                                    <path d="M14 7l-4 5h3l-4 5" stroke="white" stroke-width="2" stroke-linecap="round"
+                                        stroke-linejoin="round" />
+                                </svg>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 7. Architecture - Page 4: Design -->
+            <section>
+                <div class="center-layout">
+                    <h2>UI Design</h2>
+                    <div class="glass-panel"
+                        style="width: 50%; min-height: 350px; display: flex; align-items: center; justify-content: center;">
+                        <ul style="font-size: 2.2rem; text-align: left; padding: 0 20px;">
+                            <li style="margin-bottom: 40px;">Liquid Glass (iOS-inspired)</li>
+                            <li style="margin-bottom: 40px;">Glassmorphism</li>
+                            <li>Pink/Purple Gradients</li>
+                        </ul>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 8. Future Work - Overview Page -->
+            <section>
+                <div class="center-layout">
+                    <h2 style="font-size: 5rem;">Future Roadmap</h2>
+                    <div class="feature-grid">
+                        <div class="glass-panel">
+                            <h4>Essential Features</h4>
+                            <p>Improvements for daily usage.</p>
+                        </div>
+                        <div class="glass-panel">
+                            <h4>Monetization</h4>
+                            <p>Pro Plan & User Tiers.</p>
+                        </div>
+                        <div class="glass-panel">
+                            <h4>Professionalism</h4>
+                            <p>Scalability & Compatibility.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 8. Future Work - PAGE 1: Essentials -->
+            <section>
+                <div class="center-layout">
+                    <h2>Essential Features</h2>
+                    <ul class="future-list">
+                        <li>📸 Images in Random/Private Chat</li>
+                        <li>🚫 Delete Datemate & Blacklist</li>
+                        <li>🎤 Voice/Video Chat</li>
+                        <li>🔐 Email Password Reset</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- 8. Future Work - PAGE 2: Pro Plan -->
+            <section>
+                <div class="center-layout">
+                    <h2>Monetization (Pro)</h2>
+                    <ul class="future-list">
+                        <li>💬 Unlimited Random Chat</li>
+                        <li>🤖 Unlimited Wingman</li>
+                        <li>✨ Unlimited Profile Optimizer</li>
+                        <li>💔 Unlock "Miss Ex"</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- 8. Future Work - PAGE 3: Professionalism -->
+            <section>
+                <div class="center-layout">
+                    <h2>Professionalism</h2>
+                    <ul class="future-list">
+                        <li>🗄️ PostgreSQL Migration</li>
+                        <li>📱 Mobile Support & Windows Compatibility</li>
+                        <li>🌍 Public IP Access</li>
+                    </ul>
+                </div>
+            </section>
+
+            <!-- 9. Demo -->
+            <section>
+                <div class="center-layout">
+                    <div style="font-size: 9rem; margin-bottom: 30px; animation: float-img 3s infinite;">✨</div>
+                    <h1 style="font-size: 5rem;">Live Demo</h1>
+                    <p style="font-size: 1.8rem; margin-bottom: 60px;">Let's see FlirtNet in action.</p>
+
+                    <a id="demo-link" href="#" target="_blank" style="text-decoration: none;">
+                        <div class="glass-panel"
+                            style="background: white; color: #E91E63; padding: 20px 50px; font-weight: 800; font-size: 1.5rem;">
+                            Open Web App
+                        </div>
+                    </a>
+                    <p id="demo-url-text" style="margin-top: 20px; font-size: 1rem; color: #555;"></p>
+                </div>
+            </section>
+
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/reveal.js/5.0.4/reveal.min.js"></script>
+    <script>
+        Reveal.initialize({
+            hash: true,
+            transition: 'fade',
+            transitionSpeed: 'slow',
+            controls: true,
+            progress: true,
+            center: true,
+            width: 1600,
+            height: 900,
+            margin: 0.05,
+            minScale: 0.2,
+            maxScale: 2.0
+        });
+
+        // Dynamic Link Generation
+        const hostname = window.location.hostname;
+        const port = '5173';
+        const appUrl = `http://${hostname}:${port}`;
+
+        document.getElementById('demo-link').href = appUrl;
+        document.getElementById('demo-url-text').innerText = `Target: ${appUrl}`;
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,121 @@
+/*
+ * RegisterPage - Liquid Glass Registration
+ */
+
+.register-page {
+    min-height: calc(100vh - 80px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: var(--space-xl);
+}
+
+.register-container {
+    width: 100%;
+    max-width: 480px;
+    animation: slideUp 0.5s ease;
+    position: relative;
+}
+
+.register-card {
+    background: var(--glass-white-strong);
+    backdrop-filter: var(--blur-heavy);
+    -webkit-backdrop-filter: var(--blur-heavy);
+    border-radius: var(--radius-2xl);
+    border: 1px solid var(--glass-border-strong);
+    box-shadow: var(--shadow-glass);
+    padding: var(--space-2xl);
+    text-align: center;
+}
+
+.register-card h1 {
+    font-size: 1.8rem;
+    background: var(--romantic-gradient);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    margin-bottom: var(--space-sm);
+}
+
+.register-card .subtitle {
+    color: var(--text-secondary);
+    margin-bottom: var(--space-xl);
+    font-size: 1rem;
+}
+
+.register-card form {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-md);
+}
+
+.register-card .form-group {
+    margin-bottom: 0;
+}
+
+.register-card .form-group .input,
+.register-card .form-group .form-select {
+    text-align: left;
+}
+
+.register-card .form-row {
+    display: flex;
+    gap: var(--space-md);
+}
+
+.register-card .form-row .form-group {
+    flex: 1;
+}
+
+.register-card .error {
+    text-align: center;
+    font-size: 0.9rem;
+}
+
+.register-card .btn-primary {
+    margin-top: var(--space-sm);
+    padding: 16px;
+    font-size: 1rem;
+}
+
+.login-link {
+    margin-top: var(--space-lg);
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+}
+
+.login-link a {
+    color: var(--primary-start);
+    font-weight: 600;
+    margin-left: 4px;
+}
+
+.login-link a:hover {
+    text-decoration: underline;
+}
+
+/* Decorative heart */
+.register-container::before {
+    content: "✨";
+    position: absolute;
+    top: -35px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 2.5rem;
+    filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+}
+
+/* Responsive */
+@media (max-width: 480px) {
+    .register-card {
+        padding: var(--space-xl);
+    }
+
+    .register-card h1 {
+        font-size: 1.5rem;
+    }
+
+    .register-card .form-row {
+        flex-direction: column;
+    }
+}
