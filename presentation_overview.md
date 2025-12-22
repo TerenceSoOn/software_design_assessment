@@ -6,7 +6,7 @@
 
 **1. Background**
 
-- Many people struggle to meet neordew people and form a close relationships
+- Many people struggle to meet new people and form a close relationships
 - Existing apps focus on swiping (Tinder) or broadcasting (Instagram) -- No unified experience
 - What if someone is new to date, or too shy to start a talk?
 - What if you broke up with someone and you miss that person so much? -- Lack of humanity caring!
