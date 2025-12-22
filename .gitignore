@@ -1,7 +1,0 @@
-.DS_Store
-**/.DS_Store
-.log.DS_Store
-__pycache__
-*.db
-*.log
-/codespace/backend/venv/
