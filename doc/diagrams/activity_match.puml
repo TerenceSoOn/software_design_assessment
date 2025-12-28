@@ -1,0 +1,19 @@
+@startuml
+title Activity: Random Matching Flow
+
+start
+:User requests Random Match;
+
+if (Real User Available?) then (yes)
+  :System pairs with Partner;
+else (no)
+  :System offers AI Companion;
+  if (Accept?) then (yes)
+    :Start Chat with AI Companion;
+  else (no)
+    :Wait in Queue;
+  endif
+endif
+
+stop
+@enduml

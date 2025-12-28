@@ -1,0 +1,141 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class User {
+  +UUID userId
+  +String nickname
+  +String email
+  +UserStatus status
+  +Date lastActive
+  +Date registrationDate
+  --
+  +register()
+  +login()
+  +updateProfile()
+}
+
+class Profile {
+  +String bio
+  +List<String> interests
+  +List<String> photoWall
+  +Map<String, String> preferences
+  +Integer age
+  +String location
+  +String occupation
+  --
+  +getCompletionRate()
+}
+
+class Connection {
+  +UUID connectionId
+  +User initiator
+  +User receiver
+  +ConnectionStatus status
+  +Date establishedAt
+  --
+  +accept()
+  +reject()
+  +block()
+}
+
+enum ConnectionStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+  BLOCKED
+}
+
+abstract class ChatSession {
+  +UUID sessionId
+  +User participantA
+  +User participantB
+  +List<Message> history
+  +Date startTime
+  +Boolean isActive
+  --
+  +sendMessage(content)
+  +endSession()
+}
+
+class RandomChatSession {
+  +Boolean datemateRequestSent
+  +Float matchCompatibilityScore
+  --
+  +sendDatemateRequest()
+  +requestWingmanAdvice()
+}
+
+class PrivateChatSession {
+  +Connection linkedConnection
+  --
+  +archive()
+  +exportHistory()
+}
+
+class Message {
+  +UUID messageId
+  +User sender
+  +String content
+  +Timestamp sentAt
+  +ContentType type
+  +Boolean isFlagged
+  --
+  +markAsRead()
+}
+
+class Post {
+  +UUID postId
+  +User author
+  +String text
+  +List<String> imageUrls
+  +Integer likeCount
+  +Date publishedAt
+  --
+  +addComment(Comment)
+  +like(User)
+}
+
+class Comment {
+  +UUID commentId
+  +User author
+  +String content
+  +Date createdAt
+}
+
+interface AIService {
+  +detectAbuse(content: String) : SafetyResult
+  +getWingmanAdvice(context: List<Message>) : String
+  +analyzeAtmosphere(history: List<Message>) : SentimentMetrics
+  +chatWithCompanion(input: String) : String
+  +simulateMissEx(history: List<Message>) : String
+  +practiceMode(scenario: String) : String
+  +optimizeProfile(profile: Profile) : List<Suggestion>
+  +calculateMatchScore(userA: User, userB: User) : Float
+}
+
+
+' Relationships
+User "1" *-- "1" Profile
+User "1" --> "*" Connection : has datemates
+User "1" --> "*" Post : publishes
+User "1" --> "*" ChatSession : participates
+
+Connection "1" -- "2" User
+Connection ..> ConnectionStatus
+
+ChatSession <|-- RandomChatSession
+ChatSession <|-- PrivateChatSession
+ChatSession "1" *-- "*" Message
+
+PrivateChatSession --> Connection : belongs to
+
+Post "1" *-- "*" Comment
+Post --> User : authored by
+Comment --> User : authored by
+
+' AI Integration
+RandomChatSession ..> AIService : uses
+Message ..> AIService : analyzed by
+Profile ..> AIService : optimized by
+
+@enduml
