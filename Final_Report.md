@@ -218,7 +218,7 @@ We adhered to a strict development schedule over 7 weeks:
 *   **Week 7 (Dec 18-21)**: Final Testing, Report Writing, and Presentation Preparation.
 
 ### Roles & Responsibilities
-*   **Jiachen Pan**: Team Lead. Responsible for the core Backend logic (Socket.IO), Frontend integration, and overall Product Management (UI Design).
+*   **Jiachen Pan**: Responsible for the core Backend logic (Socket.IO), Frontend integration, and overall Product Management (UI Design).
 *   **Junlin Li**: Product Manager & Frontend Engineer. Focused on user flow definition and React component implementation.
 *   **Junrui Liang**: Backend Engineer & UI Design. Worked on API endpoints and visual consistency.
 *   **Yueshen Wang**: Backend Engineer. Specifically responsible for AI service integration and prompt tuning.
