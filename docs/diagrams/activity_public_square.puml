@@ -1,0 +1,43 @@
+@startuml
+title Activity: Community Square Interaction Flow
+
+start
+:User enters Community Square;
+
+fork
+  :Browse posts;
+  :View other users' content;
+  
+  if (Interested in a post?) then (yes)
+    :Like the post;
+    
+    if (Want to comment?) then (yes)
+      :Write and submit comment;
+    endif
+    
+    if (Want to connect with author?) then (yes)
+      :View author's profile;
+      :Send Datemate Request;
+      
+      if (Request accepted?) then (yes)
+        :Become Datemates;
+        :Unlock Private Chat;
+      else (no)
+        :Request ignored;
+      endif
+    endif
+  endif
+fork again
+  :Create new post;
+  :Enter text content;
+  
+  if (Add images?) then (yes)
+    :Upload images;
+  endif
+  
+  :Publish post;
+  :Post appears in feed;
+end fork
+
+stop
+@enduml

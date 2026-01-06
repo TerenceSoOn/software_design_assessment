@@ -1,0 +1,79 @@
+@startuml
+skinparam componentStyle rectangle
+
+package "Client Layer" {
+  [React Web App] as Web
+}
+
+package "Application Server" {
+  
+  package "API Gateway" {
+    [FastAPI REST API] as REST
+    [Socket.IO Server] as WS
+  }
+
+  package "Core Services" {
+    [Auth Service] as AuthSvc
+    [Profile Service] as ProfileSvc
+    [Matchmaking Service] as MatchSvc
+    [Chat Service] as ChatSvc
+    [Post Service] as PostSvc
+    [Datemate Service] as DatemateSvc
+    [Report Service] as ReportSvc
+    
+    package "Humanity Caring Modules" {
+      [Wingman] as Wingman
+      [Safety Checker] as Safety
+      [Profile Optimizer] as Optimizer
+      [Practice Mode] as Practice
+      [Miss Ex] as MissEx
+    }
+  }
+}
+
+package "Data Layer" {
+  database "SQLite/PostgreSQL" as DB
+}
+
+cloud "External Services" {
+  [DeepSeek LLM API] as LLM
+}
+
+' Client to Gateway
+Web --> REST : HTTP/HTTPS
+Web --> WS : WebSocket
+
+' Gateway to Core Services
+REST --> AuthSvc
+REST --> ProfileSvc
+REST --> PostSvc
+REST --> DatemateSvc
+REST --> ReportSvc
+WS --> ChatSvc
+WS --> MatchSvc
+
+' Core Services to Humanity Caring
+ChatSvc --> Wingman
+ChatSvc --> Safety
+ProfileSvc --> Optimizer
+MatchSvc --> Practice
+DatemateSvc --> MissEx
+ReportSvc --> Safety
+
+' Humanity Caring to External LLM
+Wingman --> LLM
+Safety --> LLM
+Optimizer --> LLM
+Practice --> LLM
+MissEx --> LLM
+
+' Core Services to Data
+AuthSvc --> DB
+ProfileSvc --> DB
+ChatSvc --> DB
+PostSvc --> DB
+DatemateSvc --> DB
+MatchSvc --> DB
+ReportSvc --> DB
+
+@enduml

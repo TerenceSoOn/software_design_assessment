@@ -1,0 +1,84 @@
+@startuml
+left to right direction
+skinparam packageStyle rectangle
+
+actor "User" as U
+actor "DeepSeek LLM" as LLM <<External Service>>
+
+rectangle "FlirtNet System" {
+
+  package "User Management" {
+    usecase "Register/Login" as UC_Auth
+    usecase "Edit Profile" as UC_EditProfile
+    usecase "Optimize Profile" as UC_Optimize
+  }
+
+  package "Discovery (Random Match)" {
+    usecase "Start Random Match" as UC_Match
+    usecase "Chat with Stranger" as UC_ChatRandom
+    usecase "View Stranger Profile" as UC_ViewProfile
+    usecase "Send Datemate Request" as UC_SendReq_Match
+    usecase "Report User" as UC_Report
+  }
+
+  package "Datemate System" {
+    usecase "Accept/Reject Request" as UC_HandleReq
+    usecase "Private Chat with Datemate" as UC_ChatPrivate
+    usecase "View Datemate List" as UC_ViewDatemates
+  }
+
+  package "Community Square" {
+    usecase "Publish Post" as UC_Post
+    usecase "Comment/Like Post" as UC_Interact
+    usecase "Send Datemate Request from Post" as UC_SendReq_Post
+  }
+
+  package "Humanity Caring Features" {
+    usecase "Get Wingman Help" as UC_Wingman
+    usecase "Safety Check (via Report)" as UC_Safety
+    usecase "Optimize Profile Bio" as UC_ProfileOpt
+    usecase "Practice Mode" as UC_Practice
+    usecase "Miss Ex (Closure)" as UC_MissEx
+  }
+}
+
+' User Interactions - User Management
+U --> UC_Auth
+U --> UC_EditProfile
+U --> UC_Optimize
+
+' User Interactions - Discovery
+U --> UC_Match
+U --> UC_ChatRandom
+U --> UC_ViewProfile
+U --> UC_SendReq_Match
+U --> UC_Report
+
+' User Interactions - Datemate
+U --> UC_HandleReq
+U --> UC_ChatPrivate
+U --> UC_ViewDatemates
+
+' User Interactions - Community
+U --> UC_Post
+U --> UC_Interact
+U --> UC_SendReq_Post
+
+' User Interactions - Humanity Caring
+U --> UC_Practice
+U --> UC_MissEx
+
+' Feature Extensions (Includes/Extends)
+UC_ChatRandom ..> UC_Wingman : <<extend>>
+UC_ChatPrivate ..> UC_Wingman : <<extend>>
+UC_Report ..> UC_Safety : <<include>>
+UC_EditProfile ..> UC_ProfileOpt : <<extend>>
+
+' External LLM Connection
+UC_Wingman --> LLM : uses
+UC_Safety --> LLM : uses
+UC_ProfileOpt --> LLM : uses
+UC_Practice --> LLM : uses
+UC_MissEx --> LLM : uses
+
+@enduml

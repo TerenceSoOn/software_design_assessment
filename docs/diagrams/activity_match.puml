@@ -1,0 +1,32 @@
+@startuml
+title Activity: Random Matching Flow
+
+start
+:User clicks "Start Matching";
+:User joins waiting queue;
+:System receives gender & preference;
+
+if (Compatible user in queue?) then (yes)
+  :System pairs both users;
+  :Both users receive match_found event;
+  :Start Random Chat session;
+  :Display partner's profile info;
+else (no)
+  :User waits in queue;
+  
+  if (User wants Practice Mode?) then (yes)
+    :Start Practice Mode chat;
+    :Chat with persona;
+    note right: Practice flirting skills\nin a safe environment
+  else (no)
+    :Continue waiting;
+    if (User leaves queue?) then (yes)
+      :Remove from queue;
+      stop
+    endif
+  endif
+endif
+
+:Chat Session Active;
+stop
+@enduml

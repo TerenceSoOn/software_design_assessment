@@ -1,0 +1,51 @@
+@startuml
+title Sequence: Random Matching Process
+
+participant "User A\n(Female)" as UserA
+participant "React Frontend" as Frontend
+participant "Socket.IO Server" as Socket
+participant "Waiting Queue" as Queue
+participant "User B\n(Male)" as UserB
+
+== User A Joins Queue ==
+UserA -> Frontend: Click "Start Matching"
+Frontend -> Socket: join_queue(token)
+Socket -> Socket: Decode JWT, get user info
+Socket -> Queue: Add User A to queue
+
+alt No compatible match found
+    Socket -> Frontend: queue_joined
+    Frontend -> UserA: Show "Waiting..."
+end
+
+== User B Joins Queue ==
+UserB -> Frontend: Click "Start Matching"
+Frontend -> Socket: join_queue(token)
+Socket -> Socket: Decode JWT, get user info
+
+Socket -> Queue: Check compatibility
+note right: User A wants male\nUser B wants female\nBoth compatible!
+
+Socket -> Queue: Remove both from queue
+Socket -> Socket: Create session_id
+
+== Match Found ==
+Socket -> Frontend: match_found(session_id, partner_profile)
+Frontend -> UserA: Show partner's profile
+Frontend -> UserB: Show partner's profile
+
+== Chat Session ==
+UserA -> Frontend: Type message
+Frontend -> Socket: send_message(text)
+Socket -> UserB: receive_message(text)
+
+alt User wants Wingman help
+    UserA -> Frontend: Click "Help"
+    Frontend -> Socket: Request Wingman
+    Socket -> "DeepSeek LLM": Analyze chat history
+    "DeepSeek LLM" -> Socket: Return suggestions
+    Socket -> Frontend: wingman_response
+    Frontend -> UserA: Show 3 suggestions
+end
+
+@enduml

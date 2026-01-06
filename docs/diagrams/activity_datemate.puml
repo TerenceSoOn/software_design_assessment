@@ -1,0 +1,31 @@
+@startuml
+title Activity: Datemate Connection Flow
+
+start
+:User sends Datemate Request;
+note right: Can be from Random Chat\nor Community Square
+
+:Partner receives notification;
+
+if (Partner accepts?) then (yes)
+  :Connection status = ACCEPTED;
+  :Both added to each other's Datemate List;
+  :Private Chat enabled;
+  
+  partition "Private Chat Features" {
+    :Chat with persistent history;
+    :Use Wingman for suggestions;
+    
+    if (Relationship ends?) then (yes)
+      :One user removes datemate;
+      :Miss Ex feature unlocked;
+      note right: Helps process emotions\nwith simulated closure
+    endif
+  }
+else (no)
+  :Connection status = REJECTED;
+  :Request closed;
+endif
+
+stop
+@enduml

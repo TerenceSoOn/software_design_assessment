@@ -1,0 +1,154 @@
+@startuml
+skinparam classAttributeIconSize 0
+
+class User {
+  +Integer id
+  +String username
+  +String email
+  +String password_hash
+  +DateTime created_at
+  +DateTime updated_at
+  --
+  +register()
+  +login()
+}
+
+class Profile {
+  +Integer id
+  +Integer user_id
+  +String display_name
+  +String bio
+  +JSON interests
+  +Integer age
+  +String gender
+  +String preferred_gender
+  +String location
+  +String avatar_url
+  +JSON photo_wall
+  +DateTime updated_at
+  --
+  +update()
+  +optimize()
+}
+
+class DatemateConnection {
+  +Integer id
+  +Integer requester_id
+  +Integer receiver_id
+  +String status
+  +DateTime requested_at
+  +DateTime responded_at
+  --
+  +accept()
+  +reject()
+}
+
+enum ConnectionStatus {
+  PENDING
+  ACCEPTED
+  REJECTED
+}
+
+class RandomChat {
+  +Integer id
+  +Integer user1_id
+  +Integer user2_id
+  +String status
+  +DateTime started_at
+  +DateTime ended_at
+  --
+  +endSession()
+}
+
+class ChatMessage {
+  +Integer id
+  +Integer chat_id
+  +Integer sender_id
+  +String message_text
+  +DateTime sent_at
+}
+
+class RandomChatHistory {
+  +Integer id
+  +String session_id
+  +Integer sender_id
+  +Integer receiver_id
+  +String message_text
+  +DateTime sent_at
+}
+
+class PrivateMessage {
+  +Integer id
+  +Integer connection_id
+  +Integer sender_id
+  +Integer receiver_id
+  +String message_text
+  +DateTime sent_at
+  +DateTime read_at
+  --
+  +markAsRead()
+}
+
+class Post {
+  +Integer id
+  +Integer user_id
+  +String content_text
+  +JSON image_urls
+  +JSON tags
+  +DateTime created_at
+  +DateTime updated_at
+  --
+  +publish()
+  +delete()
+}
+
+class PostLike {
+  +Integer id
+  +Integer post_id
+  +Integer user_id
+  +DateTime created_at
+}
+
+class PostComment {
+  +Integer id
+  +Integer post_id
+  +Integer user_id
+  +String comment_text
+  +DateTime created_at
+}
+
+interface HumanityCaring <<Service>> {
+  +getWingmanSuggestion(chat_history)
+  +checkSafety(message)
+  +optimizeProfile(bio)
+  +analyzeAtmosphere(history)
+  +simulateMissEx(history, partner)
+  +practiceMode(message, scenario)
+  +judgeReport(chat_history)
+}
+
+' Relationships
+User "1" *-- "1" Profile
+User "1" --> "*" DatemateConnection : has datemates
+User "1" --> "*" Post : publishes
+User "1" --> "*" RandomChat : participates
+
+DatemateConnection "1" -- "2" User
+DatemateConnection ..> ConnectionStatus
+
+RandomChat "1" *-- "*" ChatMessage
+RandomChat "1" *-- "*" RandomChatHistory
+
+DatemateConnection "1" *-- "*" PrivateMessage
+
+Post "1" *-- "*" PostLike
+Post "1" *-- "*" PostComment
+Post --> User : authored by
+PostComment --> User : authored by
+
+' Humanity Caring Integration
+RandomChat ..> HumanityCaring : uses Wingman
+Profile ..> HumanityCaring : optimized by
+DatemateConnection ..> HumanityCaring : uses Miss Ex
+
+@enduml

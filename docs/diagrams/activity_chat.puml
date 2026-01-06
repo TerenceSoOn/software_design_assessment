@@ -1,0 +1,39 @@
+@startuml
+title Activity: Chat & Wingman Flow
+
+start
+:Start Chat Session;
+:View Partner Profile;
+
+repeat
+  :User types message;
+  :Send Message;
+  :Partner receives message;
+  
+  if (Need help with reply?) then (yes)
+    :Click Wingman button;
+    :System analyzes conversation vibe;
+    :Wingman provides 3 suggestions;
+    :User picks a suggestion or types own;
+  endif
+  
+  if (User wants to report?) then (yes)
+    :Click Report button;
+    :System evaluates chat history;
+    if (Violation detected?) then (yes)
+      :Reported user gets banned;
+      :Reporter receives confirmation;
+    else (no)
+      :Report rejected with reason;
+    endif
+  endif
+  
+repeat while (Chat continues?) is (yes)
+
+if (User wants to connect?) then (yes)
+  :Send Datemate Request;
+endif
+
+:End Chat Session;
+stop
+@enduml

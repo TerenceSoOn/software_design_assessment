@@ -1,0 +1,27 @@
+@startuml
+left to right direction
+
+node "Client Device" {
+  component "Web Browser" as Browser
+  note right of Browser : React SPA\nResponsive Design
+}
+
+node "Application Server" {
+  component "FastAPI + Socket.IO" as API
+  component "Humanity Caring Modules" as HC
+}
+
+node "Database Server" {
+  database "FlirtNet DB\n(SQLite/PostgreSQL)" as DB
+}
+
+cloud "External Services" {
+  component "DeepSeek LLM API" as LLM
+}
+
+Browser -- API : HTTPS\nWebSocket
+API -- DB : SQLAlchemy ORM
+API -- HC
+HC -- LLM : HTTPS API Calls
+
+@enduml
