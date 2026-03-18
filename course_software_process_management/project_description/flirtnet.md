@@ -1,4 +1,4 @@
-## Project Specification: FlirtNet – A Supportive Social Discovery Platform
+## Project Description: FlirtNet – A Supportive Social Discovery Platform
 
 ### 1. Problem Statement
 
