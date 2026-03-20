@@ -1,16 +1,19 @@
-## Project Description: FlirtNet – A Supportive Social Discovery Platform
+## FlirtNet – We Meet, We Flirt, We Love
 
+Project Description on An Supportive Online Dating Platform  
+
+CS Group 8  
 ### 1. Problem Statement
 
-Modern dating and social discovery applications make it easier for people to meet online, but they also bring several social and emotional problems. Many current platforms are built around fast swiping and quick first impressions. Because of this, users often feel anxiety, fatigue, and disappointment instead of building meaningful social connections. The main issue is that many platforms focus strongly on getting a match, but give much less support for what happens after the match.
+Modern dating and social discovery apps make it easier for people to meet online, but they also bring several social and emotional problems. Many popular platforms are built around fast swiping and quick first impressions. Because of this, users often feel anxiety, exausted, and disappointment instead of building meaningful emotional close relationships.
 
-For many users, the difficult part is not only finding another person, but also knowing how to start a conversation, keep it respectful, build confidence, and decide whether the interaction should develop into something more meaningful. Users may also want more natural ways to discover others through profiles, shared interests, and community activities instead of relying only on quick first impressions. In practice, many people still need to move between different platforms to browse profiles, get advice, and continue communication, which creates a fragmented and tiring experience.
+For many users, the difficult part is not only finding another person, but also knowing how to start a conversation, keep it respectful, build confidence, and decide whether the interaction should develop into something more meaningful. Users may also want more natural ways to discover others through profiles, shared interests, and community activities instead of relying only on quick first impressions. In practice, many people still need to move between different platforms to browse profiles, get suggestions from their friends, and continue communication, which creates a fragmented and tiring experience.
 
-Safety is another important problem. Harmful behaviour in online conversations can cause immediate distress, but the reporting and review process on many platforms is still slow and unclear. Users may not receive timely feedback after sending a report, while staff may still need to inspect harmful messages manually, which creates both extra workload and repeated emotional burden. Current systems also provide limited support for managing unwanted contact, ending a datemate relationship in a healthy way, or helping users recover after a breakup.
+Safety is another important problem. Harmful behaviour in online conversations can cause immediate distress, but the reporting and review process on many platforms is still slow and unclear. Users may not receive timely feedback after sending a report, while staff may still need to inspect harmful messages manually, which creates both extra workload and repeated emotional burden.
 
 Our group proposes FlirtNet, a dating platform designed to provide a more supportive and human-centered social experience. Instead of working only as a matching application, FlirtNet aims to support users throughout the full interaction process: meeting new people, learning how to communicate, forming datemate relationships, joining a wider community, staying safe during interaction, and finding emotional closure when things go wrong. In this way, the system can improve both conversation quality and the overall user experience.
 
-The system should be easy to access on common devices and should support timely interaction between matched users. It should also place strong emphasis on usability, safety, and convenience, so that users can use the platform in a natural and low-pressure way. To keep the project scope more realistic, the feature set is divided into minimum viable features and desired features. The minimum viable features represent the main identity of FlirtNet and should be prioritized in the first version, while the desired features can be added later as the project develops.
+The system should be easy to access and should support timely interaction between matched users. It should also place strong emphasis on usability, safety, and convenience, so that users can use the platform in a natural and low-pressure way. To keep the project scope more realistic, the feature set is divided into minimum viable features and desired features. The minimum viable features represent the main identity of FlirtNet and should be prioritized in the first version, while the desired features can be added later as the project develops.
 
 ### 2. Minimum Viable Features
 
@@ -18,9 +21,9 @@ The system should be easy to access on common devices and should support timely 
 
 - **Account Registration and Login:** The system should allow users to create accounts, log in securely, and return to their existing profiles. This feature provides the entry point for all other personalized functions on the platform.
 
-- **User Profiles and Preferences:** The system should allow users to create, update, and manage personal profiles. This may include profile photo upload, self-descriptions, age, interests, location, and matching preferences. A clear profile system would help users present themselves better and support more suitable matching.
+- **User Profiles and Preferences:** The platform should allow users to create, update, and manage personal profiles. This may include profile photo upload, self-descriptions, age, interests, location, and matching preferences. A clear profile system would help users present themselves better and support more suitable matching.
 
-- **Real-Time Matching:** The platform should include a matching system that allows users to discover compatible people based on selected preferences and profile information. The process should be responsive so that users can move smoothly from discovery to first interaction.
+- **Real-Time Random Matching:** The platform should include a matching system that allows users to discover suitable people based on selected preferences and profile information. The process should be responsive so that users can move smoothly from discovery to first interaction.
 
 - **Random Chat:** The system should provide a random chat function that allows matched users to begin a live one-to-one conversation. During the chat, users should be able to view basic information about the other person and leave the conversation if they do not wish to continue.
 
